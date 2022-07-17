@@ -54,15 +54,23 @@ public class EffectsManger extends Effect{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String ans = JOptionPane.showInputDialog(null, "Choose Effect:", "Add Effect", JOptionPane.PLAIN_MESSAGE, null,
-						new String[] {"Green Screen", "Blur", "Black & White"}, null).toString();
+				Object ans = JOptionPane.showInputDialog(null, "Choose Effect:", "Add Effect",
+						JOptionPane.PLAIN_MESSAGE, null,
+						new String[] {"Green Screen", "Blur", "Black & White", "Retro"},
+						null);
+				if (ans == null) {
+					return;
+				}
+				String effectName = ans.toString();
 				Effect effect = null;
-				if(ans.equals("Green Screen")) {
+				if(effectName.equals("Green Screen")) {
 					effect = new GreenScreenEffect();
-				}else if(ans.equals("Blur")) {
+				}else if(effectName.equals("Blur")) {
 					effect = new BlurEffect();
-				}else if(ans.equals("Black & White")) {
+				}else if(effectName.equals("Black & White")) {
 					effect = new BlackAndWhiteEffect();
+				}else if(effectName.equals("Retro")) {
+					effect = new RetroEffect();
 				}
 				if (effect == null) {
 					return;
