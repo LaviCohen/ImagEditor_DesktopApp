@@ -50,16 +50,25 @@ public class Text extends Shape{
 		xJLabel.setForeground(Theme.getTextColor());
 		positionPanel.add(xJLabel);
 		JTextField xField = new JTextField(this.x + "");
+		xField.setBackground(Theme.getBackgroundColor().brighter());
+		xField.setForeground(Theme.getTextColor());
 		positionPanel.add(xField);
 		JLabel yJLabel = new JLabel("Y:");
 		yJLabel.setForeground(Theme.getTextColor());
 		positionPanel.add(yJLabel);
 		JTextField yField = new JTextField(this.y + "");
+		yField.setBackground(Theme.getBackgroundColor().brighter());
+		yField.setForeground(Theme.getTextColor());
 		positionPanel.add(yField);
 		editDialog.add(positionPanel);
 		JPanel textPanel = new JPanel(new BorderLayout());
-		textPanel.add(new JLabel("text:"), Main.translator.getBeforeTextBorder());
+		JLabel textLabel = new JLabel("Text:");
+		textLabel.setBackground(Theme.getBackgroundColor());
+		textLabel.setForeground(Theme.getTextColor());
+		textPanel.add(textLabel, Main.translator.getBeforeTextBorder());
 		JTextField textField = new JTextField(text);
+		textField.setBackground(Theme.getBackgroundColor().brighter());
+		textField.setForeground(Theme.getTextColor());
 		textPanel.add(textField);
 		editDialog.add(textPanel);
 		JPanel colorPanel = new JPanel(new BorderLayout());
@@ -72,6 +81,8 @@ public class Text extends Shape{
 		colorPreviewLabel.setBackground(color);
 		colorPanel.add(colorPreviewLabel);
 		JButton setColorButton = new JButton("set color");
+		setColorButton.setBackground(Theme.getBackgroundColor());
+		setColorButton.setForeground(Theme.getTextColor());
 		setColorButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -82,17 +93,20 @@ public class Text extends Shape{
 		colorPanel.add(setColorButton, Main.translator.getAfterTextBorder());
 		editDialog.add(colorPanel);
 		FontHolder fontHolder = new FontHolder(this.font);
-		JButton setFont = new JButton("Set Font");
-		setFont.addActionListener(new ActionListener() {
+		JButton setFontButton = new JButton("Set Font");
+		setFontButton.setBackground(Theme.getBackgroundColor());
+		setFontButton.setForeground(Theme.getTextColor());
+		setFontButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				fontHolder.setFont(LFontChooser.openChooseFontDialog(editDialog, "Set Font", fontHolder.getFont(), null));
 			}
 		});
-		editDialog.add(setFont);
+		editDialog.add(setFontButton);
 		JButton apply = new JButton("Apply");
-		final Text cur = this;
+		apply.setBackground(Theme.getBackgroundColor());
+		apply.setForeground(Theme.getTextColor());
 		apply.addActionListener(new ActionListener() {
 			
 			@Override
@@ -102,13 +116,13 @@ public class Text extends Shape{
 					int y = Integer.parseInt(yField.getText());
 					String text = textField.getText();
 					Color color = colorLabel.getBackground();
-					cur.x = x;
-					cur.y = y;
-					cur.text = text;
-					cur.color = color;
-					cur.font = fontHolder.getFont();
+					Text.this.x = x;
+					Text.this.y = y;
+					Text.this.text = text;
+					Text.this.color = color;
+					Text.this.font = fontHolder.getFont();
 					editDialog.dispose();
-					Main.getShapeList().updateImage(cur);
+					Main.getShapeList().updateImage(Text.this);
 					Main.getBoard().repaint();
 				} catch (Exception e2) {
 					JOptionPane.showMessageDialog(Main.f, "Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
@@ -116,6 +130,8 @@ public class Text extends Shape{
 			}
 		});
 		JButton preview = new JButton("Preview");
+		preview.setBackground(Theme.getBackgroundColor());
+		preview.setForeground(Theme.getTextColor());
 		preview.addActionListener(new ActionListener() {
 			
 			@Override
@@ -125,12 +141,12 @@ public class Text extends Shape{
 					int y = Integer.parseInt(yField.getText());
 					String text = textField.getText();
 					Color color = colorLabel.getBackground();
-					cur.x = x;
-					cur.y = y;
-					cur.text = text;
-					cur.color = color;
-					cur.font = fontHolder.getFont();
-					Main.getShapeList().updateImage(cur);
+					Text.this.x = x;
+					Text.this.y = y;
+					Text.this.text = text;
+					Text.this.color = color;
+					Text.this.font = fontHolder.getFont();
+					Main.getShapeList().updateImage(Text.this);
 					Main.getBoard().repaint();
 				} catch (Exception e2) {
 					JOptionPane.showMessageDialog(Main.f, "Invalid input", "Error", JOptionPane.ERROR_MESSAGE);

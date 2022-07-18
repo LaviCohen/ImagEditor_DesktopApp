@@ -48,11 +48,15 @@ public class Rectangle extends Shape{
 		xJLabel.setForeground(Theme.getTextColor());
 		positionPanel.add(xJLabel);
 		JTextField xField = new JTextField(this.x + "");
+		xField.setBackground(Theme.getBackgroundColor().brighter());
+		xField.setForeground(Theme.getTextColor());
 		positionPanel.add(xField);
 		JLabel yJLabel = new JLabel("Y:");
 		yJLabel.setForeground(Theme.getTextColor());
 		positionPanel.add(yJLabel);
 		JTextField yField = new JTextField(this.y + "");
+		yField.setBackground(Theme.getBackgroundColor().brighter());
+		yField.setForeground(Theme.getTextColor());
 		positionPanel.add(yField);
 		editDialog.add(positionPanel);
 		JPanel sizePanel = new JPanel(new GridLayout(1, 4));
@@ -61,11 +65,15 @@ public class Rectangle extends Shape{
 		widthLabel.setForeground(Theme.getTextColor());
 		sizePanel.add(widthLabel);
 		JTextField widthField = new JTextField(this.width + "");
+		widthField.setBackground(Theme.getBackgroundColor().brighter());
+		widthField.setForeground(Theme.getTextColor());
 		sizePanel.add(widthField);
 		JLabel heightLabel = new JLabel("height:");
 		heightLabel.setForeground(Theme.getTextColor());
 		sizePanel.add(heightLabel);
 		JTextField heightField = new JTextField(this.height + "");
+		heightField.setBackground(Theme.getBackgroundColor().brighter());
+		heightField.setForeground(Theme.getTextColor());
 		sizePanel.add(heightField);
 		editDialog.add(sizePanel);
 		JPanel colorPanel = new JPanel(new BorderLayout());
@@ -78,6 +86,8 @@ public class Rectangle extends Shape{
 		colorPreviewLabel.setBackground(color);
 		colorPanel.add(colorPreviewLabel);
 		JButton setColorButton = new JButton("set color");
+		setColorButton.setBackground(Theme.getBackgroundColor());
+		setColorButton.setForeground(Theme.getTextColor());
 		setColorButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -88,7 +98,8 @@ public class Rectangle extends Shape{
 		colorPanel.add(setColorButton, Main.translator.getAfterTextBorder());
 		editDialog.add(colorPanel);
 		JButton apply = new JButton("Apply");
-		final Rectangle cur = this;
+		apply.setBackground(Theme.getBackgroundColor());
+		apply.setForeground(Theme.getTextColor());
 		apply.addActionListener(new ActionListener() {
 			
 			@Override
@@ -99,12 +110,12 @@ public class Rectangle extends Shape{
 					int width = Integer.parseInt(widthField.getText());
 					int height = Integer.parseInt(heightField.getText());
 					Color color = colorPreviewLabel.getBackground();
-					cur.x = x;
-					cur.y = y;
-					cur.width = width;
-					cur.height = height;
-					cur.color = color;
-					Main.getShapeList().updateImage(cur);
+					Rectangle.this.x = x;
+					Rectangle.this.y = y;
+					Rectangle.this.width = width;
+					Rectangle.this.height = height;
+					Rectangle.this.color = color;
+					Main.getShapeList().updateImage(Rectangle.this);
 					editDialog.dispose();
 					Main.getBoard().repaint();
 				} catch (Exception e2) {
@@ -113,6 +124,8 @@ public class Rectangle extends Shape{
 			}
 		});
 		JButton preview = new JButton("Preview");
+		preview.setBackground(Theme.getBackgroundColor());
+		preview.setForeground(Theme.getTextColor());
 		preview.addActionListener(new ActionListener() {
 			
 			@Override
@@ -123,12 +136,12 @@ public class Rectangle extends Shape{
 					int width = Integer.parseInt(widthField.getText());
 					int height = Integer.parseInt(heightField.getText());
 					Color color = colorPreviewLabel.getBackground();
-					cur.x = x;
-					cur.y = y;
-					cur.width = width;
-					cur.height = height;
-					cur.color = color;
-					Main.getShapeList().updateImage(cur);
+					Rectangle.this.x = x;
+					Rectangle.this.y = y;
+					Rectangle.this.width = width;
+					Rectangle.this.height = height;
+					Rectangle.this.color = color;
+					Main.getShapeList().updateImage(Rectangle.this);
 					Main.getBoard().repaint();
 				} catch (Exception e2) {
 					JOptionPane.showMessageDialog(Main.f, "Invalid input", "Error", JOptionPane.ERROR_MESSAGE);

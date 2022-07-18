@@ -83,11 +83,15 @@ public class Picture extends Shape{
 		xJLabel.setForeground(Theme.getTextColor());
 		positionPanel.add(xJLabel);
 		JTextField xField = new JTextField(this.x + "");
+		xField.setBackground(Theme.getBackgroundColor().brighter());
+		xField.setForeground(Theme.getTextColor());
 		positionPanel.add(xField);
 		JLabel yJLabel = new JLabel("Y:");
 		yJLabel.setForeground(Theme.getTextColor());
 		positionPanel.add(yJLabel);
 		JTextField yField = new JTextField(this.y + "");
+		yField.setBackground(Theme.getBackgroundColor().brighter());
+		yField.setForeground(Theme.getTextColor());
 		positionPanel.add(yField);
 		editDialog.add(positionPanel);
 		JPanel sizePanel = new JPanel(new GridLayout(1, 4));
@@ -96,11 +100,15 @@ public class Picture extends Shape{
 		widthLabel.setForeground(Theme.getTextColor());
 		sizePanel.add(widthLabel);
 		JTextField widthField = new JTextField(this.width + "");
+		widthField.setBackground(Theme.getBackgroundColor().brighter());
+		widthField.setForeground(Theme.getTextColor());
 		sizePanel.add(widthField);
 		JLabel heightLabel = new JLabel("height:");
 		heightLabel.setForeground(Theme.getTextColor());
 		sizePanel.add(heightLabel);
 		JTextField heightField = new JTextField(this.height + "");
+		heightField.setBackground(Theme.getBackgroundColor().brighter());
+		heightField.setForeground(Theme.getTextColor());
 		sizePanel.add(heightField);
 		editDialog.add(sizePanel);
 		JPanel sourcePanel = new JPanel(new BorderLayout());
@@ -109,11 +117,15 @@ public class Picture extends Shape{
 		sourceLabel.setForeground(Theme.getTextColor());
 		sourcePanel.add(sourceLabel, Main.translator.getBeforeTextBorder());
 		JTextField sourceField = new JTextField("don\'t change");
+		sourceField.setBackground(Theme.getBackgroundColor());
+		sourceField.setForeground(Theme.getTextColor());
 		sourceField.setEditable(false);
 		sourceField.setBackground(Theme.getBackgroundColor());
 		sourceField.setForeground(Theme.getTextColor());
 		sourcePanel.add(sourceField);
 		JButton browse = new JButton("Browse");
+		browse.setBackground(Theme.getBackgroundColor());
+		browse.setForeground(Theme.getTextColor());
 		browse.addActionListener(new ActionListener() {
 			
 			@Override
@@ -128,7 +140,8 @@ public class Picture extends Shape{
 		sourcePanel.add(browse, Main.translator.getAfterTextBorder());
 		editDialog.add(sourcePanel);
 		JButton apply = new JButton("Apply");
-		final Picture cur = this;
+		apply.setBackground(Theme.getBackgroundColor());
+		apply.setForeground(Theme.getTextColor());
 		apply.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -141,17 +154,17 @@ public class Picture extends Shape{
 					if (!sourceField.getText().equals("don\'t change")) {
 						File f = new File(sourceField.getText());
 						try {
-							cur.image = readImage(f);
+							Picture.this.image = readImage(f);
 						} catch (Exception e2) {
 							JOptionPane.showMessageDialog(editDialog, "Invalid File Destination",
 									"ERROR", JOptionPane.ERROR_MESSAGE);
 						}
 					}
-					cur.x = x;
-					cur.y = y;
-					cur.width = width;
-					cur.height = height;
-					Main.getShapeList().updateImage(cur);
+					Picture.this.x = x;
+					Picture.this.y = y;
+					Picture.this.width = width;
+					Picture.this.height = height;
+					Main.getShapeList().updateImage(Picture.this);
 					editDialog.dispose();
 					Main.getBoard().repaint();
 				} catch (Exception e2) {
@@ -160,6 +173,8 @@ public class Picture extends Shape{
 			}
 		});
 		JButton preview = new JButton("Preview");
+		preview.setBackground(Theme.getBackgroundColor());
+		preview.setForeground(Theme.getTextColor());
 		preview.addActionListener(new ActionListener() {
 			
 			@Override
@@ -173,17 +188,17 @@ public class Picture extends Shape{
 					if (!sourceField.getText().equals("don\'t change")) {
 						File f = new File(sourceField.getText());
 						try {
-							cur.image = readImage(f);
+							Picture.this.image = readImage(f);
 						} catch (Exception e2) {
 							JOptionPane.showMessageDialog(editDialog, "Invalid File Destination",
 									"ERROR", JOptionPane.ERROR_MESSAGE);
 						}
 					}
-					cur.x = x;
-					cur.y = y;
-					cur.width = width;
-					cur.height = height;
-					Main.getShapeList().updateImage(cur);
+					Picture.this.x = x;
+					Picture.this.y = y;
+					Picture.this.width = width;
+					Picture.this.height = height;
+					Main.getShapeList().updateImage(Picture.this);
 					Main.getBoard().repaint();
 				} catch (Exception e2) {
 					JOptionPane.showMessageDialog(Main.f, "Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
