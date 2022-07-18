@@ -77,6 +77,10 @@ public class Main {
 	 */
 	public static Logger logger = new Logger(install);
 	/**
+	 * The program's Main.theme.
+	 * */
+	public static Theme theme = new Theme();
+	/**
 	 * Represents the website of the product for using its services (as accounts,
 	 * for example).
 	 * 
@@ -273,20 +277,20 @@ public class Main {
 		System.out.println("Init took " + initTime + " milli-seconds");
 	}
 	public static void applyThemeColors() {
-		System.out.println("Appling " + (Theme.isLightMode()?"Light":"Dark") + " Mode");
+		System.out.println("Appling " + (Main.theme.isLightMode()?"Light":"Dark") + " Mode");
 		//Control panel
-		controlBar.setBackground(Theme.getBackgroundColor());
-		sizeLabel.setForeground(Theme.getTextColor());
-		zoomSlider.setBackground(Theme.getBackgroundColor());
-		zoomSlider.subject.setForeground(Theme.getTextColor());
+		controlBar.setBackground(Main.theme.getBackgroundColor());
+		sizeLabel.setForeground(Main.theme.getTextColor());
+		zoomSlider.setBackground(Main.theme.getBackgroundColor());
+		zoomSlider.subject.setForeground(Main.theme.getTextColor());
 		//Menu bar
-		lMenu.setColor(Theme.getBackgroundColor(), Theme.getTextColor());
+		lMenu.setColor(Main.theme.getBackgroundColor(), Main.theme.getTextColor());
 		//Side bar
-		sideBarPanel.setBackground(Theme.getBackgroundColor());
-		shapeList.setBackground(Theme.getBackgroundColor());
-		layersLabel.setForeground(Theme.getTextColor());
+		sideBarPanel.setBackground(Main.theme.getBackgroundColor());
+		shapeList.setBackground(Main.theme.getBackgroundColor());
+		layersLabel.setForeground(Main.theme.getTextColor());
 		//Board
-		getBoard().setBackground(Theme.getBackgroundColor());
+		getBoard().setBackground(Main.theme.getBackgroundColor());
 	}
 	public static void tryToLogIn() {
 		String data = Decoder.decode(Main.install.getText("Data/Settings/user.txt"));
@@ -417,7 +421,7 @@ public class Main {
 			sideBarPanel.remove(getShapeList());
 		}
 		shapeList = new ShapeList(getBoard().getShapesList().toArray(new Shape[0]));
-		shapeList.setBackground(Theme.getBackgroundColor());
+		shapeList.setBackground(Main.theme.getBackgroundColor());
 		sideBarPanel.add(getShapeList(), BorderLayout.CENTER);
 		if (s != null) {
 			getShapeList().setSelection(s);

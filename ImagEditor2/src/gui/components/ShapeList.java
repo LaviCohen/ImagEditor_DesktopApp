@@ -34,7 +34,7 @@ public class ShapeList extends JPanel{
 		public static int displayHeight = 50;
 		public ShapePanel(Shape shape, ShapeList shapeList) {
 			super(new BorderLayout(5, 0));
-			this.setBackground(Theme.getBackgroundColor().brighter());
+			this.setBackground(Main.theme.getBackgroundColor().brighter());
 			this.setOpaque(true);
 			this.shape = shape;
 			final ShapePanel cur = this;
@@ -62,8 +62,8 @@ public class ShapeList extends JPanel{
 			});
 			this.add(showNhide, Main.translator.getAfterTextBorder());
 			JLabel label = new JLabel(shape.getName());
-			label.setBackground(Theme.getBackgroundColor());
-			label.setForeground(Theme.getTextColor());
+			label.setBackground(Main.theme.getBackgroundColor());
+			label.setForeground(Main.theme.getTextColor());
 			this.add(label);
 			this.addMouseListener(new MouseAdapter() {
 				@Override

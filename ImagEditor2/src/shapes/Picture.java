@@ -22,7 +22,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import effects.EffectsManger;
-import gui.Theme;
 import install.DefaultSettings;
 import main.Main;
 
@@ -76,56 +75,36 @@ public class Picture extends Shape{
 		JDialog editDialog = new JDialog(Main.f);
 		editDialog.setLayout(new GridLayout(4, 1));
 		editDialog.setTitle("Edit Picture");
-		editDialog.setBackground(Theme.getBackgroundColor());
 		JPanel positionPanel = new JPanel(new GridLayout(1, 4));
-		positionPanel.setBackground(Theme.getBackgroundColor());
-		JLabel xJLabel = new JLabel("X:");
-		xJLabel.setForeground(Theme.getTextColor());
-		positionPanel.add(xJLabel);
+		positionPanel.add(Main.theme.affect(new JLabel("X:")));
 		JTextField xField = new JTextField(this.x + "");
-		xField.setBackground(Theme.getBackgroundColor().brighter());
-		xField.setForeground(Theme.getTextColor());
+		Main.theme.affect(xField);
 		positionPanel.add(xField);
-		JLabel yJLabel = new JLabel("Y:");
-		yJLabel.setForeground(Theme.getTextColor());
-		positionPanel.add(yJLabel);
+		positionPanel.add(Main.theme.affect(new JLabel("Y:")));
 		JTextField yField = new JTextField(this.y + "");
-		yField.setBackground(Theme.getBackgroundColor().brighter());
-		yField.setForeground(Theme.getTextColor());
+		Main.theme.affect(yField);
 		positionPanel.add(yField);
 		editDialog.add(positionPanel);
 		JPanel sizePanel = new JPanel(new GridLayout(1, 4));
-		sizePanel.setBackground(Theme.getBackgroundColor());
-		JLabel widthLabel = new JLabel("width:");
-		widthLabel.setForeground(Theme.getTextColor());
-		sizePanel.add(widthLabel);
+		sizePanel.add(Main.theme.affect(new JLabel("Width:")));
 		JTextField widthField = new JTextField(this.width + "");
-		widthField.setBackground(Theme.getBackgroundColor().brighter());
-		widthField.setForeground(Theme.getTextColor());
+		Main.theme.affect(widthField);
 		sizePanel.add(widthField);
-		JLabel heightLabel = new JLabel("height:");
-		heightLabel.setForeground(Theme.getTextColor());
-		sizePanel.add(heightLabel);
+		sizePanel.add(Main.theme.affect(new JLabel("Height:")));
 		JTextField heightField = new JTextField(this.height + "");
-		heightField.setBackground(Theme.getBackgroundColor().brighter());
-		heightField.setForeground(Theme.getTextColor());
+		Main.theme.affect(heightField);
 		sizePanel.add(heightField);
 		editDialog.add(sizePanel);
 		JPanel sourcePanel = new JPanel(new BorderLayout());
-		sourcePanel.setBackground(Theme.getBackgroundColor());
-		JLabel sourceLabel = new JLabel("Source:");
-		sourceLabel.setForeground(Theme.getTextColor());
-		sourcePanel.add(sourceLabel, Main.translator.getBeforeTextBorder());
+		sourcePanel.add(Main.theme.affect(new JLabel("Source:")),
+				Main.translator.getBeforeTextBorder());
 		JTextField sourceField = new JTextField("don\'t change");
-		sourceField.setBackground(Theme.getBackgroundColor());
-		sourceField.setForeground(Theme.getTextColor());
+		sourceField.setBackground(Main.theme.getBackgroundColor());
+		sourceField.setForeground(Main.theme.getTextColor());
 		sourceField.setEditable(false);
-		sourceField.setBackground(Theme.getBackgroundColor());
-		sourceField.setForeground(Theme.getTextColor());
 		sourcePanel.add(sourceField);
 		JButton browse = new JButton("Browse");
-		browse.setBackground(Theme.getBackgroundColor());
-		browse.setForeground(Theme.getTextColor());
+		Main.theme.affect(browse);
 		browse.addActionListener(new ActionListener() {
 			
 			@Override
@@ -140,8 +119,7 @@ public class Picture extends Shape{
 		sourcePanel.add(browse, Main.translator.getAfterTextBorder());
 		editDialog.add(sourcePanel);
 		JButton apply = new JButton("Apply");
-		apply.setBackground(Theme.getBackgroundColor());
-		apply.setForeground(Theme.getTextColor());
+		Main.theme.affect(apply);
 		apply.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -173,8 +151,7 @@ public class Picture extends Shape{
 			}
 		});
 		JButton preview = new JButton("Preview");
-		preview.setBackground(Theme.getBackgroundColor());
-		preview.setForeground(Theme.getTextColor());
+		Main.theme.affect(preview);
 		preview.addActionListener(new ActionListener() {
 			
 			@Override

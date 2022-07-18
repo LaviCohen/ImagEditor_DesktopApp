@@ -17,7 +17,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import gui.Theme;
 import le.gui.LFontChooser;
 import le.gui.LFontChooser.FontHolder;
 import main.Main;
@@ -45,68 +44,52 @@ public class Text extends Shape{
 		editDialog.setLayout(new GridLayout(5, 1));
 		editDialog.setTitle("Edit Text");
 		JPanel positionPanel = new JPanel(new GridLayout(1, 4));
-		positionPanel.setBackground(Theme.getBackgroundColor());
-		JLabel xJLabel = new JLabel("X:");
-		xJLabel.setForeground(Theme.getTextColor());
-		positionPanel.add(xJLabel);
+		positionPanel.add(Main.theme.affect(new JLabel("X:")));
 		JTextField xField = new JTextField(this.x + "");
-		xField.setBackground(Theme.getBackgroundColor().brighter());
-		xField.setForeground(Theme.getTextColor());
+		Main.theme.affect(xField);
 		positionPanel.add(xField);
-		JLabel yJLabel = new JLabel("Y:");
-		yJLabel.setForeground(Theme.getTextColor());
-		positionPanel.add(yJLabel);
+		positionPanel.add(Main.theme.affect(new JLabel("Y:")));
 		JTextField yField = new JTextField(this.y + "");
-		yField.setBackground(Theme.getBackgroundColor().brighter());
-		yField.setForeground(Theme.getTextColor());
+		Main.theme.affect(yField);
 		positionPanel.add(yField);
 		editDialog.add(positionPanel);
 		JPanel textPanel = new JPanel(new BorderLayout());
-		JLabel textLabel = new JLabel("Text:");
-		textLabel.setBackground(Theme.getBackgroundColor());
-		textLabel.setForeground(Theme.getTextColor());
-		textPanel.add(textLabel, Main.translator.getBeforeTextBorder());
+		textPanel.add(Main.theme.affect(new JLabel("Text:")), 
+				Main.translator.getBeforeTextBorder());
 		JTextField textField = new JTextField(text);
-		textField.setBackground(Theme.getBackgroundColor().brighter());
-		textField.setForeground(Theme.getTextColor());
+		Main.theme.affect(textField);
 		textPanel.add(textField);
 		editDialog.add(textPanel);
 		JPanel colorPanel = new JPanel(new BorderLayout());
-		colorPanel.setBackground(Theme.getBackgroundColor());
-		JLabel colorLabel = new JLabel("color:");
-		colorLabel.setForeground(Theme.getTextColor());
-		colorPanel.add(colorLabel, Main.translator.getBeforeTextBorder());
-		JLabel colorPreviewLabel = new JLabel();
-		colorPreviewLabel.setOpaque(true);
-		colorPreviewLabel.setBackground(color);
-		colorPanel.add(colorPreviewLabel);
-		JButton setColorButton = new JButton("set color");
-		setColorButton.setBackground(Theme.getBackgroundColor());
-		setColorButton.setForeground(Theme.getTextColor());
-		setColorButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				colorPreviewLabel.setBackground(JColorChooser.showDialog(editDialog, "Choose Rectangle color", color));
-			}
-		});
-		colorPanel.add(setColorButton, Main.translator.getAfterTextBorder());
-		editDialog.add(colorPanel);
+		colorPanel.add(Main.theme.affect(new JLabel("Color:")), Main.translator.getBeforeTextBorder());
+		JLabel colorLabel = new JLabel();
+		colorLabel.setOpaque(true);
+		colorLabel.setBackground(color);
+		colorPanel.add(colorLabel);
 		FontHolder fontHolder = new FontHolder(this.font);
 		JButton setFontButton = new JButton("Set Font");
-		setFontButton.setBackground(Theme.getBackgroundColor());
-		setFontButton.setForeground(Theme.getTextColor());
+		Main.theme.affect(setFontButton);
 		setFontButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				fontHolder.setFont(LFontChooser.openChooseFontDialog(editDialog, "Set Font", fontHolder.getFont(), null));
+				fontHolder.setFont(LFontChooser.openChooseFontDialog(editDialog, "Set Font", fontHolder.getFont(), null, Main.theme));
 			}
 		});
 		editDialog.add(setFontButton);
+		JButton setColorButton = new JButton("Set Color");
+		Main.theme.affect(setColorButton);
+		setColorButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				colorLabel.setBackground(JColorChooser.showDialog(editDialog, "Choose Text color", color));
+			}
+		});
+		colorPanel.add(setColorButton, Main.translator.getAfterTextBorder());
+		editDialog.add(colorPanel);
 		JButton apply = new JButton("Apply");
-		apply.setBackground(Theme.getBackgroundColor());
-		apply.setForeground(Theme.getTextColor());
+		Main.theme.affect(apply);
 		apply.addActionListener(new ActionListener() {
 			
 			@Override
@@ -130,8 +113,6 @@ public class Text extends Shape{
 			}
 		});
 		JButton preview = new JButton("Preview");
-		preview.setBackground(Theme.getBackgroundColor());
-		preview.setForeground(Theme.getTextColor());
 		preview.addActionListener(new ActionListener() {
 			
 			@Override
