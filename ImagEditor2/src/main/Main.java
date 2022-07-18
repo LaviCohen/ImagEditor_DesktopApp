@@ -24,8 +24,9 @@ import javax.swing.JSeparator;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import components.Board;
-import components.ShapeList;
+import gui.Theme;
+import gui.components.Board;
+import gui.components.ShapeList;
 import install.Decoder;
 import install.DefaultSettings;
 import install.Install;
@@ -91,25 +92,41 @@ public class Main {
 	 */
 	public static Account myAccount = LOCAL_ACCOUNT;
 	/**
+	 * The time took the program to initialize itself.
+	 * */
+	public static long initTime;
+	/**
+	 * The bottom panel, which holds zoom and paper size.
+	 * */
+	public static JPanel controlBar;
+	/**
 	 * The side bar which holds the shapeList and some action buttons.
 	 */
-	private static JPanel shapeListPanel;
+	public static JPanel sideBarPanel;
 	/**
 	 * GUI list of all the shapes are currently exist.
 	 */
-	private static ShapeList shapeList;
+	public static ShapeList shapeList;
 	/**
 	 * The label which holds the size of the paper (width x height).
 	 */
-	private static JLabel sizeLabel;
+	public static JLabel sizeLabel;
+	/**
+	 * The "Layers" label.
+	 * */
+	public static JLabel layersLabel;
 	/**
 	 * The slider which uses to set the zoom of the paper.
 	 */
-	private static LSlider zoomSlider;
+	public static LSlider zoomSlider;
 	/**
 	 * The scrollable wrapper of the paper.
 	 */
-	private static JScrollPane boardScrollPane;
+	public static JScrollPane boardScrollPane;
+	/**
+	 * The program's menu bar.
+	 * */
+	public static LMenu lMenu;
 	/**
 	 * ActionListener for all of the menu actions.
 	 */
@@ -122,8 +139,6 @@ public class Main {
 			Actions.action(Main.translator.get(command));
 		}
 	};
-	private static long initTime;
-
 	public static void main(String[] args) {
 		System.out.println("Start-Up");
 		long millis = System.currentTimeMillis();
@@ -187,11 +202,11 @@ public class Main {
 				return;
 			}
 		}
-		Main.install.initLanguage();
+		Main.install.initNormalSetting();
 		f = new JFrame(Main.translator.get("ImagEditor v") + version);
 		zoomSlider = new LSlider(Main.translator.get("Zoom") + ":", 10, 200, DefaultSettings.paperZoom);
 		currentProject = new Project();
-		shapeListPanel = new JPanel(new BorderLayout());
+		sideBarPanel = new JPanel(new BorderLayout());
 		Resources.init();
 		initJMenuBar();
 		getBoard().repaint();
@@ -203,7 +218,7 @@ public class Main {
 		f.add(boardScrollPane, BorderLayout.CENTER);
 		initControlBar();
 		updateShapeList();
-		initShapeListPanel();
+		initSideBarPanel();
 		f.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		f.addWindowListener(new WindowListener() {
 			@Override
@@ -246,9 +261,9 @@ public class Main {
 			public void windowActivated(WindowEvent e) {
 			}
 		});
-		DefaultSettings.updateFromFile();
 		f.applyComponentOrientation(Main.translator.getComponentOrientation());
 		boardScrollPane.applyComponentOrientation(ComponentOrientation.UNKNOWN);
+		applyThemeColors();
 		f.setVisible(true);
 		initTime = (System.currentTimeMillis() - millis);
 		Main.website.checkUpdate();
@@ -256,6 +271,22 @@ public class Main {
 			tryToLogIn();
 		}
 		System.out.println("Init took " + initTime + " milli-seconds");
+	}
+	public static void applyThemeColors() {
+		System.out.println("Appling " + (Theme.isLightMode()?"Light":"Dark") + " Mode");
+		//Control panel
+		controlBar.setBackground(Theme.getBackgroundColor());
+		sizeLabel.setForeground(Theme.getTextColor());
+		zoomSlider.setBackground(Theme.getBackgroundColor());
+		zoomSlider.subject.setForeground(Theme.getTextColor());
+		//Menu bar
+		lMenu.setColor(Theme.getBackgroundColor(), Theme.getTextColor());
+		//Side bar
+		sideBarPanel.setBackground(Theme.getBackgroundColor());
+		shapeList.setBackground(Theme.getBackgroundColor());
+		layersLabel.setForeground(Theme.getTextColor());
+		//Board
+		getBoard().setBackground(Theme.getBackgroundColor());
 	}
 	public static void tryToLogIn() {
 		String data = Decoder.decode(Main.install.getText("Data/Settings/user.txt"));
@@ -273,7 +304,7 @@ public class Main {
 		}
 	}
 	public static void initControlBar() {
-		JPanel controlBar = new JPanel(new BorderLayout());
+		controlBar = new JPanel(new BorderLayout());
 		sizeLabel = new JLabel(getBoard().paper.getWidth() + "x" + getBoard().paper.getHeight());
 		controlBar.add(getSizeLabel(), Main.translator.getAfterTextBorder());
 		zoomSlider.slider.addChangeListener(new ChangeListener() {
@@ -286,9 +317,10 @@ public class Main {
 		controlBar.add(zoomSlider, Main.translator.getBeforeTextBorder());
 		f.add(controlBar, BorderLayout.SOUTH);
 	}
-	public static void initShapeListPanel() {
-		shapeListPanel.add(new JLabel("<html><font size=30>" + Main.translator.get("Layers") + "</font></html>"),
-				BorderLayout.NORTH);
+	public static void initSideBarPanel() {
+		layersLabel = new JLabel("<html><font size=30>" + 
+						Main.translator.get("Layers") + "</font></html>");
+		sideBarPanel.add(layersLabel, BorderLayout.NORTH);
 		JPanel actionsPanel = new JPanel(new GridLayout(2, 2));
 		JButton edit = new JButton(Resources.editIcon);
 		edit.setToolTipText(Main.translator.get("Edit selected shape"));
@@ -320,7 +352,7 @@ public class Main {
 				}
 			}
 		});
-		shapeListPanel.add(actionsPanel, BorderLayout.SOUTH);
+		sideBarPanel.add(actionsPanel, BorderLayout.SOUTH);
 		JButton uplayer = new JButton(Resources.up_layerIcon);
 		uplayer.setToolTipText(Main.translator.get("Move selected shape 1 layer up"));
 		uplayer.setBackground(Color.WHITE);
@@ -347,7 +379,7 @@ public class Main {
 				}
 			}
 		});
-		shapeListPanel.add(actionsPanel, BorderLayout.SOUTH);
+		sideBarPanel.add(actionsPanel, BorderLayout.SOUTH);
 		JButton downlayer = new JButton(Resources.down_layerIcon);
 		downlayer.setToolTipText(Main.translator.get("Move selected shape 1 layer down"));
 		downlayer.setBackground(Color.WHITE);
@@ -374,18 +406,19 @@ public class Main {
 				}
 			}
 		});
-		shapeListPanel.add(actionsPanel, BorderLayout.SOUTH);
-		f.add(shapeListPanel, Main.translator.getBeforeTextBorder());
+		sideBarPanel.add(actionsPanel, BorderLayout.SOUTH);
+		f.add(sideBarPanel, Main.translator.getBeforeTextBorder());
 	}
 	public static void updateShapeList() {
 		System.out.println("Update shapeList");
 		Shape s = null;
 		if (getShapeList() != null) {
 			s = getShapeList().getSelectedShape();
-			shapeListPanel.remove(getShapeList());
+			sideBarPanel.remove(getShapeList());
 		}
 		shapeList = new ShapeList(getBoard().getShapesList().toArray(new Shape[0]));
-		shapeListPanel.add(getShapeList(), BorderLayout.CENTER);
+		shapeList.setBackground(Theme.getBackgroundColor());
+		sideBarPanel.add(getShapeList(), BorderLayout.CENTER);
 		if (s != null) {
 			getShapeList().setSelection(s);
 		}
@@ -393,7 +426,7 @@ public class Main {
 		f.repaint();
 	}
 	public static void initJMenuBar() {
-		LMenu lMenu = new LMenu(new String[][] {
+		lMenu = new LMenu(new String[][] {
 				{ Main.translator.get("File"), Main.translator.get("Open Project from this Computer") + "#o",
 						Main.translator.get("Open Project from Web"), Main.translator.get("Save Project") + "#s",
 						Main.translator.get("Save Project As...") + "#@s", Main.translator.get("Upload Project"),

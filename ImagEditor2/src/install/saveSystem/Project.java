@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
-import components.Board;
+import gui.components.Board;
 import install.DefaultSettings;
 import main.Main;
 import shapes.Shape;

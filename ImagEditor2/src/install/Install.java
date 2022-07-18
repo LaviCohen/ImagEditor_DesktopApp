@@ -42,6 +42,7 @@ public class Install extends AbstractInstall{
 			DefaultSettings.saveLogs = true;
 			DefaultSettings.keepMeLoggedIn = true;
 			DefaultSettings.useMoreRAM = true;
+			DefaultSettings.darkMode = false;
 			
 			DefaultSettings.saveToFile();
 		} catch (IOException e) {
@@ -58,14 +59,11 @@ public class Install extends AbstractInstall{
 		return true;
 	}
 	
-	public void initLanguage() {
-		DefaultSettings.updateFromFile();
-		Main.translator.setLanguage(DefaultSettings.language);
-	}
 	public void initPremiumSetting() {
 		
 	}
 	public void initNormalSetting() {
-		
+		DefaultSettings.updateFromFile();
+		Main.translator.setLanguage(DefaultSettings.language);
 	}
 }

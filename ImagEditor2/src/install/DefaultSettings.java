@@ -24,6 +24,8 @@ public class DefaultSettings {
 
 	public static boolean useMoreRAM;
 	
+	public static boolean darkMode;
+	
 	static {
 		System.out.println("Reading");
 		default_setting = new DataFile(Main.install.getFile("Data\\Settings\\default_setting.txt"));
@@ -38,6 +40,7 @@ public class DefaultSettings {
 		saveLogs = Boolean.parseBoolean(default_setting.get("save_log_files"));
 		keepMeLoggedIn = Boolean.parseBoolean(default_setting.get("keep_me_logged_in"));
 		useMoreRAM = Boolean.parseBoolean(default_setting.get("use_more_ram"));
+		darkMode = Boolean.parseBoolean(default_setting.get("dark_mode"));
 	}
 	public static void saveToFile() throws FileNotFoundException, IOException {
 		default_setting.putWithoutSave("paper_width", paperWidth);
@@ -48,6 +51,7 @@ public class DefaultSettings {
 		default_setting.putWithoutSave("save_log_files", saveLogs);
 		default_setting.putWithoutSave("keep_me_logged_in", keepMeLoggedIn);
 		default_setting.putWithoutSave("use_more_ram", useMoreRAM);
+		default_setting.putWithoutSave("dark_mode", darkMode);
 		default_setting.save("Original Default Settings");
 	}
 }
