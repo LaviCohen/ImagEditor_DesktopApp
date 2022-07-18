@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import gui.Theme;
 import main.Main;
 
 public class Rectangle extends Shape{
@@ -42,33 +43,46 @@ public class Rectangle extends Shape{
 		editDialog.setLayout(new GridLayout(4, 1));
 		editDialog.setTitle("Edit Rectangle");
 		JPanel positionPanel = new JPanel(new GridLayout(1, 4));
-		positionPanel.add(new JLabel("X:"));
+		positionPanel.setBackground(Theme.getBackgroundColor());
+		JLabel xJLabel = new JLabel("X:");
+		xJLabel.setForeground(Theme.getTextColor());
+		positionPanel.add(xJLabel);
 		JTextField xField = new JTextField(this.x + "");
 		positionPanel.add(xField);
-		positionPanel.add(new JLabel("Y:"));
+		JLabel yJLabel = new JLabel("Y:");
+		yJLabel.setForeground(Theme.getTextColor());
+		positionPanel.add(yJLabel);
 		JTextField yField = new JTextField(this.y + "");
 		positionPanel.add(yField);
 		editDialog.add(positionPanel);
 		JPanel sizePanel = new JPanel(new GridLayout(1, 4));
-		sizePanel.add(new JLabel("width:"));
+		sizePanel.setBackground(Theme.getBackgroundColor());
+		JLabel widthLabel = new JLabel("width:");
+		widthLabel.setForeground(Theme.getTextColor());
+		sizePanel.add(widthLabel);
 		JTextField widthField = new JTextField(this.width + "");
 		sizePanel.add(widthField);
-		sizePanel.add(new JLabel("height:"));
+		JLabel heightLabel = new JLabel("height:");
+		heightLabel.setForeground(Theme.getTextColor());
+		sizePanel.add(heightLabel);
 		JTextField heightField = new JTextField(this.height + "");
 		sizePanel.add(heightField);
 		editDialog.add(sizePanel);
 		JPanel colorPanel = new JPanel(new BorderLayout());
-		colorPanel.add(new JLabel("color:"), Main.translator.getBeforeTextBorder());
-		JLabel colorLabel = new JLabel();
-		colorLabel.setOpaque(true);
-		colorLabel.setBackground(color);
-		colorPanel.add(colorLabel);
+		colorPanel.setBackground(Theme.getBackgroundColor());
+		JLabel colorLabel = new JLabel("color:");
+		colorLabel.setForeground(Theme.getTextColor());
+		colorPanel.add(colorLabel, Main.translator.getBeforeTextBorder());
+		JLabel colorPreviewLabel = new JLabel();
+		colorPreviewLabel.setOpaque(true);
+		colorPreviewLabel.setBackground(color);
+		colorPanel.add(colorPreviewLabel);
 		JButton setColorButton = new JButton("set color");
 		setColorButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				colorLabel.setBackground(JColorChooser.showDialog(editDialog, "Choose Rectangle color", color));
+				colorPreviewLabel.setBackground(JColorChooser.showDialog(editDialog, "Choose Rectangle color", color));
 			}
 		});
 		colorPanel.add(setColorButton, Main.translator.getAfterTextBorder());
@@ -84,7 +98,7 @@ public class Rectangle extends Shape{
 					int y = Integer.parseInt(yField.getText());
 					int width = Integer.parseInt(widthField.getText());
 					int height = Integer.parseInt(heightField.getText());
-					Color color = colorLabel.getBackground();
+					Color color = colorPreviewLabel.getBackground();
 					cur.x = x;
 					cur.y = y;
 					cur.width = width;
@@ -108,7 +122,7 @@ public class Rectangle extends Shape{
 					int y = Integer.parseInt(yField.getText());
 					int width = Integer.parseInt(widthField.getText());
 					int height = Integer.parseInt(heightField.getText());
-					Color color = colorLabel.getBackground();
+					Color color = colorPreviewLabel.getBackground();
 					cur.x = x;
 					cur.y = y;
 					cur.width = width;

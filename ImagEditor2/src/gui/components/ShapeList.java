@@ -5,8 +5,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
+import gui.Theme;
 import install.Resources;
 import layouts.ListLayout;
 import main.Main;
@@ -33,10 +34,11 @@ public class ShapeList extends JPanel{
 		public static int displayHeight = 50;
 		public ShapePanel(Shape shape, ShapeList shapeList) {
 			super(new BorderLayout(5, 0));
+			this.setBackground(Theme.getBackgroundColor().brighter());
+			this.setOpaque(true);
 			this.shape = shape;
 			final ShapePanel cur = this;
 			JPopupMenu popup = Main.getPopupMenuForShape(shape);
-			this.setBackground(Color.WHITE);
 			JButton showNhide = new JButton(Resources.hideIcon);
 			showNhide.setToolTipText("hide this shape");
 			showNhide.setFocusPainted(false);
@@ -59,28 +61,11 @@ public class ShapeList extends JPanel{
 				}
 			});
 			this.add(showNhide, Main.translator.getAfterTextBorder());
-			this.add(new JLabel(shape.getName()));
-			this.addMouseListener(new MouseListener() {
-				
-				@Override
-				public void mouseReleased(MouseEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-				@Override
-				public void mousePressed(MouseEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-				@Override
-				public void mouseExited(MouseEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-				@Override
-				public void mouseEntered(MouseEvent e) {
-					
-				}
+			JLabel label = new JLabel(shape.getName());
+			label.setBackground(Theme.getBackgroundColor());
+			label.setForeground(Theme.getTextColor());
+			this.add(label);
+			this.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					shapeList.setSelection(cur);
