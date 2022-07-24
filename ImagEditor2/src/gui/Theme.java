@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Color;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.text.JTextComponent;
 
@@ -33,7 +34,10 @@ public class Theme implements ColorTheme{
 		if (component instanceof JTextComponent) {
 			component.setBackground(getBackgroundColor().brighter());
 			component.setForeground(getTextColor());
-		}else {
+		}else if(component instanceof JButton){	
+			component.setBackground(getBackgroundColor().darker());
+			component.setForeground(getTextColor());
+		}else{
 			component.setOpaque(true);
 			ColorTheme.super.affect(component);
 		}
@@ -42,7 +46,7 @@ public class Theme implements ColorTheme{
 	public static Color opposeColor(Color c) {
 		return new Color(255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue());
 	}
-	public static boolean isLightMode() {
+	public boolean isLightMode() {
 		return !DefaultSettings.darkMode;
 	}
 }

@@ -17,8 +17,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import le.gui.LFontChooser;
-import le.gui.LFontChooser.FontHolder;
+import le.gui.dialogs.LFontChooser;
+import le.gui.dialogs.LFontChooser.FontHolder;
 import main.Main;
 
 public class Text extends Shape{
@@ -73,7 +73,8 @@ public class Text extends Shape{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				fontHolder.setFont(LFontChooser.openChooseFontDialog(editDialog, "Set Font", fontHolder.getFont(), null, Main.theme));
+				fontHolder.setFont(LFontChooser.openChooseFontDialog(editDialog,
+						"Set Font", fontHolder.getFont(), null, Main.theme));
 			}
 		});
 		editDialog.add(setFontButton);
@@ -113,6 +114,7 @@ public class Text extends Shape{
 			}
 		});
 		JButton preview = new JButton("Preview");
+		Main.theme.affect(preview);
 		preview.addActionListener(new ActionListener() {
 			
 			@Override

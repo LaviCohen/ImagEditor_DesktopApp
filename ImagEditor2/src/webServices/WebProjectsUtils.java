@@ -8,7 +8,7 @@ import main.Main;
 public class WebProjectsUtils {
 	
 	public static boolean isAccountConnected() {
-		return Main.myAccount != Main.LOCAL_ACCOUNT;
+		return Main.myAccount != Account.LOCAL_ACCOUNT;
 	}
 	public static Project loadProjectFromWeb(String name) {
 		if (!isAccountConnected()) {

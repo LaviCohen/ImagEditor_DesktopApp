@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 
-import le.gui.LSlider;
+import le.gui.components.LSlider;
 import main.Main;
 
 public class RetroEffect extends Effect{

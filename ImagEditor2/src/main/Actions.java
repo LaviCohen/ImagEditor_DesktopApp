@@ -20,7 +20,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -31,9 +30,10 @@ import javax.swing.SwingUtilities;
 import install.DefaultSettings;
 import install.Resources;
 import install.saveSystem.Project;
-import le.gui.LSlider;
-import le.gui.LTextArea;
-import le.gui.LTextField;
+import le.gui.components.LSlider;
+import le.gui.components.LTextArea;
+import le.gui.components.LTextField;
+import le.gui.dialogs.LDialogs;
 import le.log.Logger;
 import shapes.Picture;
 import shapes.Rectangle;
@@ -54,8 +54,8 @@ public class Actions {
 		}else if (command.equals("Set Paper Size")) {
 			try {
 				Main.getBoard().setPaperSize(
-						Integer.parseInt(JOptionPane.showInputDialog("Enter Width:")),
-						Integer.parseInt(JOptionPane.showInputDialog("Enter Height:")));
+						Integer.parseInt(LDialogs.showInputDialog(Main.f, "Enter Width:")),
+						Integer.parseInt(LDialogs.showInputDialog(Main.f, "Enter Height:")));
 			} catch (Exception e) {
 				if (!(e instanceof NumberFormatException)) {
 					e.printStackTrace();
@@ -94,29 +94,34 @@ public class Actions {
 	}
 	private static void openPreferencesDialog() {
 		JDialog preferencesDialog = new JDialog(Main.f, "User Preferences");
+		preferencesDialog.getContentPane().setBackground(Main.theme.getBackgroundColor());
 		preferencesDialog.setLayout(new BorderLayout());
 		preferencesDialog.add(new JLabel("Change the default settings:"), BorderLayout.NORTH);
 		
 		//Using tabbed pane to sort all preferences by categories
 		JTabbedPane tabbedPane = new JTabbedPane();
+		Main.theme.affect(tabbedPane);
 		
 		//Paper's preferences tab, including width, height and zoom
 		JPanel paperPrefsPanel = new JPanel(new GridLayout(3, 1));
 		//Width GUI
 		JPanel widthPanel = new JPanel(new BorderLayout());
-		widthPanel.add(new JLabel("Width:"), Main.translator.getBeforeTextBorder());
+		widthPanel.add(Main.theme.affect(new JLabel("Width:")), Main.translator.getBeforeTextBorder());
 		JTextField widthField = new JTextField(DefaultSettings.paperWidth + "");
+		Main.theme.affect(widthField);
 		widthPanel.add(widthField);
 		paperPrefsPanel.add(widthPanel);
 		//Height GUI
 		JPanel heightPanel = new JPanel(new BorderLayout());
-		heightPanel.add(new JLabel("Height:"), Main.translator.getBeforeTextBorder());
+		heightPanel.add(Main.theme.affect(new JLabel("Height:")), Main.translator.getBeforeTextBorder());
 		JTextField heightField = new JTextField(DefaultSettings.paperHeight + "");
+		Main.theme.affect(heightField);
 		heightPanel.add(heightField);
 		paperPrefsPanel.add(heightPanel);
 		//Zoom GUI
 		LSlider zoomSlider = new LSlider("Zoom", Main.getZoomSlider().slider.getMinimum(),
 				Main.getZoomSlider().slider.getMaximum(), DefaultSettings.paperZoom);
+		Main.theme.affect(zoomSlider);
 		paperPrefsPanel.add(zoomSlider);
 		
 		tabbedPane.addTab("Paper", paperPrefsPanel);
@@ -125,7 +130,8 @@ public class Actions {
 		JPanel languagePrefsPanel = new JPanel(new GridLayout(2, 1));
 		//Default language GUI
 		JPanel defLanPanel = new JPanel(new BorderLayout());
-		defLanPanel.add(new JLabel("Defalut Language:"), Main.translator.getBeforeTextBorder());
+		defLanPanel.add(Main.theme.affect(new JLabel("Defalut Language:")),
+				Main.translator.getBeforeTextBorder());
 		//The language picking JComboBox
 		File f = Main.install.getFile("Languages");
 		String[] allLanguages = f.list();
@@ -136,11 +142,13 @@ public class Actions {
 					allLanguages[i - 1].substring(0, allLanguages[i - 1].indexOf('.'));
 		}
 		JComboBox<String> chooseLanguge = new JComboBox<>(displayLanguages);
+		Main.theme.affect(chooseLanguge);
 		chooseLanguge.setSelectedItem(DefaultSettings.language);
 		defLanPanel.add(chooseLanguge);
 		languagePrefsPanel.add(defLanPanel);
 		//Auto-set default language
 		JCheckBox autoSetDefLan = new JCheckBox("Auto-set Defalut Language When Changing Language", DefaultSettings.autoSetDefLan);
+		Main.theme.affect(autoSetDefLan);
 		languagePrefsPanel.add(autoSetDefLan);
 		
 		tabbedPane.addTab("Language", languagePrefsPanel);
@@ -152,16 +160,19 @@ public class Actions {
 		
 		//Save logs
 		JCheckBox saveLogsCheckBox = new JCheckBox("Save the Logs Every time the Program is Being Used", DefaultSettings.saveLogs);
+		Main.theme.affect(saveLogsCheckBox);
 		advancedPrefsPanel.add(saveLogsCheckBox);
 		
 		//CPU vs RAM priority
 		JCheckBox useRAMCheckBox = new JCheckBox("Use More RAM to Reduce CPU & GPU Usage", DefaultSettings.useMoreRAM);
+		Main.theme.affect(useRAMCheckBox);
 		advancedPrefsPanel.add(useRAMCheckBox);
 		
 		tabbedPane.addTab("Advanced", advancedPrefsPanel);
 		
 		//Apply button
 		JButton apply = new JButton("Apply Preferences");
+		Main.theme.affect(apply);
 		//The code inside the listeners update the defaults to the values in the dialog's input components
 		apply.addActionListener(new ActionListener() {
 			
@@ -175,8 +186,8 @@ public class Actions {
 					DefaultSettings.paperHeight = height;
 				} catch (Exception e2) {
 					if (e2 instanceof NumberFormatException) {
-						JOptionPane.showMessageDialog(Main.f, "Error while parsing paper dimensions",
-								"Parsing Error", JOptionPane.ERROR_MESSAGE);
+						LDialogs.showMessageDialog(Main.f, "Error while parsing paper dimensions",
+								"Parsing Error", LDialogs.ERROR_MESSAGE);
 					}else {
 						e2.printStackTrace();
 					}
@@ -209,15 +220,15 @@ public class Actions {
 	}
 	private static void openProjectFromWeb() {
 		if (!WebProjectsUtils.isAccountConnected()) {
-			JOptionPane.showMessageDialog(Main.f, "You aren't logged in to your account, please "
-					+ "login to your account.", "Warning", JOptionPane.WARNING_MESSAGE);
+			LDialogs.showMessageDialog(Main.f, "You aren't logged in to your account, please "
+					+ "login to your account.", "Warning", LDialogs.WARNING_MESSAGE);
 			return;
 		}
 		String[] allProjects = WebProjectsUtils.getProjectsList();
 		
 		if (allProjects == null) {
-			JOptionPane.showMessageDialog(Main.f, "You haven't projects on the web."
-					, "Warning", JOptionPane.WARNING_MESSAGE);
+			LDialogs.showMessageDialog(Main.f, "You haven't projects on the web."
+					, "Warning", LDialogs.WARNING_MESSAGE);
 			return;
 		}
 		
@@ -275,16 +286,18 @@ public class Actions {
 	private static void openProjectFromThisComputer() {
 		JFileChooser fc = new JFileChooser(Main.install.getPath("/Projects"));
 		fc.showOpenDialog(Main.f);
-		Main.switchProject(Project.loadProject(fc.getSelectedFile()));
+		if (fc.getSelectedFile() != null) {
+			Main.switchProject(Project.loadProject(fc.getSelectedFile()));		
+		}
 	}
 	/**
 	 * Method that pop up a dialog to ask where to  save the project, and than save it as a project.
 	 * */
 	private static void save() {
 		if (Main.currentProject.hasFile()) {
-			int ans = JOptionPane.showConfirmDialog(Main.f, 
+			int ans = LDialogs.showConfirmDialog(Main.f, 
 					"Do you want to save your project into its current location?");
-			if (ans == JOptionPane.YES_OPTION) {
+			if (ans == LDialogs.YES_OPTION) {
 				try {
 					Main.currentProject.save();
 					return;
@@ -416,7 +429,7 @@ public class Actions {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(reportDialog,
+				LDialogs.showMessageDialog(reportDialog,
 					Main.website.sendReport(Main.myAccount.userName, 
 						titleField.getText(), contentArea.getText()));
 				reportDialog.dispose();
@@ -519,7 +532,7 @@ public class Actions {
 		if (Main.getShapeList().getSelectedShape() == null) {
 			return;
 		}
-		if (JOptionPane.showConfirmDialog(Main.f, "Are you sure?") == JOptionPane.YES_OPTION) {
+		if (LDialogs.showConfirmDialog(Main.f, "Are you sure?") == LDialogs.YES_OPTION) {
 			Main.getBoard().getShapesList().remove(Main.getShapeList().getSelectedShape());
 			Main.getBoard().repaint();
 			Main.updateShapeList();

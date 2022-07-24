@@ -17,7 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import le.gui.LSlider;
+import le.gui.components.LSlider;
 import main.Main;
 
 public class GreenScreenEffect extends Effect{

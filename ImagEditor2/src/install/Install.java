@@ -6,6 +6,8 @@ import java.io.IOException;
 import javax.swing.JLabel;
 import javax.swing.JWindow;
 
+import gui.Theme;
+import le.gui.dialogs.LDialogs;
 import le.install.AbstractInstall;
 import main.Main;
 
@@ -64,6 +66,8 @@ public class Install extends AbstractInstall{
 	}
 	public void initNormalSetting() {
 		DefaultSettings.updateFromFile();
+		Main.theme = new Theme();
+		LDialogs.theme = Main.theme;
 		Main.translator.setLanguage(DefaultSettings.language);
 	}
 }

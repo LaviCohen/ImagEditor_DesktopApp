@@ -21,16 +21,22 @@ import main.Main;
 
 public class Account {
 	
-	public String userName;
-	public String password;
-	public boolean isPremium;
+	/**
+	 * The default account, which uses in the case of none account logged-in.
+	 */
+	public static final Account LOCAL_ACCOUNT = new Account("local account", "", "none", false);
 	
+	//Gender Constants
 	public static final String MALE = "male";
 	public static final String FEMALE = "female";
 	public static final String NONE_GENDER = "none";
 	
-	public String gender;
 	
+	public String userName;
+	public String password;
+	public boolean isPremium;
+	
+	public String gender;
 	
 	public static void login(String userName, String password) throws AccountUndefindException{
 		String userCode = Main.website.getResponse("getAccount.php", "userName=" + userName + "&" + "password=" + password + "&app=yes", "POST");
@@ -141,12 +147,12 @@ public class Account {
 		
 		d.add(personalDataPanel);
 		
-		JButton login = new JButton((this == Main.LOCAL_ACCOUNT?"login":"logout"));
+		JButton login = new JButton((this == Account.LOCAL_ACCOUNT?"login":"logout"));
 		login.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (Main.myAccount == Main.LOCAL_ACCOUNT) {
+				if (Main.myAccount == Account.LOCAL_ACCOUNT) {
 					d.dispose();
 					Account.GUILogin();
 				}else {	
@@ -161,7 +167,7 @@ public class Account {
 		d.setVisible(true);
 	}
 	public static void logout() {
-		Main.myAccount = Main.LOCAL_ACCOUNT;
+		Main.myAccount = Account.LOCAL_ACCOUNT;
 		Main.install.initNormalSetting();
 	}
 }

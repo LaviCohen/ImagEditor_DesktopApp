@@ -6,8 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-import javax.swing.JOptionPane;
-
+import le.gui.dialogs.LDialogs;
 import le.web.AbstractWebsite;
 import main.Main;
 
@@ -21,15 +20,15 @@ public class Website extends AbstractWebsite{
 		System.out.println("Checking internet connection");
 		if (!checkInternetConnection()) {
 			System.out.println("no internet connection");
-			JOptionPane.showMessageDialog(Main.f, "<html>Your\'e have not an internet connection.<br/>"
-					+ "Please connect for full support and features.</html>", "No Internet Connection", JOptionPane.WARNING_MESSAGE);
+			LDialogs.showMessageDialog(Main.f, "<html>Your\'e have not an internet connection.<br/>"
+					+ "Please connect for full support and features.</html>", "No Internet Connection", LDialogs.WARNING_MESSAGE);
 			return;
 		}
 		System.out.println("Checking if the website is avaliable");
 		if (!checkWebsite()) {
 			System.out.println("website isn't avaliable");
-			JOptionPane.showMessageDialog(Main.f, "<html>ImagEditor web support isn't avaliable now.<br/>"
-					+ "Please try again later.</html>", "Web Support Problem", JOptionPane.WARNING_MESSAGE);
+			LDialogs.showMessageDialog(Main.f, "<html>ImagEditor web support isn't avaliable now.<br/>"
+					+ "Please try again later.</html>", "Web Support Problem", LDialogs.WARNING_MESSAGE);
 			return;
 		}
 		URL url;
@@ -53,11 +52,11 @@ public class Website extends AbstractWebsite{
 					s += "\n";
 				}
 			}
-			int answer = JOptionPane.showConfirmDialog(Main.f, "<html>There are a new version."
+			int answer = LDialogs.showConfirmDialog(Main.f, "<html>There are a new version."
 					+ "<br/>Do you want to take a look?"
 					+ "<br/>new features:<ol><li>" + s.replaceAll("\n", "</li><li>") + "</li></ol>"
 					+ "</html>");
-			if (answer == JOptionPane.YES_OPTION) {
+			if (answer == LDialogs.YES_OPTION) {
 				openInBrowser();
 			}
 			reader.close();

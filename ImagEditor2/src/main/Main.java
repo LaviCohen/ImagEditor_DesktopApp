@@ -16,7 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
+import le.gui.dialogs.LDialogs;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -33,8 +33,8 @@ import install.Install;
 import install.Resources;
 import install.saveSystem.Project;
 import languages.Translator;
-import le.gui.LMenu;
-import le.gui.LSlider;
+import le.gui.components.LMenu;
+import le.gui.components.LSlider;
 import le.log.ExceptionUtils;
 import le.log.Logger;
 import shapes.Picture;
@@ -56,7 +56,7 @@ public class Main {
 	 */
 	public static final double version = 2.3;
 	/**
-	 * The frame of the app.
+	 * The frame of the program.
 	 */
 	public static JFrame f;
 	/**
@@ -67,38 +67,38 @@ public class Main {
 	 * The program's install class instance, used for accessing and managing the
 	 * program's files.
 	 */
-	public static Install install = new Install("C:\\ImagEditor" + Main.version);
+	public static Install install;
 	/**
 	 * The program's translator, used for supporting multiple languages.
 	 */
-	public static Translator translator = new Translator(install);
+	public static Translator translator;
 	/**
 	 * The program's logger, used for logging the program's activity.
 	 */
-	public static Logger logger = new Logger(install);
+	public static Logger logger;
 	/**
 	 * The program's Main.theme.
 	 * */
-	public static Theme theme = new Theme();
+	public static Theme theme;
 	/**
 	 * Represents the website of the product for using its services (as accounts,
 	 * for example).
 	 * 
 	 * @see le.web.AbstractWebsite
 	 */
-	public static Website website = new Website("http://localhost/ImagEditorWebsite/");
-	/**
-	 * The default account, which uses in the case of none account logged-in.
-	 */
-	public static final Account LOCAL_ACCOUNT = new Account("local account", "", "none", false);
+	public static Website website;
 	/**
 	 * Current logged-in account. As default, LOCAL_ACCOUNT.
 	 */
-	public static Account myAccount = LOCAL_ACCOUNT;
+	public static Account myAccount;
 	/**
 	 * The time took the program to initialize itself.
 	 * */
 	public static long initTime;
+	/**
+	 * The time the program started at.
+	 * */
+	public static long startUpMillis;
 	/**
 	 * The bottom panel, which holds zoom and paper size.
 	 * */
@@ -144,85 +144,70 @@ public class Main {
 		}
 	};
 	public static void main(String[] args) {
-		System.out.println("Start-Up");
-		long millis = System.currentTimeMillis();
-		if (Main.install.getFile("Data\\Logs\\live log.txt").exists()) {
-			long pause = System.currentTimeMillis();
-			if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(null, "<html>Last time, the app crashed.<br/>"
-					+ "would you like to send us auto report about it?</html>")) {
-				try {
-					website.sendReport("Auto Reporter", "Crash Report",
-							Main.install.getText("Data\\Logs\\live log.txt"));
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "Can't report your crash.", "Connection Erorr",
-							JOptionPane.ERROR_MESSAGE);
-				}
-			}
-			millis += System.currentTimeMillis() - pause;
-		}
-		Main.logger.initializeLogger();
-		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-			@Override
-			public void uncaughtException(Thread t, Throwable e) {
-				System.out.println("Error " + e + " has been reported - ID " + ++Main.logger.errorCount);
-				Main.logger.getErrorLogger().println(ExceptionUtils.exceptionToString((Exception) e, t, Main.logger.getErrorCount()));
-				if (Main.logger.printInConsole) {
-					e.printStackTrace(Main.logger.err);
-				}
-				int criticality = ExceptionUtils.getCriticality((Exception) e);
-				if (criticality == 2) {
-					int ans = JOptionPane.showOptionDialog(null, "An error has occurred", "Warning", 0,
-							JOptionPane.WARNING_MESSAGE, null, new String[] { "Open Log", "Cancel" }, 0);
-					if (ans == 0) {
-						System.out.println("Opening error log from error message");
-						Actions.action("Log");
-					}
-				}
-				if (criticality > 2) {
-					int ans = JOptionPane.showOptionDialog(null, "An error has occurred", "ERROR", 0,
-							JOptionPane.ERROR_MESSAGE, null, new String[] { "Open Log", "Cancel" }, 0);
-					if (ans == 0) {
-						System.out.println("Opening error log from error message");
-						Actions.action("Log");
-					}
-				}
-			}
-		});
-		if (!Main.install.isInstalled()) {
-			int answer = JOptionPane.showConfirmDialog(f, "Do you want to install ImageEditor v" + version + "?");
-			switch (answer) {
-			case JOptionPane.YES_OPTION:
-				if (Main.install.install()) {
-					Main.logger.initializeLiveLogger();
-					JOptionPane.showMessageDialog(f, "Install done successfully!");
-				} else {
-					JOptionPane.showMessageDialog(f, "Error: install failed", "Install Error",
-							JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				break;
-			default:
-				System.exit(0);
-				return;
-			}
-		}
-		Main.install.initNormalSetting();
-		f = new JFrame(Main.translator.get("ImagEditor v") + version);
-		zoomSlider = new LSlider(Main.translator.get("Zoom") + ":", 10, 200, DefaultSettings.paperZoom);
-		currentProject = new Project();
-		sideBarPanel = new JPanel(new BorderLayout());
-		Resources.init();
+		startup();
+		checkIfPreviousRunFailed();
+		createProgramVars();
+		initializeLogger();
+		applyExceptionsHandling();
+		checkIfInstalled();
+		initNormalSetting();
+		initResources();
+		initProgramFrame();
 		initJMenuBar();
-		getBoard().repaint();
-		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		f.setIconImage(Resources.logo.getImage());
-		f.setLayout(new BorderLayout());
-		boardScrollPane = new JScrollPane(getBoard(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		f.add(boardScrollPane, BorderLayout.CENTER);
+		initBoardScrollPane();
 		initControlBar();
 		updateShapeList();
 		initSideBarPanel();
+		applyThemeColors();
+		displayFrame();
+		finishStartup();
+		websiteChecks();
+	}
+	private static void initResources() {
+		Resources.init();
+	}
+	private static void initNormalSetting() {
+		Main.install.initNormalSetting();
+	}
+	private static void initializeLogger() {
+		Main.logger.initializeLogger();
+	}
+	private static void displayFrame() {
+		f.setVisible(true);
+	}
+	private static void finishStartup() {
+		initTime = (System.currentTimeMillis() - startUpMillis);
+		System.out.println("Init took " + initTime + " milli-seconds");
+	}
+	private static void startup() {
+		startUpMillis = System.currentTimeMillis();
+		System.out.println("Start-Up");
+	}
+	private static void createProgramVars() {
+		Main.install = new Install("C:\\ImagEditor" + Main.version);
+		Main.translator = new Translator(install);
+		Main.logger = new Logger(install);
+		Main.website = new Website("http://localhost/ImagEditorWebsite/");
+		Main.myAccount = Account.LOCAL_ACCOUNT;
+		Main.currentProject = new Project();
+	}
+	private static void websiteChecks() {
+		Main.website.checkUpdate();
+		if (Main.website.checkWebsite() && DefaultSettings.keepMeLoggedIn) {
+			tryToLogIn();
+		}
+	}
+	private static void initBoardScrollPane() {
+		boardScrollPane.applyComponentOrientation(ComponentOrientation.UNKNOWN);
+		boardScrollPane = new JScrollPane(getBoard(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		f.add(boardScrollPane, BorderLayout.CENTER);
+	}
+	private static void initProgramFrame() {
+		f = new JFrame(Main.translator.get("ImagEditor v") + version);
+		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		f.setIconImage(Resources.logo.getImage());
+		f.setLayout(new BorderLayout());
 		f.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		f.addWindowListener(new WindowListener() {
 			@Override
@@ -266,15 +251,71 @@ public class Main {
 			}
 		});
 		f.applyComponentOrientation(Main.translator.getComponentOrientation());
-		boardScrollPane.applyComponentOrientation(ComponentOrientation.UNKNOWN);
-		applyThemeColors();
-		f.setVisible(true);
-		initTime = (System.currentTimeMillis() - millis);
-		Main.website.checkUpdate();
-		if (Main.website.checkWebsite() && DefaultSettings.keepMeLoggedIn) {
-			tryToLogIn();
+	}
+	private static void checkIfInstalled() {
+		if (!Main.install.isInstalled()) {
+			int answer = LDialogs.showConfirmDialog(f, "Do you want to install ImageEditor v" + version + "?");
+			switch (answer) {
+			case LDialogs.YES_OPTION:
+				if (Main.install.install()) {
+					Main.logger.initializeLiveLogger();
+					LDialogs.showMessageDialog(f, "Install done successfully!");
+				} else {
+					LDialogs.showMessageDialog(f, "Error: install failed", "Install Error",
+							LDialogs.ERROR_MESSAGE);
+					return;
+				}
+				break;
+			default:
+				System.exit(0);
+				return;
+			}
 		}
-		System.out.println("Init took " + initTime + " milli-seconds");
+	}
+	private static void applyExceptionsHandling() {
+		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+			@Override
+			public void uncaughtException(Thread t, Throwable e) {
+				System.out.println("Error " + e + " has been reported - ID " + ++Main.logger.errorCount);
+				Main.logger.getErrorLogger().println(ExceptionUtils.exceptionToString((Exception) e, t, Main.logger.getErrorCount()));
+				if (Main.logger.printInConsole) {
+					e.printStackTrace(Main.logger.err);
+				}
+				int criticality = ExceptionUtils.getCriticality((Exception) e);
+				if (criticality == 2) {
+					int ans = LDialogs.showOptionDialog(null, "An error has occurred", "Warning", 0,
+							LDialogs.WARNING_MESSAGE, new String[] { "Open Log", "Cancel" }, 0);
+					if (ans == 0) {
+						System.out.println("Opening error log from error message");
+						Actions.action("Log");
+					}
+				}
+				if (criticality > 2) {
+					int ans = LDialogs.showOptionDialog(null, "An error has occurred", "ERROR", 0,
+							LDialogs.ERROR_MESSAGE, new String[] { "Open Log", "Cancel" }, 0);
+					if (ans == 0) {
+						System.out.println("Opening error log from error message");
+						Actions.action("Log");
+					}
+				}
+			}
+		});
+	}
+	private static void checkIfPreviousRunFailed() {
+		if (Main.install.getFile("Data\\Logs\\live log.txt").exists()) {
+			long pause = System.currentTimeMillis();
+			if (LDialogs.YES_OPTION == LDialogs.showConfirmDialog(null, "<html>Last time, the app crashed.<br/>"
+					+ "would you like to send us auto report about it?</html>")) {
+				try {
+					website.sendReport("Auto Reporter", "Crash Report",
+							Main.install.getText("Data\\Logs\\live log.txt"));
+				} catch (Exception e) {
+					LDialogs.showMessageDialog(null, "Can't report your crash.", "Connection Erorr",
+							LDialogs.ERROR_MESSAGE);
+				}
+			}
+			startUpMillis += System.currentTimeMillis() - pause;
+		}
 	}
 	public static void applyThemeColors() {
 		System.out.println("Appling " + (Main.theme.isLightMode()?"Light":"Dark") + " Mode");
@@ -300,14 +341,16 @@ public class Main {
 			try {
 				Account.login(loginData[0], loginData[1]);
 			} catch (AccountUndefindException e) {
-				JOptionPane.showMessageDialog(Main.f,
+				LDialogs.showMessageDialog(Main.f,
 						"<html>We couldn't login to your saved account (" + loginData[0]
 								+ "),<br/>please check the username and the password.</html>",
-						"Failed to Login", JOptionPane.WARNING_MESSAGE);
+						"Failed to Login", LDialogs.WARNING_MESSAGE);
 			}
 		}
 	}
 	public static void initControlBar() {
+		zoomSlider = new LSlider(Main.translator.get("Zoom") + ":",
+				10, 200, DefaultSettings.paperZoom);
 		controlBar = new JPanel(new BorderLayout());
 		sizeLabel = new JLabel(getBoard().paper.getWidth() + "x" + getBoard().paper.getHeight());
 		controlBar.add(getSizeLabel(), Main.translator.getAfterTextBorder());
@@ -322,6 +365,7 @@ public class Main {
 		f.add(controlBar, BorderLayout.SOUTH);
 	}
 	public static void initSideBarPanel() {
+		sideBarPanel = new JPanel(new BorderLayout());
 		layersLabel = new JLabel("<html><font size=30>" + 
 						Main.translator.get("Layers") + "</font></html>");
 		sideBarPanel.add(layersLabel, BorderLayout.NORTH);
@@ -369,8 +413,8 @@ public class Main {
 				if (getShapeList().getSelectedShape() != null) {
 					Shape s = getShapeList().getSelectedShape();
 					if (getBoard().getShapesList().getLast() == s) {
-						JOptionPane.showMessageDialog(Main.f, Main.translator.get("This is the top layer!"),
-								Main.translator.get("Warning"), JOptionPane.WARNING_MESSAGE);
+						LDialogs.showMessageDialog(Main.f, Main.translator.get("This is the top layer!"),
+								Main.translator.get("Warning"), LDialogs.WARNING_MESSAGE);
 						return;
 					}
 					int sIndex = getBoard().getShapesList().indexOf(s);
@@ -396,8 +440,8 @@ public class Main {
 				if (getShapeList().getSelectedShape() != null) {
 					Shape s = getShapeList().getSelectedShape();
 					if (getBoard().getShapesList().getFirst() == s) {
-						JOptionPane.showMessageDialog(Main.f, Main.translator.get("This is the down layer!"),
-								Main.translator.get("Warning"), JOptionPane.WARNING_MESSAGE);
+						LDialogs.showMessageDialog(Main.f, Main.translator.get("This is the down layer!"),
+								Main.translator.get("Warning"), LDialogs.WARNING_MESSAGE);
 						return;
 					}
 					int sIndex = getBoard().getShapesList().indexOf(s);
@@ -451,8 +495,8 @@ public class Main {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				s.setName(JOptionPane
-						.showInputDialog(Main.translator.get("Enter the new name for") + " \"" + s.getName() + "\""));
+				s.setName(LDialogs
+						.showInputDialog(null, Main.translator.get("Enter the new name for") + " \"" + s.getName() + "\"", null));
 				Main.updateShapeList();
 			}
 		});
