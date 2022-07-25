@@ -153,7 +153,7 @@ public class Main {
 		initNormalSetting();
 		initResources();
 		initProgramFrame();
-		initJMenuBar();
+		initMenuBar();
 		initControlBar();
 		initProject();
 		initBoardScrollPane();
@@ -476,14 +476,15 @@ public class Main {
 		f.revalidate();
 		f.repaint();
 	}
-	public static void initJMenuBar() {
+	public static void initMenuBar() {
 		lMenu = new LMenu(new String[][] {
 				{ Main.translator.get("File"), Main.translator.get("Open Project from this Computer") + "#o",
 						Main.translator.get("Open Project from Web"), Main.translator.get("Save Project") + "#s",
 						Main.translator.get("Save Project As...") + "#@s", Main.translator.get("Upload Project"),
 						Main.translator.get("Export Image") + "#e", Main.translator.get("Set Paper Size"),
-						Main.translator.get("Preferences"), Main.translator.get("Log"),
-						Main.translator.get("Send Report"), Main.translator.get("Visit Website") },
+						Main.translator.get("Preferences"), Main.translator.get("Set Language"), 
+						Main.translator.get("Log"), Main.translator.get("Send Report"),
+						Main.translator.get("Visit Website") },
 				{ Main.translator.get("Actions"), Main.translator.get("Edit") + "#e",
 						Main.translator.get("Set Paper Size"), Main.translator.get("Refresh") + "#r" },
 				{ Main.translator.get("Add"), Main.translator.get("Rectangle") + "@r",

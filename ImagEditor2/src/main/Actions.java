@@ -70,7 +70,7 @@ public class Actions {
 		}else if (command.equals("Upload Project")) {
 			WebProjectsUtils.uploadProject(Main.currentProject);
 		}else if (command.equals("Set Language")) {
-			Main.translator.showChangeLanguageDialog();
+			showChangeLanguageDialog();
 		}else if (command.equals("Rectangle")) {
 			addRectagle();
 		}else if (command.equals("Text")) {
@@ -562,5 +562,115 @@ public class Actions {
 			Main.getBoard().repaint();
 			Main.updateShapeList();
 		}
+	}
+	public static void showChangeLanguageDialog() {
+		File f = Main.install.getFile("Languages");
+		String[] allLanguages = f.list();
+		String[] displayLanguages = new String[allLanguages.length + 2];
+		displayLanguages[0] = Main.translator.DEFAULT_LANGUAGE;
+		for (int i = 1; i < displayLanguages.length - 1; i++) {
+			displayLanguages[i] = 
+					allLanguages[i - 1].substring(0, allLanguages[i - 1].indexOf('.'));
+		}
+		displayLanguages[displayLanguages.length - 1] = "Another Language...";
+		Object ans = LDialogs.showInputDialog(Main.f, "Choose Language:", "Languages",
+				LDialogs.QUESTION_MESSAGE, displayLanguages, Main.translator.getLanguageName());
+		if (ans == null) {
+			return;
+		}else if(ans.equals("Another Language...")) {
+			loadLanguageFromWeb();
+			return;
+		}
+		Main.translator.setLanguage(ans.toString());
+		if (DefaultSettings.autoSetDefLan || LDialogs.showConfirmDialog(Main.f,
+					"Do you want to make " + ans + " your default language?") == LDialogs.YES_OPTION) {
+			DefaultSettings.language = ans.toString();
+			try {
+				DefaultSettings.saveToFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			LDialogs.showMessageDialog(Main.f, 
+				"<html>To change the language properly,<br/>"
+				+ "close the program and reopen it.</html>");
+		}
+	}
+	private static void loadLanguageFromWeb() {
+		if (!WebProjectsUtils.isAccountConnected()) {
+			LDialogs.showMessageDialog(Main.f, "You aren't logged in to your account, please "
+					+ "login to your account.", "Warning", LDialogs.WARNING_MESSAGE);
+			return;
+		}
+		
+		String[] allLanguages = Main.website.getResponse("/getLanguagesList.php", "", "GET").split("&&");
+		
+		if (allLanguages == null || allLanguages.length == 0) {
+			LDialogs.showMessageDialog(Main.f, "There  are no more supported languages yet."
+					, "Warning", LDialogs.WARNING_MESSAGE);
+			return;
+		}
+		
+		JDialog d = new JDialog(Main.f, "Choose Language");
+		
+		d.setLayout(new GridLayout(allLanguages.length, 1));
+		
+		ActionListener listener = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				d.dispose();
+				JDialog loadingDialog = new JDialog(Main.f);
+				loadingDialog.setTitle("Loading...");
+				loadingDialog.setSize(300, 300);
+				loadingDialog.setLayout(new BorderLayout());
+				JLabel upSent = new JLabel("Downloading language data, please wait", SwingConstants.CENTER);
+				upSent.setFont(new Font("Arial", Font.PLAIN, 18));
+				loadingDialog.add(upSent, BorderLayout.NORTH);
+				JLabel gif = new JLabel(Resources.loading, SwingConstants.CENTER);
+				loadingDialog.add(gif);
+				loadingDialog.getContentPane().setBackground(Color.WHITE);
+				loadingDialog.pack();
+				loadingDialog.setSize(loadingDialog.getWidth() + 200, loadingDialog.getHeight());
+				loadingDialog.setVisible(true);
+				loadingDialog.setResizable(false);
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						File f = Main.install.getFile("/Languages/" + e.getActionCommand() + ".lng");
+						try {
+							f.createNewFile();
+							Main.install.writeToFile(f, 
+									Main.website.getResponse("/getLanguageData.php", "name=" + e.getActionCommand(), "GET"));
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+						SwingUtilities.invokeLater(new Runnable() {
+							
+							@Override
+							public void run() {
+								loadingDialog.dispose();
+								int ans = LDialogs.showConfirmDialog(Main.f, "<html>The language downloaded successfuly.<br/>"
+										+ "Would you want to aplly it right now?</html>");
+								if (ans == LDialogs.YES_OPTION) {
+									Main.translator.setLanguage(e.getActionCommand());
+								}
+							}
+						});
+					}
+				}).start();
+			}
+		};
+		for (String projectName : allLanguages) {
+			JButton b = new JButton(projectName);
+			Main.theme.affect(b);
+			b.addActionListener(listener);
+			d.add(b);
+		}
+		
+		d.pack();
+		d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		d.setVisible(true);
+		
 	}
 }
