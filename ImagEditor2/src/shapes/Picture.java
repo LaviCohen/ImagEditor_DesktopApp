@@ -265,6 +265,9 @@ public class Picture extends Shape{
 				Integer.parseInt(data[6]));
 		this.effectsManger = new EffectsManager(data[7], this);
 	}
+	public Picture(String line) throws NumberFormatException, IOException {
+		this(line.split(","));
+	}
 	@Override
 	public String encodeShape() {
 		return super.encodeShape() + "," + encodeSourceImge(image) + "," + width + "," + height

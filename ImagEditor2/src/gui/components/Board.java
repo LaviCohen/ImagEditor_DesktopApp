@@ -80,6 +80,9 @@ public class Board extends JPanel{
 				shapeInFocus = getShapeAt(
 						(int)((e.getX() - getLeftGap()) / getZoomRate()),
 						(int)((e.getY() - getUpGap()) / getZoomRate()));
+				if (shapeInFocus != null && !shapeInFocus.isVisible()) {
+					shapeInFocus = null;
+				}
 				if (e.getButton() == MouseEvent.BUTTON3) {
 					if (shapeInFocus != null) {
 						Main.getPopupMenuForShape(shapeInFocus).show(cur, e.getX(), e.getY());

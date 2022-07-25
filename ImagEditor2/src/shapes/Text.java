@@ -184,6 +184,10 @@ public class Text extends Shape{
 				Boolean.parseBoolean(data[2]), data[3], new Color(Integer.parseInt(data[4])),
 				new Font(data[5], Integer.parseInt(data[6]), Integer.parseInt(data[7])), data[8]);
 	}
+	public Text(String line) {
+		this(line.split(",", 9));
+	}
+
 	@Override
 	public String encodeShape() {
 		return super.encodeShape() + "," + color.getRGB() + "," + font.getFamily() + "," +

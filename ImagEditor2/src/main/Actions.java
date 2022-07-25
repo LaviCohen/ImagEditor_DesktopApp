@@ -35,6 +35,7 @@ import le.gui.components.LTextArea;
 import le.gui.components.LTextField;
 import le.gui.dialogs.LDialogs;
 import le.log.Logger;
+import shapes.Code;
 import shapes.Picture;
 import shapes.Rectangle;
 import shapes.Text;
@@ -77,6 +78,8 @@ public class Actions {
 			addText();
 		}else if (command.equals("Picture")) {
 			addPicture();
+		}else if (command.equals("Code")) {
+			addCode();
 		}else if (command.equals("Edit")) {
 			edit();
 		}else if (command.equals("Refresh")) {
@@ -567,6 +570,14 @@ public class Actions {
 				new BufferedImage(150, 50, BufferedImage.TYPE_INT_RGB), 100, 100);
 		Main.getBoard().addShape(p);
 		p.edit();
+	}
+	/**
+	 * Adds Code to the current project.
+	 * */
+	public static void addCode() {
+		Code c = new Code("<html><i>Your Code</i></html>", true);
+		Main.getBoard().addShape(c);
+		c.edit();
 	}
 	/**
 	 * Edits the current selected shape.

@@ -150,6 +150,10 @@ public class Rectangle extends Shape{
 				Boolean.parseBoolean(data[2]), data[3], Integer.parseInt(data[4]),
 				Integer.parseInt(data[5]), new Color(Integer.parseInt(data[6])));
 	}
+	public Rectangle(String line) {
+		this(line.split(","));
+	}
+
 	@Override
 	public String encodeShape() {
 		return super.encodeShape() + "," + width + "," + height + "," + color.getRGB();

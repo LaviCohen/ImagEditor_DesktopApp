@@ -78,13 +78,13 @@ public abstract class Shape {
 	}
 	public static Shape parseShape(String line) throws NumberFormatException, IOException {
 		if (line.startsWith(Rectangle.class.getName())) {
-			return new Rectangle(line.substring(line.indexOf(':') + 1).split(","));
-		}
-		if (line.startsWith(Text.class.getName())) {
-			return new Text(line.substring(line.indexOf(':') + 1).split(","));
-		}
-		if (line.startsWith(Picture.class.getName())) {
-			return new Picture(line.substring(line.indexOf(':') + 1).split(","));
+			return new Rectangle(line.substring(line.indexOf(':') + 1));
+		}else if (line.startsWith(Text.class.getName())) {
+			return new Text(line.substring(line.indexOf(':') + 1));
+		}else if (line.startsWith(Picture.class.getName())) {
+			return new Picture(line.substring(line.indexOf(':') + 1));
+		}else if (line.startsWith(Code.class.getName())) {
+			return new Code(line.substring(line.indexOf(':') + 1));
 		}
 		return null;
 	}

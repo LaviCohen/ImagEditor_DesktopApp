@@ -488,7 +488,8 @@ public class Main {
 				{ Main.translator.get("Actions"), Main.translator.get("Edit") + "#e",
 						Main.translator.get("Set Paper Size"), Main.translator.get("Refresh") + "#r" },
 				{ Main.translator.get("Add"), Main.translator.get("Rectangle") + "@r",
-						Main.translator.get("Text") + "@t", Main.translator.get("Picture") + "@p" },
+						Main.translator.get("Text") + "@t", Main.translator.get("Picture") + "@p"
+						, Main.translator.get("Code") + "@c"},
 				{ Main.translator.get("Account"), Main.translator.get("Profile") } }, menuListener);
 		f.setJMenuBar(lMenu);
 	}
