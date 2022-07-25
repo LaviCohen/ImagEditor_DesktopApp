@@ -263,7 +263,7 @@ public class Main {
 			case LDialogs.YES_OPTION:
 				if (Main.install.install()) {
 					Main.logger.initializeLiveLogger();
-					LDialogs.showMessageDialog(f, "Install done successfully!");
+					LDialogs.showMessageDialog(f, "Install has been completed successfully!");
 				} else {
 					LDialogs.showMessageDialog(f, "Error: install failed", "Install Error",
 							LDialogs.ERROR_MESSAGE);

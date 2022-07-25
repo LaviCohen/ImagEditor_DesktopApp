@@ -13,10 +13,10 @@ import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import le.gui.dialogs.LDialogs;
 import le.gui.dialogs.LFontChooser;
 import le.gui.dialogs.LFontChooser.FontHolder;
 import main.Main;
@@ -109,7 +109,7 @@ public class Text extends Shape{
 					Main.getShapeList().updateImage(Text.this);
 					Main.getBoard().repaint();
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(Main.f, "Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
+					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -132,7 +132,7 @@ public class Text extends Shape{
 					Main.getShapeList().updateImage(Text.this);
 					Main.getBoard().repaint();
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(Main.f, "Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
+					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
 				}		
 			}
 		});

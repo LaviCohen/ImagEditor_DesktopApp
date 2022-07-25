@@ -92,7 +92,10 @@ public class Actions {
 			openLog();
 		}
 	}
-	private static void openPreferencesDialog() {
+	/**
+	 * Opens the preferences dialog.
+	 * */
+	public static void openPreferencesDialog() {
 		JDialog preferencesDialog = new JDialog(Main.f, "User Preferences");
 		preferencesDialog.getContentPane().setBackground(Main.theme.getBackgroundColor());
 		preferencesDialog.setLayout(new BorderLayout());
@@ -219,7 +222,10 @@ public class Actions {
 		preferencesDialog.pack();
 		preferencesDialog.setVisible(true);
 	}
-	private static void openProjectFromWeb() {
+	/**
+	 * Shows dialog to open project from the web.
+	 * */
+	public static void openProjectFromWeb() {
 		if (!WebProjectsUtils.isAccountConnected()) {
 			LDialogs.showMessageDialog(Main.f, "You aren't logged in to your account, please "
 					+ "login to your account.", "Warning", LDialogs.WARNING_MESSAGE);
@@ -286,7 +292,10 @@ public class Actions {
 		d.setVisible(true);
 		
 	}
-	private static void openProjectFromThisComputer() {
+	/**
+	 * Shows JFileChooser to open project from the local storage.
+	 * */
+	public static void openProjectFromThisComputer() {
 		JFileChooser fc = new JFileChooser(Main.install.getPath("/Projects"));
 		fc.showOpenDialog(Main.f);
 		if (fc.getSelectedFile() != null) {
@@ -296,7 +305,7 @@ public class Actions {
 	/**
 	 * Method that pop up a dialog to ask where to  save the project, and than save it as a project.
 	 * */
-	private static void save() {
+	public static void save() {
 		if (Main.currentProject.hasFile()) {
 			int ans = LDialogs.showConfirmDialog(Main.f, 
 					"Do you want to save your project into its current location?");
@@ -428,7 +437,10 @@ public class Actions {
 				errorLog.getWidth() > 500 ? 500 : errorLog.getWidth(), errorLog.getHeight() > 500 ? 500 : errorLog.getHeight());
 		errorLog.setVisible(true);
 	}
-	private static void sendReport() {
+	/**
+	 * Shows dialog to send report to the website.
+	 * */
+	public static void sendReport() {
 		JDialog reportDialog = new JDialog(Main.f);
 		reportDialog.setTitle("Report");
 		JPanel headerPanel = new JPanel(new BorderLayout());
@@ -530,29 +542,44 @@ public class Actions {
 		saveDialog.pack();
 		saveDialog.setVisible(true);
 	}
+	/**
+	 * Adds Rectangle to the current project.
+	 * */
 	public static void addRectagle() {
 		Rectangle r = new Rectangle(0, 0, true, null, 100, 100, Color.BLUE);
 		Main.getBoard().addShape(r);
 		r.edit();
 	}
+	/**
+	 * Adds Text to the current project.
+	 * */
 	public static void addText() {
 		Text t = new Text(
 				0, 0, true, null, Color.BLACK, new Font("Arial", Font.PLAIN, 20), "text");
 		Main.getBoard().addShape(t);
 		t.edit();
 	}
+	/**
+	 * Adds Picture to the current project.
+	 * */
 	public static void addPicture() {
 		Picture p = new Picture(0, 0, true, null,
 				new BufferedImage(150, 50, BufferedImage.TYPE_INT_RGB), 100, 100);
 		Main.getBoard().addShape(p);
 		p.edit();
 	}
+	/**
+	 * Edits the current selected shape.
+	 * */
 	public static void edit() {
 		if (Main.getShapeList().getSelectedShape() == null) {
 			return;
 		}
 		Main.getShapeList().getSelectedShape().edit();
 	}
+	/**
+	 * Removes the current selected shape.
+	 * */
 	public static void remove() {
 		if (Main.getShapeList().getSelectedShape() == null) {
 			return;
@@ -563,6 +590,9 @@ public class Actions {
 			Main.updateShapeList();
 		}
 	}
+	/**
+	 * Shows dialog to change language.
+	 * */
 	public static void showChangeLanguageDialog() {
 		File f = Main.install.getFile("Languages");
 		String[] allLanguages = f.list();
@@ -595,13 +625,10 @@ public class Actions {
 				+ "close the program and reopen it.</html>");
 		}
 	}
-	private static void loadLanguageFromWeb() {
-		if (!WebProjectsUtils.isAccountConnected()) {
-			LDialogs.showMessageDialog(Main.f, "You aren't logged in to your account, please "
-					+ "login to your account.", "Warning", LDialogs.WARNING_MESSAGE);
-			return;
-		}
-		
+	/**
+	 * Shows dialog to load language from web.
+	 * */
+	public static void loadLanguageFromWeb() {
 		String[] allLanguages = Main.website.getResponse("/getLanguagesList.php", "", "GET").split("&&");
 		
 		if (allLanguages == null || allLanguages[0].equals("")) {

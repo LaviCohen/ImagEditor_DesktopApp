@@ -13,9 +13,9 @@ import java.util.LinkedList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import le.gui.dialogs.LDialogs;
 import main.Main;
 import shapes.Shape;
 import shapes.Text;
@@ -87,7 +87,7 @@ public class Board extends JPanel{
 				}
 				if(e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1 
 						&& shapeInFocus instanceof Text){
-					String text = JOptionPane.
+					String text = LDialogs.
 							showInputDialog(cur, "Enter Text:", ((Text)shapeInFocus).getText());
 					if (text != null && !text.equals(((Text)shapeInFocus).getText())) {
 						((Text)shapeInFocus).setText(text);

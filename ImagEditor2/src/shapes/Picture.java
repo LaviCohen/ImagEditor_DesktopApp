@@ -17,12 +17,12 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import effects.EffectsManager;
 import install.DefaultSettings;
+import le.gui.dialogs.LDialogs;
 import main.Main;
 
 public class Picture extends Shape{
@@ -134,8 +134,8 @@ public class Picture extends Shape{
 						try {
 							Picture.this.image = readImage(f);
 						} catch (Exception e2) {
-							JOptionPane.showMessageDialog(editDialog, "Invalid File Destination",
-									"ERROR", JOptionPane.ERROR_MESSAGE);
+							LDialogs.showMessageDialog(editDialog, "Invalid File Destination",
+									"ERROR", LDialogs.ERROR_MESSAGE);
 						}
 					}
 					Picture.this.x = x;
@@ -146,7 +146,7 @@ public class Picture extends Shape{
 					editDialog.dispose();
 					Main.getBoard().repaint();
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(Main.f, "Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
+					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -167,8 +167,8 @@ public class Picture extends Shape{
 						try {
 							Picture.this.image = readImage(f);
 						} catch (Exception e2) {
-							JOptionPane.showMessageDialog(editDialog, "Invalid File Destination",
-									"ERROR", JOptionPane.ERROR_MESSAGE);
+							LDialogs.showMessageDialog(editDialog, "Invalid File Destination",
+									"ERROR", LDialogs.ERROR_MESSAGE);
 						}
 					}
 					Picture.this.x = x;
@@ -178,7 +178,7 @@ public class Picture extends Shape{
 					Main.getShapeList().updateImage(Picture.this);
 					Main.getBoard().repaint();
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(Main.f, "Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
+					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
 				}
 			}
 		});

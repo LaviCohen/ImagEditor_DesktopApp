@@ -10,13 +10,13 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import install.DefaultSettings;
 import install.Resources;
+import le.gui.dialogs.LDialogs;
 import main.Main;
 
 public class Account {
@@ -117,12 +117,12 @@ public class Account {
 								 + Main.myAccount.password);
 					}
 				} catch (AccountUndefindException e2) {
-					JOptionPane.showMessageDialog(Main.f, "Failed to Login");
+					LDialogs.showMessageDialog(Main.f, "Failed to Login");
 					d.setVisible(true);
 					d.toFront();
 					return;
 				}
-				JOptionPane.showMessageDialog(Main.f, "Hello " + Main.myAccount.userName + ", let\'s create some magic!");
+				LDialogs.showMessageDialog(Main.f, "Hello " + Main.myAccount.userName + ", let\'s create some magic!");
 				Main.myAccount.showAccount();
 				d.dispose();
 			}

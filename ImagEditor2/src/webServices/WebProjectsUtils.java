@@ -1,10 +1,9 @@
 package webServices;
 
-import javax.swing.JOptionPane;
-
 import install.saveSystem.Project;
-import le.gui.dialogs.LDialogs;
 import main.Main;
+
+import le.gui.dialogs.LDialogs;
 
 public class WebProjectsUtils {
 	
@@ -13,8 +12,8 @@ public class WebProjectsUtils {
 	}
 	public static Project loadProjectFromWeb(String name) {
 		if (!isAccountConnected()) {
-			JOptionPane.showMessageDialog(Main.f, "You aren't logged in to your account, please "
-					+ "login to your account.", "Warning", JOptionPane.WARNING_MESSAGE);
+			LDialogs.showMessageDialog(Main.f, "You aren't logged in to your account, please "
+					+ "login to your account.", "Warning", LDialogs.WARNING_MESSAGE);
 			return null;
 		}
 		String params = "username=" + Main.myAccount.userName + "&password=" + Main.myAccount.password
@@ -24,8 +23,8 @@ public class WebProjectsUtils {
 	}
 	public static String[] getProjectsList() {
 		if (!isAccountConnected()) {
-			JOptionPane.showMessageDialog(Main.f, "You aren't logged in to your account, please "
-					+ "login to your account.", "Warning", JOptionPane.WARNING_MESSAGE);
+			LDialogs.showMessageDialog(Main.f, "You aren't logged in to your account, please "
+					+ "login to your account.", "Warning", LDialogs.WARNING_MESSAGE);
 			return null;
 		}
 		String params = "username=" + Main.myAccount.userName + "&password=" + Main.myAccount.password;
@@ -51,10 +50,10 @@ public class WebProjectsUtils {
 		System.out.println(params);
 		String response = Main.website.getResponse("/uploadProject.php", params, "POST");
 		if(response.equals("Your username or password are incorrect.")) {
-			JOptionPane.showMessageDialog(Main.f, "We had issues with your request, please try to "
-					+ "logout and re-login to your account.", "Warning", JOptionPane.WARNING_MESSAGE);
+			LDialogs.showMessageDialog(Main.f, "We had issues with your request, please try to "
+					+ "logout and re-login to your account.", "Warning", LDialogs.WARNING_MESSAGE);
 		}else if(response.equals("Project uploaded successfuly")) {
-			JOptionPane.showMessageDialog(null, "We've uploaded your project successfuly");
+			LDialogs.showMessageDialog(null, "We've uploaded your project successfuly");
 		}else {
 			try {
 				throw new Exception("Can't upload project " + p.name + "\n" + response);
