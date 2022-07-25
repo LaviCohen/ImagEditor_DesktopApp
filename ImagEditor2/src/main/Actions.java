@@ -604,7 +604,7 @@ public class Actions {
 		
 		String[] allLanguages = Main.website.getResponse("/getLanguagesList.php", "", "GET").split("&&");
 		
-		if (allLanguages == null || allLanguages.length == 0) {
+		if (allLanguages == null || allLanguages[0].equals("")) {
 			LDialogs.showMessageDialog(Main.f, "There  are no more supported languages yet."
 					, "Warning", LDialogs.WARNING_MESSAGE);
 			return;
