@@ -3,6 +3,7 @@ package webServices;
 import javax.swing.JOptionPane;
 
 import install.saveSystem.Project;
+import le.gui.dialogs.LDialogs;
 import main.Main;
 
 public class WebProjectsUtils {
@@ -37,12 +38,12 @@ public class WebProjectsUtils {
 	}
 	public static void uploadProject(Project p) {
 		if (!isAccountConnected()) {
-			JOptionPane.showMessageDialog(Main.f, "You aren't logged in to your account, please "
-					+ "login to your account.", "Warning", JOptionPane.WARNING_MESSAGE);
+			LDialogs.showMessageDialog(Main.f, "You aren't logged in to your account, please "
+					+ "login to your account.", "Warning", LDialogs.WARNING_MESSAGE);
 			return;
 		}
 		if (p.name == null) {
-			p.name = JOptionPane.showInputDialog("Please enter your project name:");
+			p.name = LDialogs.showInputDialog("Please enter your project name:");
 		}
 		String params = "projectName=" + p.name + "&" + "data=" + p.getData() + "&username=" + 
 				Main.myAccount.userName + "&password=" + Main.myAccount.password + "&app=yes&"

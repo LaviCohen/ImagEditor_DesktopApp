@@ -72,30 +72,39 @@ public class Account {
 	}
 	public static void GUILogin() {
 		JDialog d = new JDialog();
+		d.setBackground(Main.theme.getBackgroundColor());
 		d.setTitle("login");
 		d.setLayout(new BorderLayout());
 		
 		JPanel dataPanel = new JPanel(new GridLayout(3, 1));
 		
+		Main.theme.affect(dataPanel);
+		
 		JPanel userNamePanel = new JPanel(new BorderLayout());
-		userNamePanel.add(new JLabel("User Name:"), BorderLayout.WEST);
+		Main.theme.affect(userNamePanel);
+		userNamePanel.add(Main.theme.affect(new JLabel("User Name:")), BorderLayout.WEST);
 		JTextField userNameField = new JTextField();
+		Main.theme.affect(userNameField);
 		userNamePanel.add(userNameField);
 		
 		dataPanel.add(userNamePanel);
 
 		JPanel passwordPanel = new JPanel(new BorderLayout());
-		passwordPanel.add(new JLabel("Password:"), BorderLayout.WEST);
+		Main.theme.affect(passwordPanel);
+		passwordPanel.add(Main.theme.affect(new JLabel("Password:")), BorderLayout.WEST);
 		JPasswordField passwordField = new JPasswordField();
+		Main.theme.affect(passwordField);
 		passwordPanel.add(passwordField);
 		
 		dataPanel.add(passwordPanel);
 		
 		JCheckBox rememberMe = new JCheckBox("Remember Me", DefaultSettings.keepMeLoggedIn);
+		Main.theme.affect(rememberMe);
 		
 		dataPanel.add(rememberMe);
 		
 		JButton login = new JButton("Login");
+		Main.theme.affect(login);
 		login.addActionListener(new ActionListener() {
 			
 			@Override
@@ -119,7 +128,7 @@ public class Account {
 			}
 		});
 		
-		d.add(new JLabel("<html><font size=5>Login to Your Account</font></html>"), BorderLayout.NORTH);
+		d.add(Main.theme.affect(new JLabel("<html><font size=5>Login to Your Account</font></html>")), BorderLayout.NORTH);
 		d.add(dataPanel);
 		d.add(login, BorderLayout.SOUTH);
 		d.pack();
@@ -127,6 +136,7 @@ public class Account {
 	}
 	public void showAccount() {
 		JDialog d = new JDialog();
+		d.setBackground(Main.theme.getBackgroundColor());
 		d.setLayout(new BorderLayout());
 		ImageIcon icon = null;
 		if (gender.equals(NONE_GENDER)) {
@@ -137,17 +147,18 @@ public class Account {
 			icon = Resources.femaleShadow;
 		}
 		d.add(new JLabel(icon), BorderLayout.NORTH);
-		JPanel personalDataPanel = new JPanel(new GridLayout(3, 1));
-		
+		JPanel personalDataPanel = new JPanel(new GridLayout((this.isPremium?3:2), 1));
+		Main.theme.affect(personalDataPanel);
 		if (this.isPremium) {
-			personalDataPanel.add(new JLabel("<html><i>Premium Account</i></html>"));
+			personalDataPanel.add(Main.theme.affect(new JLabel("<html><i>Premium Account</i></html>")));
 		}
-		personalDataPanel.add(new JLabel("UserName: " + this.userName));
-		personalDataPanel.add(new JLabel("Gender: " + this.gender));
+		personalDataPanel.add(Main.theme.affect(new JLabel("UserName: " + this.userName)));
+		personalDataPanel.add(Main.theme.affect(new JLabel("Gender: " + this.gender)));
 		
 		d.add(personalDataPanel);
 		
 		JButton login = new JButton((this == Account.LOCAL_ACCOUNT?"login":"logout"));
+		Main.theme.affect(login);
 		login.addActionListener(new ActionListener() {
 			
 			@Override

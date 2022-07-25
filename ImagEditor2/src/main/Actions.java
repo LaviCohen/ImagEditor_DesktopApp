@@ -96,7 +96,8 @@ public class Actions {
 		JDialog preferencesDialog = new JDialog(Main.f, "User Preferences");
 		preferencesDialog.getContentPane().setBackground(Main.theme.getBackgroundColor());
 		preferencesDialog.setLayout(new BorderLayout());
-		preferencesDialog.add(new JLabel("Change the default settings:"), BorderLayout.NORTH);
+		preferencesDialog.add(Main.theme.affect(new JLabel("Change the default settings:")),
+				BorderLayout.NORTH);
 		
 		//Using tabbed pane to sort all preferences by categories
 		JTabbedPane tabbedPane = new JTabbedPane();
@@ -224,10 +225,11 @@ public class Actions {
 					+ "login to your account.", "Warning", LDialogs.WARNING_MESSAGE);
 			return;
 		}
+		
 		String[] allProjects = WebProjectsUtils.getProjectsList();
 		
 		if (allProjects == null) {
-			LDialogs.showMessageDialog(Main.f, "You haven't projects on the web."
+			LDialogs.showMessageDialog(Main.f, "You haven't any projects on the web."
 					, "Warning", LDialogs.WARNING_MESSAGE);
 			return;
 		}
@@ -274,6 +276,7 @@ public class Actions {
 		};
 		for (String projectName : allProjects) {
 			JButton b = new JButton(projectName);
+			Main.theme.affect(b);
 			b.addActionListener(listener);
 			d.add(b);
 		}
@@ -311,8 +314,10 @@ public class Actions {
 		saveDialog.setTitle("Save As Project");
 		saveDialog.setLayout(new GridLayout(3, 1));
 		JPanel dirPanel = new JPanel(new BorderLayout());
-		dirPanel.add(new JLabel("Directory:"), Main.translator.getBeforeTextBorder());
+		Main.theme.affect(dirPanel);
+		dirPanel.add(Main.theme.affect(dirPanel), Main.translator.getBeforeTextBorder());
 		JTextField dirField = new JTextField();
+		Main.theme.affect(dirField);
 		dirField.setEditable(false);
 		if (Main.currentProject.folder != null) {
 			dirField.setText(Main.currentProject.folder);
@@ -320,6 +325,7 @@ public class Actions {
 		dirPanel.add(dirField);
 		saveDialog.add(dirPanel);
 		JButton browse = new JButton("Browse");
+		Main.theme.affect(browse);
 		browse.addActionListener(new ActionListener() {
 			
 			@Override
@@ -334,16 +340,20 @@ public class Actions {
 		});
 		dirPanel.add(browse, Main.translator.getAfterTextBorder());
 		JPanel namePanel = new JPanel(new BorderLayout());
-		namePanel.add(new JLabel("Name"), Main.translator.getBeforeTextBorder());
+		Main.theme.affect(namePanel);
+		namePanel.add(Main.theme.affect(new JLabel("Name:")), Main.translator.getBeforeTextBorder());
 		JTextField nameField = new JTextField("project");
+		Main.theme.affect(nameField);
 		if (Main.currentProject.name != null) {
 			nameField.setText(Main.currentProject.name);
 		}
 		namePanel.add(nameField);
-		JLabel suffixLabel = new JLabel("\t.iep");
+		JLabel suffixLabel = new JLabel("<html><t/>.iep</html>");
+		Main.theme.affect(suffixLabel);
 		namePanel.add(suffixLabel, Main.translator.getAfterTextBorder());
 		saveDialog.add(namePanel);
 		JButton save = new JButton("Save");
+		Main.theme.affect(save);
 		save.addActionListener(new ActionListener() {
 			
 			@Override
@@ -372,13 +382,17 @@ public class Actions {
 	public static void openLog() {
 		//General log
 		JDialog generalLog = new JDialog(Main.f);
+		generalLog.getContentPane().setBackground(Main.theme.getBackgroundColor());
 		generalLog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		generalLog.setTitle(Main.translator.get("General Log"));
 		generalLog.setLayout(new BorderLayout());
-		generalLog.add(new JLabel("<html><b>" + Main.translator.get("General Log") + "</b></html>"), BorderLayout.NORTH);
+		generalLog.add(
+				Main.theme.affect(new JLabel("<html><b>" + 
+					Main.translator.get("General Log") + "</b></html>")), BorderLayout.NORTH);
 		String styledText = "<html>" + Main.logger.getLog().replaceAll("\n", "<br/>") + "</html>";
-		generalLog.add(new JScrollPane(new JLabel(styledText)));
+		generalLog.add(Main.theme.affect(new JScrollPane(Main.theme.affect(new JLabel(styledText)))));
 		JButton copyGeneralLog = new JButton("Copy");
+		Main.theme.affect(copyGeneralLog);
 		copyGeneralLog.addActionListener(new ActionListener() {
 			
 			@Override
@@ -396,10 +410,11 @@ public class Actions {
 		errorLog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		errorLog.setTitle(Main.translator.get("Error Log"));
 		errorLog.setLayout(new BorderLayout());
-		errorLog.add(new JLabel("<html><b>" + Main.translator.get("Error Log") + "</b></html>"), BorderLayout.NORTH);
+		errorLog.add(Main.theme.affect(new JLabel("<html><b>" + Main.translator.get("Error Log") + "</b></html>")), BorderLayout.NORTH);
 		styledText = "<html>" + Main.logger.getErrorLog().replaceAll("\n", "<br/>") + "</html>";
-		errorLog.add(new JScrollPane(new JLabel(styledText)));
+		errorLog.add(Main.theme.affect(new JScrollPane(Main.theme.affect(new JLabel(styledText)))));
 		JButton copyErrorLog = new JButton("Copy");
+		Main.theme.affect(copyErrorLog);
 		copyErrorLog.addActionListener(new ActionListener() {
 			
 			@Override
@@ -417,15 +432,19 @@ public class Actions {
 		JDialog reportDialog = new JDialog(Main.f);
 		reportDialog.setTitle("Report");
 		JPanel headerPanel = new JPanel(new BorderLayout());
-		headerPanel.add(new JLabel(Main.translator.get("Title") + ":"), Main.translator.getBeforeTextBorder());
+		headerPanel.add(Main.theme.affect(new JLabel(Main.translator.get("Title") + ":")),
+				Main.translator.getBeforeTextBorder());
 		LTextField titleField = new LTextField("Your report title here");
+		Main.theme.affect(titleField);
 		headerPanel.add(titleField);
 		reportDialog.add(headerPanel, BorderLayout.NORTH);
 		LTextArea contentArea = new LTextArea("Your report content here");
+		Main.theme.affect(contentArea);
 		reportDialog.add(contentArea);
-		JButton done = new JButton("done");
-		reportDialog.add(done, BorderLayout.SOUTH);
-		done.addActionListener(new ActionListener() {
+		JButton send = new JButton("Send");
+		Main.theme.affect(send);
+		reportDialog.add(send, BorderLayout.SOUTH);
+		send.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -447,12 +466,14 @@ public class Actions {
 		saveDialog.setTitle("Export As an Image");
 		saveDialog.setLayout(new GridLayout(3, 1));
 		JPanel dirPanel = new JPanel(new BorderLayout());
-		dirPanel.add(new JLabel("Directory:"), Main.translator.getBeforeTextBorder());
+		dirPanel.add(Main.theme.affect(new JLabel("Directory:")), Main.translator.getBeforeTextBorder());
 		JTextField dirField = new JTextField();
+		Main.theme.affect(dirField);
 		dirField.setEditable(false);
 		dirPanel.add(dirField);
 		saveDialog.add(dirPanel);
 		JButton browse = new JButton("Browse");
+		Main.theme.affect(browse);
 		browse.addActionListener(new ActionListener() {
 			
 			@Override
@@ -467,13 +488,16 @@ public class Actions {
 		});
 		dirPanel.add(browse, Main.translator.getAfterTextBorder());
 		JPanel namePanel = new JPanel(new BorderLayout());
-		namePanel.add(new JLabel("Name"), Main.translator.getBeforeTextBorder());
+		namePanel.add(Main.theme.affect(new JLabel("Name")), Main.translator.getBeforeTextBorder());
 		JTextField nameField = new JTextField("picture");
+		Main.theme.affect(nameField);
 		namePanel.add(nameField);
 		JComboBox<String> typeBox = new JComboBox<String>(new String[] {".png", ".jpg"});
+		Main.theme.affect(typeBox);
 		namePanel.add(typeBox, Main.translator.getAfterTextBorder());
 		saveDialog.add(namePanel);
 		JButton save = new JButton("Save");
+		Main.theme.affect(save);
 		save.addActionListener(new ActionListener() {
 			
 			@Override
@@ -487,8 +511,9 @@ public class Actions {
 									BufferedImage.TYPE_INT_ARGB:BufferedImage.TYPE_INT_RGB);
 					Main.getBoard().paintShapes(bf.getGraphics());
 					JDialog d = new JDialog();
+					d.getContentPane().setBackground(Main.theme.getBackgroundColor());
 					d.setTitle("Preview");
-					d.add(new JLabel(new ImageIcon(bf)));
+					d.add(new JScrollPane(new JLabel(new ImageIcon(bf))));
 					d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					d.pack();
 					d.setVisible(true);

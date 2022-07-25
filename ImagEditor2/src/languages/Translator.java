@@ -4,9 +4,8 @@ package languages;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.JOptionPane;
-
 import install.DefaultSettings;
+import le.gui.dialogs.LDialogs;
 import le.install.AbstractInstall;
 import le.languages.AbstractTranslator;
 import main.Main;
@@ -27,22 +26,21 @@ public class Translator extends AbstractTranslator{
 			displayLanguages[i] = 
 					allLanguages[i - 1].substring(0, allLanguages[i - 1].indexOf('.'));
 		}
-		Object ans = JOptionPane.showInputDialog(Main.f, "Choose Language:", "Languages",
-				JOptionPane.QUESTION_MESSAGE, null, displayLanguages, 
-				getLanguageName());
+		Object ans = LDialogs.showInputDialog(Main.f, "Choose Language:", "Languages",
+				LDialogs.QUESTION_MESSAGE, displayLanguages, getLanguageName());
 		if (ans == null) {
 			return;
 		}
 		setLanguage(ans.toString());
-		if (DefaultSettings.autoSetDefLan || JOptionPane.showConfirmDialog(Main.f,
-					"Do you want to make " + ans + " your default language?") == JOptionPane.YES_OPTION) {
+		if (DefaultSettings.autoSetDefLan || LDialogs.showConfirmDialog(Main.f,
+					"Do you want to make " + ans + " your default language?") == LDialogs.YES_OPTION) {
 			DefaultSettings.language = ans.toString();
 			try {
 				DefaultSettings.saveToFile();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			JOptionPane.showMessageDialog(Main.f, 
+			LDialogs.showMessageDialog(Main.f, 
 				"<html>To change the language properly,<br/>"
 				+ "close the program and reopen it.</html>");
 		}

@@ -17,8 +17,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
+import gui.layouts.ListLayout;
 import install.Resources;
-import layouts.ListLayout;
 import main.Main;
 import shapes.Picture;
 import shapes.Shape;

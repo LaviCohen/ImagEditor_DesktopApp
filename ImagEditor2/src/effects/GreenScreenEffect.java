@@ -18,11 +18,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import le.gui.components.LSlider;
+import le.gui.dialogs.LDialogs;
 import main.Main;
 
 public class GreenScreenEffect extends Effect{
 	int colorRed = 0;
-	int colorGreen = 200;
+	int colorGreen = 255;
 	int colorBlue = 0;
 	
 	int accuracy = 50;
@@ -57,29 +58,32 @@ public class GreenScreenEffect extends Effect{
 		editGreenScreenDialog.setTitle("Green Screen");
 		editGreenScreenDialog.setLayout(new GridLayout(3, 1));
 		JPanel colorPanel = new JPanel(new BorderLayout());
-		colorPanel.add(new JLabel("color:"), BorderLayout.WEST);
+		Main.theme.affect(colorPanel);
+		colorPanel.add(Main.theme.affect(new JLabel("Color:")), BorderLayout.WEST);
 		JLabel colorLabel = new JLabel();
 		colorLabel.setOpaque(true);
 		colorLabel.setBackground(greenScreenColor);
 		colorPanel.add(colorLabel);
 		colorPanel.add(colorLabel);
 		JPanel setColorPanel = new JPanel(new GridLayout(1, 2));
-		JButton chooseColorButton = new JButton("choose color");
+		JButton chooseColorButton = new JButton("Choose Color");
+		Main.theme.affect(chooseColorButton);
 		chooseColorButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				colorLabel.setBackground(JColorChooser.showDialog(
-						editGreenScreenDialog, "Choose Green Screen color", greenScreenColor));
+						editGreenScreenDialog, "Choose Green Screen Color", greenScreenColor));
 			}
 		});
 		setColorPanel.add(chooseColorButton);
-		JButton pickColorButton = new JButton("pick Color");
+		JButton pickColorButton = new JButton("Pick Color");
+		Main.theme.affect(pickColorButton);
 		pickColorButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(editGreenScreenDialog,
+				LDialogs.showMessageDialog(editGreenScreenDialog,
 						"Put the mouse on the color and press space");
 				try {
 					Robot r = new Robot();
@@ -87,7 +91,6 @@ public class GreenScreenEffect extends Effect{
 							MouseInfo.getPointerInfo().getLocation().x, 
 							MouseInfo.getPointerInfo().getLocation().y));
 				} catch (AWTException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -96,9 +99,11 @@ public class GreenScreenEffect extends Effect{
 		colorPanel.add(setColorPanel, Main.translator.getAfterTextBorder());
 		editGreenScreenDialog.add(colorPanel);
 		LSlider accuracySlider = new LSlider("Accuracy:", 0, 255, accuracy);
+		Main.theme.affect(accuracySlider);
 		editGreenScreenDialog.add(accuracySlider);
-		JButton done = new JButton("done");
-		done.addActionListener(new ActionListener() {
+		JButton apply = new JButton("Apply");
+		Main.theme.affect(apply);
+		apply.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -110,7 +115,7 @@ public class GreenScreenEffect extends Effect{
 				Main.getBoard().repaint();
 			}
 		});
-		editGreenScreenDialog.add(done);
+		editGreenScreenDialog.add(apply);
 		editGreenScreenDialog.pack();
 		editGreenScreenDialog.setSize(editGreenScreenDialog.getWidth() + 100, editGreenScreenDialog.getHeight());
 		editGreenScreenDialog.setVisible(true);

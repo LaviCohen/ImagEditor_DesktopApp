@@ -27,11 +27,14 @@ public class BlurEffect extends Effect{
 	@Override
 	public void edit() {
 		JDialog editDialog = new JDialog(Main.f);
+		editDialog.getContentPane().setBackground(Main.theme.getBackgroundColor());
 		editDialog.setLayout(new GridLayout(2, 1));
-		LSlider radiusSlider = new LSlider("Radius", 1, 9, radius);
+		LSlider radiusSlider = new LSlider("Radius:", 1, 9, radius);
+		Main.theme.affect(radiusSlider);
 		editDialog.add(radiusSlider);
-		JButton done = new JButton("done");
-		done.addActionListener(new ActionListener() {
+		JButton apply = new JButton("Apply");
+		Main.theme.affect(apply);
+		apply.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -39,7 +42,7 @@ public class BlurEffect extends Effect{
 				editDialog.dispose();
 			}
 		});
-		editDialog.add(done);
+		editDialog.add(apply);
 		editDialog.pack();
 		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		editDialog.setVisible(true);

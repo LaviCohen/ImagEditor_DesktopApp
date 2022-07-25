@@ -16,13 +16,14 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import le.gui.dialogs.LDialogs;
 import main.Main;
 import shapes.Picture;
 
-public class EffectsManger extends Effect{
+public class EffectsManager extends Effect{
 	public Picture parent;
 	public HashMap<Effect, Boolean> effects = new HashMap<Effect, Boolean>();
-	public EffectsManger(Picture picture) {
+	public EffectsManager(Picture picture) {
 		this.parent = picture;
 	}
 	public BufferedImage getImage(BufferedImage bufferedImage) {
@@ -41,21 +42,24 @@ public class EffectsManger extends Effect{
 	@Override
 	public void edit() {
 		JDialog effectManagerDialog = new JDialog(Main.f);
+		effectManagerDialog.setBackground(Main.theme.getBackgroundColor());
 		effectManagerDialog.setTitle("Effects Manager");
 		effectManagerDialog.setLayout(new BorderLayout());
 		GridLayout effectsLayout = new GridLayout(effects.size(), 1);
 		JPanel allEffects = new JPanel(effectsLayout);
+		Main.theme.affect(allEffects);
 		for (Effect effect : effects.keySet()) {
 			allEffects.add(getPanelForEffect(effect, effectManagerDialog));
 		}
 		effectManagerDialog.add(allEffects);
 		JButton addEffect = new JButton("Add Effect");
+		Main.theme.affect(addEffect);
 		addEffect.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Object ans = JOptionPane.showInputDialog(null, "Choose Effect:", "Add Effect",
-						JOptionPane.PLAIN_MESSAGE, null,
+				Object ans = LDialogs.showInputDialog(Main.f, "Choose Effect:", "Add Effect",
+						LDialogs.QUESTION_MESSAGE,
 						new String[] {"Green Screen", "Blur", "Black & White", "Retro"},
 						null);
 				if (ans == null) {
@@ -81,6 +85,7 @@ public class EffectsManger extends Effect{
 				effectManagerDialog.pack();
 				effect.edit();
 				parent.lastDrawn = null;
+				Main.getBoard().repaint();
 			}
 		});
 		effectManagerDialog.add(addEffect, BorderLayout.SOUTH);
@@ -107,7 +112,6 @@ public class EffectsManger extends Effect{
 			
 			@Override
 			public void componentHidden(ComponentEvent e) {
-				parent.lastDrawn = null;
 				Main.getBoard().repaint();
 			}
 		});
@@ -115,19 +119,25 @@ public class EffectsManger extends Effect{
 	}
 	public JPanel getPanelForEffect(Effect effect, JDialog dialog) {
 		JPanel panel = new JPanel(new BorderLayout());
+		Main.theme.affect(panel);
 		JCheckBox active = new JCheckBox();
+		Main.theme.affect(active);
 		active.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				effects.put(effect, active.isSelected());
+				parent.lastDrawn = null;
+				Main.getBoard().repaint();
 			}
 		});
 		active.setSelected(effects.get(effect));
 		panel.add(active, Main.translator.getBeforeTextBorder());
-		panel.add(new JLabel(effect.getClass().getSimpleName()));
+		panel.add(Main.theme.affect(new JLabel(effect.getClass().getSimpleName())));
 		JPanel actionsPanel = new JPanel(new GridLayout(1, 2));
+		Main.theme.affect(actionsPanel);
 		JButton edit = new JButton("Edit Effect");
+		Main.theme.affect(edit);
 		edit.addActionListener(new ActionListener() {
 			
 			@Override
@@ -137,6 +147,7 @@ public class EffectsManger extends Effect{
 		});
 		actionsPanel.add(edit);
 		JButton remove = new JButton("Remove Effect");
+		Main.theme.affect(remove);
 		remove.addActionListener(new ActionListener() {
 			
 			@Override
@@ -151,7 +162,7 @@ public class EffectsManger extends Effect{
 		panel.add(actionsPanel, Main.translator.getAfterTextBorder());
 		return panel;
 	}
-	public EffectsManger(String s, Picture parent) {
+	public EffectsManager(String s, Picture parent) {
 		String[] data = s.split("^");
 		int effectsNum = data.length/2;
 		for (int i = 0; i < effectsNum; i++) {

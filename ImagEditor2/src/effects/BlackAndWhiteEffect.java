@@ -38,18 +38,24 @@ public class BlackAndWhiteEffect extends Effect{
 	@Override
 	public void edit() {
 		JDialog editBlackAwhiteDialog = new JDialog(Main.f);
+		editBlackAwhiteDialog.getContentPane().setBackground(Main.theme.getBackgroundColor());
 		editBlackAwhiteDialog.setTitle("Edit Black & White");
 		editBlackAwhiteDialog.setLayout(new BorderLayout());
 		JPanel slidersPanel = new JPanel(new GridLayout(3, 1));
-		LSlider red = new LSlider("red:", 0, 255, redStrength);
+		Main.theme.affect(slidersPanel);
+		LSlider red = new LSlider("Red:", 0, 255, redStrength);
+		Main.theme.affect(red);
 		slidersPanel.add(red);
-		LSlider green = new LSlider("green:", 0, 255, greenStrength);
+		LSlider green = new LSlider("Green:", 0, 255, greenStrength);
+		Main.theme.affect(green);
 		slidersPanel.add(green);
-		LSlider blue = new LSlider("blue:", 0, 255, blueStrength);
+		LSlider blue = new LSlider("Blue:", 0, 255, blueStrength);
+		Main.theme.affect(blue);
 		slidersPanel.add(blue);
 		editBlackAwhiteDialog.add(slidersPanel);
-		JButton done = new JButton("done");
-		done.addActionListener(new ActionListener() {
+		JButton apply = new JButton("Apply");
+		Main.theme.affect(apply);
+		apply.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -60,7 +66,7 @@ public class BlackAndWhiteEffect extends Effect{
 				Main.getBoard().repaint();
 			}
 		});
-		editBlackAwhiteDialog.add(done, BorderLayout.SOUTH);
+		editBlackAwhiteDialog.add(apply, BorderLayout.SOUTH);
 		editBlackAwhiteDialog.pack();
 		editBlackAwhiteDialog.setVisible(true);
 	}

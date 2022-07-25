@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import effects.EffectsManger;
+import effects.EffectsManager;
 import install.DefaultSettings;
 import main.Main;
 
@@ -35,7 +35,7 @@ public class Picture extends Shape{
 	int height;
 	
 	//Effects
-	EffectsManger effectsManger = new EffectsManger(this);
+	EffectsManager effectsManger = new EffectsManager(this);
 	
 	//Constructor
 	public Picture(int x, int y, boolean visible, String name, BufferedImage img, int width, int height) {
@@ -234,10 +234,10 @@ public class Picture extends Shape{
 	public void setHeight(int height) {
 		this.height = height;
 	}
-	public EffectsManger getEffectsManger() {
+	public EffectsManager getEffectsManger() {
 		return effectsManger;
 	}
-	public void setEffectsManger(EffectsManger effectsManger) {
+	public void setEffectsManger(EffectsManager effectsManger) {
 		this.effectsManger = effectsManger;
 	}
 	public Picture copy() {
@@ -263,7 +263,7 @@ public class Picture extends Shape{
 		this(Integer.parseInt(data[0]), Integer.parseInt(data[1]), Boolean.parseBoolean(data[2]),
 				data[3], decodeSourceImage(data[4]), Integer.parseInt(data[5]), 
 				Integer.parseInt(data[6]));
-		this.effectsManger = new EffectsManger(data[7], this);
+		this.effectsManger = new EffectsManager(data[7], this);
 	}
 	@Override
 	public String encodeShape() {

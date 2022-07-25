@@ -45,9 +45,11 @@ public class RetroEffect extends Effect{
 		JDialog editDialog = new JDialog(Main.f);
 		editDialog.setTitle("Edit Retro Effect");
 		editDialog.setLayout(new GridLayout(2, 1));
-		LSlider varietySlider = new LSlider("Variety", 0, 255, variety);
+		LSlider varietySlider = new LSlider("Variety:", 0, 255, variety);
+		Main.theme.affect(varietySlider);
 		editDialog.add(varietySlider);
 		JButton apply = new JButton("Apply");
+		Main.theme.affect(apply);
 		apply.addActionListener(new ActionListener() {
 			
 			@Override
