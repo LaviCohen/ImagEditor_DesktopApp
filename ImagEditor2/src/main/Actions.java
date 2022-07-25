@@ -609,7 +609,6 @@ public class Actions {
 					, "Warning", LDialogs.WARNING_MESSAGE);
 			return;
 		}
-		
 		JDialog d = new JDialog(Main.f, "Choose Language");
 		
 		d.setLayout(new GridLayout(allLanguages.length, 1));
