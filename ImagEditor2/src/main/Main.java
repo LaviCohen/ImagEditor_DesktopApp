@@ -145,8 +145,8 @@ public class Main {
 	};
 	public static void main(String[] args) {
 		startup();
-		checkIfPreviousRunFailed();
 		createProgramVars();
+		checkIfPreviousRunFailed();
 		initializeLogger();
 		applyExceptionsHandling();
 		checkIfInstalled();
@@ -154,14 +154,19 @@ public class Main {
 		initResources();
 		initProgramFrame();
 		initJMenuBar();
-		initBoardScrollPane();
 		initControlBar();
-		updateShapeList();
+		initProject();
+		initBoardScrollPane();
+		updateSizeLabel();
 		initSideBarPanel();
+		updateShapeList();
 		applyThemeColors();
 		displayFrame();
 		finishStartup();
 		websiteChecks();
+	}
+	private static void initProject() {
+		Main.currentProject = new Project();
 	}
 	private static void initResources() {
 		Resources.init();
@@ -189,7 +194,6 @@ public class Main {
 		Main.logger = new Logger(install);
 		Main.website = new Website("http://localhost/ImagEditorWebsite/");
 		Main.myAccount = Account.LOCAL_ACCOUNT;
-		Main.currentProject = new Project();
 	}
 	private static void websiteChecks() {
 		Main.website.checkUpdate();
@@ -198,9 +202,9 @@ public class Main {
 		}
 	}
 	private static void initBoardScrollPane() {
-		boardScrollPane.applyComponentOrientation(ComponentOrientation.UNKNOWN);
 		boardScrollPane = new JScrollPane(getBoard(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		boardScrollPane.applyComponentOrientation(ComponentOrientation.UNKNOWN);
 		f.add(boardScrollPane, BorderLayout.CENTER);
 	}
 	private static void initProgramFrame() {
@@ -320,18 +324,17 @@ public class Main {
 	public static void applyThemeColors() {
 		System.out.println("Appling " + (Main.theme.isLightMode()?"Light":"Dark") + " Mode");
 		//Control panel
-		controlBar.setBackground(Main.theme.getBackgroundColor());
-		sizeLabel.setForeground(Main.theme.getTextColor());
-		zoomSlider.setBackground(Main.theme.getBackgroundColor());
-		zoomSlider.subject.setForeground(Main.theme.getTextColor());
+		Main.theme.affect(controlBar);
+		Main.theme.affect(sizeLabel);
+		Main.theme.affect(zoomSlider);
 		//Menu bar
-		lMenu.setColor(Main.theme.getBackgroundColor(), Main.theme.getTextColor());
+		Main.theme.affect(lMenu);
 		//Side bar
-		sideBarPanel.setBackground(Main.theme.getBackgroundColor());
-		shapeList.setBackground(Main.theme.getBackgroundColor());
-		layersLabel.setForeground(Main.theme.getTextColor());
+		Main.theme.affect(sideBarPanel);
+		Main.theme.affect(shapeList);
+		Main.theme.affect(layersLabel);
 		//Board
-		getBoard().setBackground(Main.theme.getBackgroundColor());
+		Main.theme.affect(getBoard());
 	}
 	public static void tryToLogIn() {
 		String data = Decoder.decode(Main.install.getText("Data/Settings/user.txt"));
@@ -352,7 +355,7 @@ public class Main {
 		zoomSlider = new LSlider(Main.translator.get("Zoom") + ":",
 				10, 200, DefaultSettings.paperZoom);
 		controlBar = new JPanel(new BorderLayout());
-		sizeLabel = new JLabel(getBoard().paper.getWidth() + "x" + getBoard().paper.getHeight());
+		sizeLabel = new JLabel("");
 		controlBar.add(getSizeLabel(), Main.translator.getAfterTextBorder());
 		zoomSlider.slider.addChangeListener(new ChangeListener() {
 
@@ -490,7 +493,9 @@ public class Main {
 	}
 	public static JPopupMenu getPopupMenuForShape(Shape s) {
 		JPopupMenu popup = new JPopupMenu("Options");
+		Main.theme.affect(popup);
 		JMenuItem setName = new JMenuItem(Main.translator.get("Set Name"));
+		Main.theme.affect(setName);
 		setName.addActionListener(new ActionListener() {
 
 			@Override
@@ -502,6 +507,7 @@ public class Main {
 		});
 		popup.add(setName);
 		JMenuItem edit = new JMenuItem(Main.translator.get("Edit"));
+		Main.theme.affect(edit);
 		edit.addActionListener(new ActionListener() {
 
 			@Override
@@ -515,6 +521,7 @@ public class Main {
 		}
 		popup.add(new JSeparator());
 		JMenuItem editEffects = new JMenuItem("Edit Effects");
+		Main.theme.affect(editEffects);
 		editEffects.addActionListener(new ActionListener() {
 
 			@Override
@@ -523,7 +530,8 @@ public class Main {
 			}
 		});
 		popup.add(editEffects);
-		JMenuItem copy = new JMenuItem("Copy as image");
+		JMenuItem copy = new JMenuItem("Copy as Image");
+		Main.theme.affect(copy);
 		copy.addActionListener(new ActionListener() {
 
 			@Override
@@ -554,6 +562,6 @@ public class Main {
 		Main.updateSizeLabel();
 	}
 	public static void updateSizeLabel() {
-		Main.sizeLabel.setText(getBoard().getPaperWidth() + "*" + getBoard().getPaperHeight());
+		Main.sizeLabel.setText(getBoard().getPaperWidth() + "px X " + getBoard().getPaperHeight() + "px");
 	}
 }
