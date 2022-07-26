@@ -162,6 +162,16 @@ public class Actions {
 		
 		preferencesDialog.add(tabbedPane);
 		
+		//Appearance tab
+		JPanel appearancePrefsPanel = new JPanel(new GridLayout(1, 1));
+		
+		//Dark mode
+		JCheckBox darkModeCheckBox = new JCheckBox("Dark Mode", DefaultSettings.darkMode);
+		Main.theme.affect(darkModeCheckBox);
+		appearancePrefsPanel.add(darkModeCheckBox);
+		
+		tabbedPane.addTab("Appearance", appearancePrefsPanel);
+		
 		//Advanced tab (save logs and CPU vs RAM priority)
 		JPanel advancedPrefsPanel = new JPanel(new GridLayout(2, 1));
 		
@@ -206,6 +216,12 @@ public class Actions {
 				DefaultSettings.language = chooseLanguge.getSelectedItem().toString();
 				//Updating auto-set default language
 				DefaultSettings.autoSetDefLan = autoSetDefLan.isSelected();
+				//Updating dark mode
+				DefaultSettings.darkMode = darkModeCheckBox.isSelected();
+				//Updating save logs
+				DefaultSettings.saveLogs = saveLogsCheckBox.isSelected();
+				//Updating use more RAM
+				DefaultSettings.useMoreRAM = useRAMCheckBox.isSelected();
 				//Saving the settings to the default settings file
 				try {
 					DefaultSettings.saveToFile();
@@ -566,8 +582,7 @@ public class Actions {
 	 * Adds Picture to the current project.
 	 * */
 	public static void addPicture() {
-		Picture p = new Picture(0, 0, true, null,
-				new BufferedImage(150, 50, BufferedImage.TYPE_INT_RGB), 100, 100);
+		Picture p = new Picture(0, 0, true, null, Resources.defaultImage, 150, 50);
 		Main.getBoard().addShape(p);
 		p.edit();
 	}

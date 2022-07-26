@@ -337,9 +337,9 @@ public class Main {
 		Main.theme.affect(getBoard());
 	}
 	public static void tryToLogIn() {
-		String data = Decoder.decode(Main.install.getText("Data/Settings/user.txt"));
-		System.out.println(data);
+		String data = Main.install.getText("Data/Settings/user.txt");
 		if (data != null && !data.equals("")) {
+			data = Decoder.decode(data);
 			String[] loginData = data.split("\n");
 			try {
 				Account.login(loginData[0], loginData[1]);
@@ -481,7 +481,7 @@ public class Main {
 				{ Main.translator.get("File"), Main.translator.get("Open Project from this Computer") + "#o",
 						Main.translator.get("Open Project from Web"), Main.translator.get("Save Project") + "#s",
 						Main.translator.get("Save Project As...") + "#@s", Main.translator.get("Upload Project"),
-						Main.translator.get("Export Image") + "#e", Main.translator.get("Set Paper Size"),
+						Main.translator.get("Export Image") + "#@e", Main.translator.get("Set Paper Size"),
 						Main.translator.get("Preferences"), Main.translator.get("Set Language"), 
 						Main.translator.get("Log"), Main.translator.get("Send Report"),
 						Main.translator.get("Visit Website") },

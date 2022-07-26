@@ -17,16 +17,12 @@ import javax.swing.JTextField;
 import le.gui.dialogs.LDialogs;
 import main.Main;
 
-public class Rectangle extends Shape{
+public class Rectangle extends StretcableShpae{
 
-	int width;
-	int height;
 	Color color;
 	
 	public Rectangle(int x, int y, boolean visible, String name, int width, int height, Color color) {
-		super(x, y, visible, name);
-		this.width = width;
-		this.height = height;
+		super(x, y, visible, name, width, height);
 		this.color = color;
 	}
 

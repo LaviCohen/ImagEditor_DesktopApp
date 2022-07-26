@@ -1,6 +1,7 @@
 package install;
 
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -10,7 +11,7 @@ import shapes.Picture;
 
 /**
  * The resources class holds all the resources used in the program.
- * It is loading them once, to save disk requests.
+ * It is loading them once, to prevent disk request every time  they are being used.
  * */
 public class Resources {
 	public static ImageIcon editIcon;
@@ -26,6 +27,7 @@ public class Resources {
 	public static ImageIcon loading;
 	public static int iconsWidth = 50;
 	public static int iconsHeight = 50;
+	public static BufferedImage defaultImage;
 	public static void init(){
 		System.out.println("loading images");
 		try {
@@ -50,6 +52,8 @@ public class Resources {
 			logo = new ImageIcon(ImageIO.read(
 					Resources.class.getResourceAsStream("/images/logo.png")));
 			loading = new ImageIcon(Resources.class.getResource("/images/loading.gif"));
+			defaultImage = ImageIO.read(Resources.class.getResource("/images/default.jpg"));
+			
 		} catch (IOException e) {
 			System.out.println("Error in loading images");
 			e.printStackTrace();

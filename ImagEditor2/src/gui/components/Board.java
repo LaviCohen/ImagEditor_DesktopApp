@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import le.gui.dialogs.LDialogs;
 import main.Main;
 import shapes.Shape;
+import shapes.StretcableShpae;
 import shapes.Text;
 
 public class Board extends JPanel{
@@ -28,6 +29,7 @@ public class Board extends JPanel{
 	public Color backgroundColor;
 	public BufferedImage paper;
 	public LinkedList<Shape> shapes = new LinkedList<Shape>();
+	
 	public boolean inited = false;
 	
 	public Board(Color color, int width, int height) {
@@ -40,25 +42,29 @@ public class Board extends JPanel{
 		inited = true;
 		final Board cur = this;
 		MouseAdapter mouseListener = new MouseAdapter() {
+			Shape shapeInFocus = null;
+			
+			
 			int firstX = 0;
 			int firstY = 0;
-			int firstShapeX = 0;
-			int firstShapeY = 0;
-			double movementInX = 0;
-			double movementInY = 0;
+			int movementInX = 0;
+			int movementInY = 0;
+			
 			@Override
 			public void mousePressed(MouseEvent e) {
 				firstX = e.getXOnScreen();
 				firstY = e.getYOnScreen();
 				shapeInFocus = getShapeAt(
 						(int)((e.getX() - getLeftGap()) / getZoomRate()),
-						(int)((e.getY() - getUpGap()) / getZoomRate()));
+						(int)((e.getY() - getTopGap()) / getZoomRate()));
+				if (shapeInFocus != null && !shapeInFocus.isVisible()) {
+					shapeInFocus = null;
+				}
 				if (shapeInFocus != null) {
-					firstShapeX = shapeInFocus.getX();
-					firstShapeY = shapeInFocus.getY();
+					touchedWrapper = touchWrapper(e);
 				}
 			}
-			private double getUpGap() {
+			private double getTopGap() {
 				return ((cur.getHeight() - (cur.paper.getHeight() * getZoomRate()))/2);
 			}
 			private double getLeftGap() {
@@ -68,21 +74,19 @@ public class Board extends JPanel{
 			public void mouseReleased(MouseEvent e) {
 				firstX = 0;
 				firstY = 0;
-				firstShapeX = 0;
-				firstShapeY = 0;
 				movementInX = 0;
 				movementInY = 0;
 				shapeInFocus = null;
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.out.println(e.getClickCount());
 				shapeInFocus = getShapeAt(
 						(int)((e.getX() - getLeftGap()) / getZoomRate()),
-						(int)((e.getY() - getUpGap()) / getZoomRate()));
+						(int)((e.getY() - getTopGap()) / getZoomRate()));
 				if (shapeInFocus != null && !shapeInFocus.isVisible()) {
 					shapeInFocus = null;
 				}
+				Main.getShapeList().setSelection(shapeInFocus);
 				if (e.getButton() == MouseEvent.BUTTON3) {
 					if (shapeInFocus != null) {
 						Main.getPopupMenuForShape(shapeInFocus).show(cur, e.getX(), e.getY());
@@ -99,18 +103,80 @@ public class Board extends JPanel{
 					}
 				}
 			}
-			Shape shapeInFocus = null;
+			public static final int TOP_LEFT_WRAPPER = 1;
+			public static final int TOP_RIGHT_WRAPPER = 2;
+			public static final int BOTTOM_LEFT_WRAPPER = 3;
+			public static final int BOTTOM_RIGHT_WRAPPER = 4;
+			public int touchedWrapper = 0;
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				if (shapeInFocus != null) {
-					movementInX += (e.getXOnScreen() - firstX) * 100.0 / Main.getZoomSlider().getValue();
-					movementInY += (e.getYOnScreen() - firstY) * 100.0 / Main.getZoomSlider().getValue();
-					shapeInFocus.setX(firstShapeX + (int)movementInX);
-					shapeInFocus.setY(firstShapeY + (int)movementInY);
+					movementInX = (int)(e.getXOnScreen() - firstX) * 100 / Main.getZoomSlider().getValue();
+					movementInY = (int)(e.getYOnScreen() - firstY) * 100 / Main.getZoomSlider().getValue();
+					switch(touchedWrapper){
+					case 0:
+						shapeInFocus.setX(shapeInFocus.getX() + movementInX);
+						shapeInFocus.setY(shapeInFocus.getY() + movementInY);
+						break;
+					case TOP_LEFT_WRAPPER:
+						shapeInFocus.setX(shapeInFocus.getX() + movementInX);
+						shapeInFocus.setY(shapeInFocus.getY() + movementInY);
+						if (shapeInFocus instanceof StretcableShpae) {
+							((StretcableShpae)shapeInFocus).strecthBy(-movementInX, -movementInY);
+						}
+						break;
+					case TOP_RIGHT_WRAPPER:
+						shapeInFocus.setY(shapeInFocus.getY() + movementInY);
+						if (shapeInFocus instanceof StretcableShpae) {
+							((StretcableShpae)shapeInFocus).strecthBy(movementInX, -movementInY);
+						}
+						break;
+					case BOTTOM_LEFT_WRAPPER:
+						shapeInFocus.setX(shapeInFocus.getX() + movementInX);
+						if (shapeInFocus instanceof StretcableShpae) {
+							((StretcableShpae)shapeInFocus).strecthBy(-movementInX, movementInY);
+						}
+						break;
+					case BOTTOM_RIGHT_WRAPPER:
+						if (shapeInFocus instanceof StretcableShpae) {
+							((StretcableShpae)shapeInFocus).strecthBy(movementInX, movementInY);
+						}
+						break;
+					}
 					firstX = e.getXOnScreen();
 					firstY = e.getYOnScreen();
 					Main.getBoard().repaint();
 				}
+			}
+			public int screenToBoardCoordsX(int screenX) {
+				return (int)((screenX - getLeftGap()) / getZoomRate());
+			}
+			public int screenToBoardCoordsY(int screenY) {
+				return (int)((screenY - getTopGap()) / getZoomRate());
+			}
+			public int touchWrapper(MouseEvent e) {
+				int x = screenToBoardCoordsX(e.getX());
+				int y = screenToBoardCoordsY(e.getY());
+				
+				double distance = 5;
+				
+				if (distance(x + 3, y + 3, shapeInFocus.getX(), shapeInFocus.getY()) < distance) {
+					return TOP_LEFT_WRAPPER;
+				}
+				if (distance(x - 3, y + 3, shapeInFocus.getX() + shapeInFocus.getWidthOnBoard(), shapeInFocus.getY()) < distance) {
+					return TOP_RIGHT_WRAPPER;
+				}
+				if (distance(x + 3, y - 3, shapeInFocus.getX(), shapeInFocus.getY() + shapeInFocus.getHeightOnBoard()) < distance) {
+					return BOTTOM_LEFT_WRAPPER;
+				}
+				if (distance(x - 3, y - 3, shapeInFocus.getX() + shapeInFocus.getWidthOnBoard(), shapeInFocus.getY() + shapeInFocus.getHeightOnBoard()) < distance) {
+					return BOTTOM_RIGHT_WRAPPER;
+				}
+				
+				return 0;
+			}
+			public double distance(int x1, int y1, int x2, int y2) {
+				return Math.sqrt(Math.abs(x1 - x2) + Math.abs(y1 - y2));
 			}
 		};
 		this.addMouseListener(mouseListener);
@@ -129,6 +195,9 @@ public class Board extends JPanel{
 	public void repaint() {
 		if (inited) {
 			paintShapes();
+			if (Main.shapeList != null) {
+				paintCornerWrappers(Main.getShapeList().getSelectedShape());
+			}
 			displayLabel.setIcon(new ImageIcon(
 					getScaledImage(paper, 
 							(int)(paper.getWidth() * getZoomRate()),
@@ -136,6 +205,24 @@ public class Board extends JPanel{
 		}
 		super.repaint();
 		System.gc();
+	}
+	public void paintCornerWrappers(Shape selectedShape) {
+		if (selectedShape == null) {
+			return;
+		}
+		g.setColor(Color.GRAY);
+		//Top-Left wrapper
+		g.fillRect(selectedShape.getX(), 
+				selectedShape.getY(), 9, 9);
+		//Top-Right wrapper
+		g.fillRect(selectedShape.getX(), 
+				selectedShape.getY() + selectedShape.getHeightOnBoard() - 9, 9, 9);
+		//Bottom-Left wrapper
+		g.fillRect(selectedShape.getX() + selectedShape.getWidthOnBoard() - 9,
+				selectedShape.getY(), 9, 9);
+		//Bottom-Right wrapper
+		g.fillRect(selectedShape.getX() + selectedShape.getWidthOnBoard() - 9,
+				selectedShape.getY() + selectedShape.getHeightOnBoard() - 9, 9, 9);
 	}
 	private void paintShapes() {
 		paintShapes(g);

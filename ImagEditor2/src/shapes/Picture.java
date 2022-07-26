@@ -25,24 +25,18 @@ import install.DefaultSettings;
 import le.gui.dialogs.LDialogs;
 import main.Main;
 
-public class Picture extends Shape{
+public class Picture extends StretcableShpae{
 	
 	BufferedImage image;
 	public BufferedImage lastDrawn = null;
-	
-	//Picture size
-	int width;
-	int height;
 	
 	//Effects
 	EffectsManager effectsManger = new EffectsManager(this);
 	
 	//Constructor
 	public Picture(int x, int y, boolean visible, String name, BufferedImage img, int width, int height) {
-		super(x, y, visible, name);
+		super(x, y, visible, name, width, height);
 		this.image = img;
-		this.width = width;
-		this.height = height;
 	}
 	//Methods
 	@Override
@@ -64,11 +58,11 @@ public class Picture extends Shape{
 	}
 	@Override
 	public int getWidthOnBoard() {
-		return (image.getWidth() * width)/100;
+		return getWidth();
 	}
 	@Override
 	public int getHeightOnBoard() {
-		return (image.getHeight() * height)/100;
+		return getHeight();
 	}
 	@Override
 	public void edit() {
@@ -85,15 +79,28 @@ public class Picture extends Shape{
 		Main.theme.affect(yField);
 		positionPanel.add(yField);
 		editDialog.add(positionPanel);
-		JPanel sizePanel = new JPanel(new GridLayout(1, 4));
-		sizePanel.add(Main.theme.affect(new JLabel("Width:")));
+		JPanel sizePanel = new JPanel(new BorderLayout());
+		JPanel xNyPanel = new JPanel(new GridLayout(1, 4));
+		xNyPanel.add(Main.theme.affect(new JLabel("Width:")));
 		JTextField widthField = new JTextField(this.width + "");
 		Main.theme.affect(widthField);
-		sizePanel.add(widthField);
-		sizePanel.add(Main.theme.affect(new JLabel("Height:")));
+		xNyPanel.add(widthField);
+		xNyPanel.add(Main.theme.affect(new JLabel("Height:")));
 		JTextField heightField = new JTextField(this.height + "");
 		Main.theme.affect(heightField);
-		sizePanel.add(heightField);
+		xNyPanel.add(heightField);
+		sizePanel.add(xNyPanel);
+		JButton toNaturalImageSizeButton = new JButton("To Natural Image Size");
+		Main.theme.affect(toNaturalImageSizeButton);
+		toNaturalImageSizeButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				widthField.setText(Picture.this.image.getWidth() + "");
+				heightField.setText(Picture.this.image.getHeight() + "");
+			}
+		});
+		sizePanel.add(toNaturalImageSizeButton, Main.translator.getAfterTextBorder());
 		editDialog.add(sizePanel);
 		JPanel sourcePanel = new JPanel(new BorderLayout());
 		sourcePanel.add(Main.theme.affect(new JLabel("Source:")),
@@ -221,18 +228,6 @@ public class Picture extends Shape{
 	}
 	public void setLastDrawn(BufferedImage lastDrawn) {
 		this.lastDrawn = lastDrawn;
-	}
-	public int getWidth() {
-		return width;
-	}
-	public void setWidth(int width) {
-		this.width = width;
-	}
-	public int getHeight() {
-		return height;
-	}
-	public void setHeight(int height) {
-		this.height = height;
 	}
 	public EffectsManager getEffectsManger() {
 		return effectsManger;
