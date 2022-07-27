@@ -16,7 +16,6 @@ public class BlurEffect extends Effect{
 	int radius = 3;
 	@Override
 	public BufferedImage getImage(BufferedImage bf) {
-//		BufferedImage bufferedImage = new BufferedImage(bf.getWidth(), bf.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		for (int i = 0; i < bf.getWidth(); i++) {
 			for (int j = 0; j < bf.getHeight(); j++) {
 				bf.setRGB(i, j, getAverageColor(bf, i, j, radius).getRGB());

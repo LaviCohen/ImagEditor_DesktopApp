@@ -20,6 +20,7 @@ import le.gui.dialogs.LDialogs;
 import le.gui.dialogs.LFontChooser;
 import le.gui.dialogs.LFontChooser.FontHolder;
 import main.Main;
+import shapes.abstractShapes.Shape;
 
 public class Text extends Shape{
 	Color color;
@@ -36,7 +37,7 @@ public class Text extends Shape{
 	public void draw(Graphics g) {
 		g.setColor(color);
 		g.setFont(font);
-		g.drawString(text, x, y + getHeightOnBoard());
+		g.drawString(text, (int)x, (int)y + getHeightOnBoard());
 	}
 	@Override
 	public void edit() {
@@ -96,8 +97,8 @@ public class Text extends Shape{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					int x = Integer.parseInt(xField.getText());
-					int y = Integer.parseInt(yField.getText());
+					double x = Double.parseDouble(xField.getText());
+					double y = Double.parseDouble(yField.getText());
 					String text = textField.getText();
 					Color color = colorLabel.getBackground();
 					Text.this.x = x;

@@ -15,12 +15,10 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
+
 import le.gui.dialogs.LDialogs;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -37,10 +35,7 @@ import le.gui.components.LMenu;
 import le.gui.components.LSlider;
 import le.log.ExceptionUtils;
 import le.log.Logger;
-import shapes.Picture;
-import shapes.Rectangle;
-import shapes.Shape;
-import shapes.Text;
+import shapes.abstractShapes.Shape;
 import webServices.Account;
 import webServices.AccountUndefindException;
 import webServices.Website;
@@ -492,57 +487,6 @@ public class Main {
 						, Main.translator.get("Code") + "@c"},
 				{ Main.translator.get("Account"), Main.translator.get("Profile") } }, menuListener);
 		f.setJMenuBar(lMenu);
-	}
-	public static JPopupMenu getPopupMenuForShape(Shape s) {
-		JPopupMenu popup = new JPopupMenu("Options");
-		Main.theme.affect(popup);
-		JMenuItem setName = new JMenuItem(Main.translator.get("Set Name"));
-		Main.theme.affect(setName);
-		setName.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				s.setName(LDialogs
-						.showInputDialog(null, Main.translator.get("Enter the new name for") + " \"" + s.getName() + "\"", null));
-				Main.updateShapeList();
-			}
-		});
-		popup.add(setName);
-		JMenuItem edit = new JMenuItem(Main.translator.get("Edit"));
-		Main.theme.affect(edit);
-		edit.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				s.edit();
-			}
-		});
-		popup.add(edit);
-		if (s instanceof Text || s instanceof Rectangle) {
-			return popup;
-		}
-		popup.add(new JSeparator());
-		JMenuItem editEffects = new JMenuItem("Edit Effects");
-		Main.theme.affect(editEffects);
-		editEffects.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				((Picture) s).editEffects();
-			}
-		});
-		popup.add(editEffects);
-		JMenuItem copy = new JMenuItem("Copy as Image");
-		Main.theme.affect(copy);
-		copy.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Main.getBoard().addShape(((Picture) s).copy());
-			}
-		});
-		popup.add(copy);
-		return popup;
 	}
 	public static ShapeList getShapeList() {
 		return shapeList;

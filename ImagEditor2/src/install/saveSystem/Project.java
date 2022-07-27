@@ -9,7 +9,7 @@ import java.util.Scanner;
 import gui.components.Board;
 import install.DefaultSettings;
 import main.Main;
-import shapes.Shape;
+import shapes.abstractShapes.Shape;
 
 public class Project {
 	

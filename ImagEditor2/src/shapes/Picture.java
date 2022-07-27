@@ -17,24 +17,42 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
 import effects.EffectsManager;
 import install.DefaultSettings;
 import le.gui.dialogs.LDialogs;
 import main.Main;
+import shapes.abstractShapes.StretcableShpae;
 
 public class Picture extends StretcableShpae{
 	
+	public static final int MINIMUM = 5;
+	
+	//Source Image
 	BufferedImage image;
+	
+	//Last Drawn Image, For CPU Saving
 	public BufferedImage lastDrawn = null;
+	
+	//Cut Variables
+	double cutFromLeft = 0;
+	double cutFromTop = 0;
+	double cutFromRight = 0;
+	double cutFromBottom = 0;
+	
+	//Is the Picture currently cut
+	private boolean isCutting;
 	
 	//Effects
 	EffectsManager effectsManger = new EffectsManager(this);
 	
 	//Constructor
-	public Picture(int x, int y, boolean visible, String name, BufferedImage img, int width, int height) {
+	public Picture(int x, int y, boolean visible, String name, BufferedImage img, double width, double height) {
 		super(x, y, visible, name, width, height);
 		this.image = img;
 	}
@@ -44,25 +62,25 @@ public class Picture extends StretcableShpae{
 		if (!DefaultSettings.useMoreRAM) {
 			//In case the setting has been changed while the program is running, so previous lastDrawn won't stuck in the memory
 			lastDrawn = null;
-			g.drawImage(getImageToDisplay(), x, y, getWidthOnBoard(), getHeightOnBoard(), null);
+			g.drawImage(getImageToDisplay(), (int)x, (int)y, getWidthOnBoard(), getHeightOnBoard(), null);
 		}
 		if (lastDrawn == null) {
 			lastDrawn = getImageToDisplay();
 		}
-		g.drawImage(lastDrawn, x, y, getWidthOnBoard(), getHeightOnBoard(), null);
+		g.drawImage(lastDrawn, (int)x, (int)y, getWidthOnBoard(), getHeightOnBoard(), null);
 	}
 	public BufferedImage getImageToDisplay() {
-		BufferedImage displayImage = getScaledImage(image, getWidthOnBoard(), getHeightOnBoard());
+		BufferedImage displayImage = getScaledImage(image.getSubimage(
+				(int)cutFromLeft, (int)cutFromTop, (int)getCutWidth(), (int)getCutHeight()), 
+				getWidthOnBoard(), getHeightOnBoard());
     	effectsManger.getImage(displayImage);
     	return displayImage;
 	}
-	@Override
-	public int getWidthOnBoard() {
-		return getWidth();
+	public double getCutHeight() {
+		return image.getHeight() - cutFromTop - cutFromBottom;
 	}
-	@Override
-	public int getHeightOnBoard() {
-		return getHeight();
+	public double getCutWidth() {
+		return image.getWidth() - cutFromLeft - cutFromRight;
 	}
 	@Override
 	public void edit() {
@@ -132,10 +150,10 @@ public class Picture extends StretcableShpae{
 			public void actionPerformed(ActionEvent e) {
 				try {
 					lastDrawn = null;
-					int x = Integer.parseInt(xField.getText());
-					int y = Integer.parseInt(yField.getText());
-					int width = Integer.parseInt(widthField.getText());
-					int height = Integer.parseInt(heightField.getText());
+					double x = Double.parseDouble(xField.getText());
+					double y = Double.parseDouble(yField.getText());
+					double width = Double.parseDouble(widthField.getText());
+					double height = Double.parseDouble(heightField.getText());
 					if (!sourceField.getText().equals("don\'t change")) {
 						File f = new File(sourceField.getText());
 						try {
@@ -149,12 +167,12 @@ public class Picture extends StretcableShpae{
 					Picture.this.y = y;
 					Picture.this.width = width;
 					Picture.this.height = height;
-					Main.getShapeList().updateImage(Picture.this);
-					editDialog.dispose();
-					Main.getBoard().repaint();
 				} catch (Exception e2) {
 					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
 				}
+				Main.getBoard().repaint();
+				Main.getShapeList().updateImage(Picture.this);
+				editDialog.dispose();
 			}
 		});
 		JButton preview = new JButton("Preview");
@@ -165,10 +183,10 @@ public class Picture extends StretcableShpae{
 			public void actionPerformed(ActionEvent e) {
 				try {
 					lastDrawn = null;
-					int x = Integer.parseInt(xField.getText());
-					int y = Integer.parseInt(yField.getText());
-					int width = Integer.parseInt(widthField.getText());
-					int height = Integer.parseInt(heightField.getText());
+					double x = Double.parseDouble(xField.getText());
+					double y = Double.parseDouble(yField.getText());
+					double width = Double.parseDouble(widthField.getText());
+					double height = Double.parseDouble(heightField.getText());
 					if (!sourceField.getText().equals("don\'t change")) {
 						File f = new File(sourceField.getText());
 						try {
@@ -182,11 +200,11 @@ public class Picture extends StretcableShpae{
 					Picture.this.y = y;
 					Picture.this.width = width;
 					Picture.this.height = height;
-					Main.getShapeList().updateImage(Picture.this);
-					Main.getBoard().repaint();
 				} catch (Exception e2) {
 					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
 				}
+				Main.getShapeList().updateImage(Picture.this);
+				Main.getBoard().repaint();
 			}
 		});
 		JPanel actionPanel = new JPanel(new BorderLayout());
@@ -235,22 +253,57 @@ public class Picture extends StretcableShpae{
 	public void setEffectsManger(EffectsManager effectsManger) {
 		this.effectsManger = effectsManger;
 	}
+	public double getCutFromLeft() {
+		return cutFromLeft;
+	}
+	public void setCutFromLeft(double cutFromLeft) {
+		if (cutFromLeft < 0 || cutFromLeft + this.cutFromRight > image.getWidth() - MINIMUM) {
+			return;
+		}
+		double diff = (cutFromLeft - this.cutFromLeft) * getWidthStretchRatio();
+		this.x += diff;
+		this.width -= diff;
+		this.cutFromLeft = cutFromLeft;
+	}
+	public double getCutFromTop() {
+		return cutFromTop;
+	}
+	public void setCutFromTop(double cutFromTop) {
+		if (cutFromTop < 0 || cutFromTop + this.cutFromBottom > image.getHeight() - MINIMUM) {
+			return;
+		}
+		double diff = (cutFromTop - this.cutFromTop) * getHeightStretchRatio();
+		this.y += diff;
+		this.height -= diff;
+		this.cutFromTop = cutFromTop;
+	}
+	public double getCutFromRight() {
+		return cutFromRight;
+	}
+	public void setCutFromRight(double cutFromRight) {
+		if (cutFromRight < 0 || this.cutFromLeft + cutFromRight > image.getWidth() - MINIMUM) {
+			return;
+		}
+		double diff = (cutFromRight - this.cutFromRight) * getWidthStretchRatio();
+		this.width -= diff;
+		this.cutFromRight = cutFromRight;
+	}
+	public double getCutFromBottom() {
+		return cutFromBottom;
+	}
+	public void setCutFromBottom(double cutFromBottom) {
+		if (cutFromBottom < 0 || this.cutFromTop + cutFromBottom > image.getHeight() - MINIMUM) {
+			return;
+		}
+		double diff = (cutFromBottom - this.cutFromBottom) * getHeightStretchRatio();
+		this.height -= diff;
+		this.cutFromBottom = cutFromBottom;
+	}
 	public Picture copy() {
-		BufferedImage image = null;
-		if (this.width != 100 || this.height != 100) {
-			int width = this.width;
-			int height = this.height;
-			this.width = 100;
-			this.height = 100;
-			image = getImageToDisplay();
-			this.height = height;
-			this.width = width;
+		if (lastDrawn != null) {
+			image = lastDrawn;
 		}else {
-			if (lastDrawn != null) {
-				image = lastDrawn;
-			}else {
-				image = getImageToDisplay();
-			}
+			image = getImageToDisplay();
 		}
 		return new Picture(0, 0, true, "Copy of " + this.getName(), image, getWidth(), getHeight());		
 	}
@@ -289,5 +342,80 @@ public class Picture extends StretcableShpae{
 			}
 		}
 		return bf;
+	}
+	@Override
+	public JPopupMenu getPopupMenuForShape() {
+		JPopupMenu popup = super.getPopupMenuForShape();
+		popup.add(new JSeparator());
+		JMenuItem editEffects = new JMenuItem("Edit Effects");
+		Main.theme.affect(editEffects);
+		editEffects.addActionListener(new ActionListener() {
+	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Picture.this.editEffects();
+			}
+		});
+		popup.add(editEffects);
+		JMenuItem cut = new JMenuItem(isCutting?"Stop Cut":"Cut");
+		Main.theme.affect(cut);
+		cut.addActionListener(new ActionListener() {
+	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Picture.this.setCutting(!Picture.this.isCutting);
+			}
+		});
+		popup.add(cut);
+		JMenuItem cancelCut = new JMenuItem("Cancel Cut");
+		Main.theme.affect(cancelCut);
+		cancelCut.addActionListener(new ActionListener() {
+	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Picture.this.setCutFromLeft(0);
+				Picture.this.setCutFromTop(0);
+				Picture.this.setCutFromRight(0);
+				Picture.this.setCutFromBottom(0);
+				Picture.this.lastDrawn = null;
+				Main.getBoard().repaint();
+			}
+		});
+		popup.add(cancelCut);
+		JMenuItem copy = new JMenuItem("Copy as Image");
+		Main.theme.affect(copy);
+		copy.addActionListener(new ActionListener() {
+	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Main.getBoard().addShape(Picture.this.copy());
+			}
+		});
+		popup.add(copy);
+		return popup;
+	}
+	public double getWidthStretchRatio() {
+		return width / getCutWidth();
+	}
+	public double getHeightStretchRatio() {
+		return height / getCutHeight();
+	}
+	public boolean isCutting() {
+		return isCutting;
+	}
+	public void setCutting(boolean isCutting) {
+		this.isCutting = isCutting;
+	}
+	public void addToCutFromLeft(int diff) {
+		setCutFromLeft(getCutFromLeft() + 1/getWidthStretchRatio() * diff);
+	}
+	public void addToCutFromTop(int diff) {
+		setCutFromTop(getCutFromTop() + 1/getHeightStretchRatio() * diff);
+	}
+	public void addToCutFromRight(int diff) {
+		setCutFromRight(getCutFromRight() + 1/getWidthStretchRatio() * diff);
+	}
+	public void addToCutFromBottom(int diff) {
+		setCutFromBottom(getCutFromBottom() + 1/getHeightStretchRatio() * diff);
 	}
 }

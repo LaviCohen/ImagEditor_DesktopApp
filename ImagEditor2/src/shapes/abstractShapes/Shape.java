@@ -1,18 +1,30 @@
-package shapes;
+package shapes.abstractShapes;
 
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
+
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+
+import le.gui.dialogs.LDialogs;
+import main.Main;
+import shapes.Code;
+import shapes.Picture;
+import shapes.Rectangle;
+import shapes.Text;
 
 public abstract class Shape {
 	public static final int DEFAULT_X = 0;
 	public static final int DEFAULT_Y = 0;
 	public static final boolean DEFAULT_VISIBLE = true;
-	int x;
-	int y;
-	int id;
-	boolean visible;
-	String name;
-	static int shapesCount = 1;
+	protected double x;
+	protected double y;
+	protected int id;
+	protected boolean visible;
+	protected String name;
+	protected static int shapesCount = 1;
 	public Shape(int x, int y, boolean visible, String name) {
 		super();
 		this.x = x;
@@ -29,16 +41,16 @@ public abstract class Shape {
 	public Shape() {
 		this(DEFAULT_X, DEFAULT_Y, DEFAULT_VISIBLE, null);
 	}
-	public int getX() {
+	public double getX() {
 		return x;
 	}
-	public void setX(int x) {
+	public void setX(double x) {
 		this.x = x;
 	}
-	public int getY() {
+	public double getY() {
 		return y;
 	}
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 	public boolean isVisible() {
@@ -75,6 +87,33 @@ public abstract class Shape {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public JPopupMenu getPopupMenuForShape() {
+		JPopupMenu popup = new JPopupMenu("Options");
+		Main.theme.affect(popup);
+		JMenuItem setName = new JMenuItem(Main.translator.get("Set Name"));
+		Main.theme.affect(setName);
+		setName.addActionListener(new ActionListener() {
+	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Shape.this.setName(LDialogs
+						.showInputDialog(null, Main.translator.get("Enter the new name for") + " \"" + Shape.this.getName() + "\"", null));
+				Main.updateShapeList();
+			}
+		});
+		popup.add(setName);
+		JMenuItem edit = new JMenuItem(Main.translator.get("Edit"));
+		Main.theme.affect(edit);
+		edit.addActionListener(new ActionListener() {
+	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Shape.this.edit();
+			}
+		});
+		popup.add(edit);
+		return popup;
 	}
 	public static Shape parseShape(String line) throws NumberFormatException, IOException {
 		if (line.startsWith(Rectangle.class.getName())) {

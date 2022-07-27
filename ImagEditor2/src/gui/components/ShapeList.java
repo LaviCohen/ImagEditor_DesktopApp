@@ -21,7 +21,7 @@ import gui.layouts.ListLayout;
 import install.Resources;
 import main.Main;
 import shapes.Picture;
-import shapes.Shape;
+import shapes.abstractShapes.Shape;
 
 public class ShapeList extends JPanel{
 	private static final long serialVersionUID = 1L;
@@ -37,7 +37,7 @@ public class ShapeList extends JPanel{
 			this.setOpaque(true);
 			this.shape = shape;
 			final ShapePanel cur = this;
-			JPopupMenu popup = Main.getPopupMenuForShape(shape);
+			JPopupMenu popup = shape.getPopupMenuForShape();
 			JButton showNhide = new JButton(Resources.hideIcon);
 			showNhide.setToolTipText("hide this shape");
 			showNhide.setFocusPainted(false);
@@ -80,8 +80,8 @@ public class ShapeList extends JPanel{
 			int shapeHeight = s.getHeightOnBoard();
 			int max = Math.max(shapeWidth, shapeHeight);
 			BufferedImage display = new BufferedImage(max, max, BufferedImage.TYPE_INT_ARGB);
-			int x = s.getX();
-			int y = s.getY();
+			int x = (int)s.getX();
+			int y = (int)s.getY();
 			s.setY(0);
 			s.setX(0);
 			Graphics g = display.getGraphics();

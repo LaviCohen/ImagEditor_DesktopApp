@@ -16,12 +16,13 @@ import javax.swing.JTextField;
 
 import le.gui.dialogs.LDialogs;
 import main.Main;
+import shapes.abstractShapes.StretcableShpae;
 
 public class Rectangle extends StretcableShpae{
 
 	Color color;
 	
-	public Rectangle(int x, int y, boolean visible, String name, int width, int height, Color color) {
+	public Rectangle(int x, int y, boolean visible, String name, double width, double height, Color color) {
 		super(x, y, visible, name, width, height);
 		this.color = color;
 	}
@@ -29,7 +30,7 @@ public class Rectangle extends StretcableShpae{
 	@Override
 	public void draw(Graphics g) {
 		g.setColor(color);
-		g.fillRect(x, y, width, height);
+		g.fillRect((int)x, (int)y, (int)width, (int)height);
 	}
 
 	@Override
@@ -81,10 +82,10 @@ public class Rectangle extends StretcableShpae{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					int x = Integer.parseInt(xField.getText());
-					int y = Integer.parseInt(yField.getText());
-					int width = Integer.parseInt(widthField.getText());
-					int height = Integer.parseInt(heightField.getText());
+					double x = Double.parseDouble(xField.getText());
+					double y = Double.parseDouble(yField.getText());
+					double width = Double.parseDouble(widthField.getText());
+					double height = Double.parseDouble(heightField.getText());
 					Color color = colorLabel.getBackground();
 					Rectangle.this.x = x;
 					Rectangle.this.y = y;
@@ -106,10 +107,10 @@ public class Rectangle extends StretcableShpae{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					int x = Integer.parseInt(xField.getText());
-					int y = Integer.parseInt(yField.getText());
-					int width = Integer.parseInt(widthField.getText());
-					int height = Integer.parseInt(heightField.getText());
+					double x = Double.parseDouble(xField.getText());
+					double y = Double.parseDouble(yField.getText());
+					double width = Double.parseDouble(widthField.getText());
+					double height = Double.parseDouble(heightField.getText());
 					Color color = colorLabel.getBackground();
 					Rectangle.this.x = x;
 					Rectangle.this.y = y;
@@ -130,16 +131,6 @@ public class Rectangle extends StretcableShpae{
 		editDialog.pack();
 		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		editDialog.setVisible(true);
-	}
-
-	@Override
-	public int getWidthOnBoard() {
-		return width;
-	}
-
-	@Override
-	public int getHeightOnBoard() {
-		return height;
 	}
 	public Rectangle(String[] data) {
 		this(Integer.parseInt(data[0]), Integer.parseInt(data[1]),

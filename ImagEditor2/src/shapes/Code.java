@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 
 import le.gui.dialogs.LDialogs;
 import main.Main;
+import shapes.abstractShapes.Shape;
 
 public class Code extends Shape{
 	
@@ -47,10 +48,8 @@ public class Code extends Shape{
 	public void draw(Graphics g) {
 		BufferedImage bf = new BufferedImage(getWidthOnBoard(), getHeightOnBoard(), 
 				BufferedImage.TYPE_INT_ARGB);
-		pane.setBounds(this.x, this.y, this.pane.getPreferredSize().width,
-				this.pane.getPreferredSize().height);
 		pane.paint(bf.getGraphics());
-		g.drawImage(bf, this.x, this.y, null);
+		g.drawImage(bf, (int)this.x, (int)this.y, null);
 	}
 
 	@Override
@@ -82,8 +81,8 @@ public class Code extends Shape{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					int x = Integer.parseInt(xField.getText());
-					int y = Integer.parseInt(yField.getText());
+					double x = Double.parseDouble(xField.getText());
+					double y = Double.parseDouble(yField.getText());
 					String code = textArea.getText();
 					Code.this.x = x;
 					Code.this.y = y;
@@ -104,8 +103,8 @@ public class Code extends Shape{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					int x = Integer.parseInt(xField.getText());
-					int y = Integer.parseInt(yField.getText());
+					double x = Double.parseDouble(xField.getText());
+					double y = Double.parseDouble(yField.getText());
 					String code = textArea.getText();
 					Code.this.x = x;
 					Code.this.y = y;

@@ -17,9 +17,10 @@ import javax.swing.JPanel;
 
 import le.gui.dialogs.LDialogs;
 import main.Main;
-import shapes.Shape;
-import shapes.StretcableShpae;
+import shapes.Picture;
 import shapes.Text;
+import shapes.abstractShapes.Shape;
+import shapes.abstractShapes.StretcableShpae;
 
 public class Board extends JPanel{
 	private static final long serialVersionUID = 1L;
@@ -87,7 +88,7 @@ public class Board extends JPanel{
 				}
 				if (e.getButton() == MouseEvent.BUTTON3) {
 					if (shapeInFocus != null) {
-						Main.getPopupMenuForShape(shapeInFocus).show(Board.this, e.getX(), e.getY());
+						shapeInFocus.getPopupMenuForShape().show(Board.this, e.getX(), e.getY());
 					}
 				}
 				if(e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1 
@@ -111,35 +112,58 @@ public class Board extends JPanel{
 				if (shapeInFocus != null) {
 					movementInX = (int)(e.getXOnScreen() - firstX) * 100 / Main.getZoomSlider().getValue();
 					movementInY = (int)(e.getYOnScreen() - firstY) * 100 / Main.getZoomSlider().getValue();
-					switch(touchedWrapper){
-					case 0:
-						shapeInFocus.setX(shapeInFocus.getX() + movementInX);
-						shapeInFocus.setY(shapeInFocus.getY() + movementInY);
-						break;
-					case TOP_LEFT_WRAPPER:
-						shapeInFocus.setX(shapeInFocus.getX() + movementInX);
-						shapeInFocus.setY(shapeInFocus.getY() + movementInY);
-						if (shapeInFocus instanceof StretcableShpae) {
-							((StretcableShpae)shapeInFocus).strecthBy(-movementInX, -movementInY);
+					if(shapeInFocus instanceof Picture && ((Picture)shapeInFocus).isCutting() && touchedWrapper != 0) {
+						Picture p = ((Picture)shapeInFocus);
+						switch(touchedWrapper){
+						case TOP_LEFT_WRAPPER:
+							p.addToCutFromLeft(movementInX);
+							p.addToCutFromTop(movementInY);
+							break;
+						case TOP_RIGHT_WRAPPER:
+							p.addToCutFromRight(-movementInX);
+							p.addToCutFromTop(movementInY);
+							break;
+						case BOTTOM_LEFT_WRAPPER:
+							p.addToCutFromLeft(movementInX);
+							p.addToCutFromBottom(-movementInY);
+							break;
+						case BOTTOM_RIGHT_WRAPPER:
+							p.addToCutFromRight(-movementInX);
+							p.addToCutFromBottom(-movementInY);
+							break;
 						}
-						break;
-					case TOP_RIGHT_WRAPPER:
-						shapeInFocus.setY(shapeInFocus.getY() + movementInY);
-						if (shapeInFocus instanceof StretcableShpae) {
-							((StretcableShpae)shapeInFocus).strecthBy(movementInX, -movementInY);
+						p.lastDrawn = null;
+					}else {
+						switch(touchedWrapper){
+						case 0:
+							shapeInFocus.setX(shapeInFocus.getX() + movementInX);
+							shapeInFocus.setY(shapeInFocus.getY() + movementInY);
+							break;
+						case TOP_LEFT_WRAPPER:
+							shapeInFocus.setX(shapeInFocus.getX() + movementInX);
+							shapeInFocus.setY(shapeInFocus.getY() + movementInY);
+							if (shapeInFocus instanceof StretcableShpae) {
+								((StretcableShpae)shapeInFocus).strecthBy(-movementInX, -movementInY);
+							}
+							break;
+						case TOP_RIGHT_WRAPPER:
+							shapeInFocus.setY(shapeInFocus.getY() + movementInY);
+							if (shapeInFocus instanceof StretcableShpae) {
+								((StretcableShpae)shapeInFocus).strecthBy(movementInX, -movementInY);
+							}
+							break;
+						case BOTTOM_LEFT_WRAPPER:
+							shapeInFocus.setX(shapeInFocus.getX() + movementInX);
+							if (shapeInFocus instanceof StretcableShpae) {
+								((StretcableShpae)shapeInFocus).strecthBy(-movementInX, movementInY);
+							}
+							break;
+						case BOTTOM_RIGHT_WRAPPER:
+							if (shapeInFocus instanceof StretcableShpae) {
+								((StretcableShpae)shapeInFocus).strecthBy(movementInX, movementInY);
+							}
+							break;
 						}
-						break;
-					case BOTTOM_LEFT_WRAPPER:
-						shapeInFocus.setX(shapeInFocus.getX() + movementInX);
-						if (shapeInFocus instanceof StretcableShpae) {
-							((StretcableShpae)shapeInFocus).strecthBy(-movementInX, movementInY);
-						}
-						break;
-					case BOTTOM_RIGHT_WRAPPER:
-						if (shapeInFocus instanceof StretcableShpae) {
-							((StretcableShpae)shapeInFocus).strecthBy(movementInX, movementInY);
-						}
-						break;
 					}
 					firstX = e.getXOnScreen();
 					firstY = e.getYOnScreen();
@@ -181,7 +205,7 @@ public class Board extends JPanel{
 			/**
 			 * Return if value is between start & start + difference
 			 * */
-			public boolean isBetween(int start, int value, int difference) {
+			public boolean isBetween(double start, double value, double difference) {
 				if (difference < 0) {
 					start += difference;
 					difference = -difference;
@@ -219,17 +243,17 @@ public class Board extends JPanel{
 		}
 		g.setColor(Color.GRAY);
 		//Top-Left wrapper
-		g.fillRect(selectedShape.getX(), 
-				selectedShape.getY(), 9, 9);
+		g.fillRect((int)selectedShape.getX(), 
+				(int)selectedShape.getY(), 9, 9);
 		//Top-Right wrapper
-		g.fillRect(selectedShape.getX(), 
-				selectedShape.getY() + selectedShape.getHeightOnBoard() - 9, 9, 9);
+		g.fillRect((int)selectedShape.getX(), 
+				(int)selectedShape.getY() + selectedShape.getHeightOnBoard() - 9, 9, 9);
 		//Bottom-Left wrapper
-		g.fillRect(selectedShape.getX() + selectedShape.getWidthOnBoard() - 9,
-				selectedShape.getY(), 9, 9);
+		g.fillRect((int)selectedShape.getX() + selectedShape.getWidthOnBoard() - 9,
+				(int)selectedShape.getY(), 9, 9);
 		//Bottom-Right wrapper
-		g.fillRect(selectedShape.getX() + selectedShape.getWidthOnBoard() - 9,
-				selectedShape.getY() + selectedShape.getHeightOnBoard() - 9, 9, 9);
+		g.fillRect((int)selectedShape.getX() + selectedShape.getWidthOnBoard() - 9,
+				(int)selectedShape.getY() + selectedShape.getHeightOnBoard() - 9, 9, 9);
 	}
 	private void paintShapes() {
 		paintShapes(g);
