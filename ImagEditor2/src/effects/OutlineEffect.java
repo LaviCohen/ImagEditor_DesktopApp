@@ -35,7 +35,7 @@ public class OutlineEffect extends Effect{
 	
 	@Override
 	public BufferedImage getImage(BufferedImage bf) {
-		BufferedImage ret = new BufferedImage(bf.getWidth(), bf.getHeight(), BufferedImage.TYPE_INT_RGB);
+		BufferedImage ret = new BufferedImage(bf.getWidth(), bf.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		for (int i = 0; i < bf.getWidth(); i++) {
 			for (int j = 0; j < bf.getHeight(); j++) {
 				int curRGB = bf.getRGB(i, j);
