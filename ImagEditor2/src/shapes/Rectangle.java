@@ -8,12 +8,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import le.gui.components.LSlider;
 import le.gui.dialogs.LDialogs;
 import main.Main;
 import shapes.abstractShapes.StretcableShpae;
@@ -22,22 +24,33 @@ public class Rectangle extends StretcableShpae{
 
 	Color color;
 	
+	int roundWidth;
+	int roundHeight;
+	
+	boolean isFilled;
 	
 	public Rectangle(int x, int y, boolean visible, String name, double width, double height, Color color) {
 		super(x, y, visible, name, width, height);
 		this.color = color;
+		this.isFilled = true;
+		this.roundWidth = 0;
+		this.roundHeight = 0;
 	}
 
 	@Override
 	public void draw(Graphics2D g) {
 		g.setColor(color);
-		g.fillRect((int)x, (int)y, (int)width, (int)height);
+		if (isFilled) {
+			g.fillRoundRect((int)x, (int)y, (int)width, (int)height, roundWidth, roundHeight);
+		}else {	
+			g.drawRoundRect((int)x, (int)y, (int)width, (int)height, roundWidth, roundHeight);
+		}
 	}
 
 	@Override
 	public void edit() {
 		JDialog editDialog = new JDialog(Main.f);
-		editDialog.setLayout(new GridLayout(4, 1));
+		editDialog.setLayout(new GridLayout(7, 1));
 		editDialog.setTitle("Edit Rectangle");
 		JPanel positionPanel = new JPanel(new GridLayout(1, 4));
 		positionPanel.add(Main.theme.affect(new JLabel("X:")));
@@ -76,6 +89,15 @@ public class Rectangle extends StretcableShpae{
 		});
 		colorPanel.add(setColorButton, Main.translator.getAfterTextBorder());
 		editDialog.add(colorPanel);
+		LSlider roundWidthSlider = new LSlider("Round Width:", 0, (int) this.width, roundWidth);
+		Main.theme.affect(roundWidthSlider);
+		editDialog.add(roundWidthSlider);
+		LSlider roundHeightSlider = new LSlider("Round Height:", 0, (int) this.height, roundWidth);
+		Main.theme.affect(roundHeightSlider);
+		editDialog.add(roundHeightSlider);
+		JCheckBox isFilledCheckBox = new JCheckBox("Fill Rectangle", isFilled);
+		Main.theme.affect(isFilledCheckBox);
+		editDialog.add(isFilledCheckBox);
 		JButton apply = new JButton("Apply");
 		Main.theme.affect(apply);
 		apply.addActionListener(new ActionListener() {
@@ -93,6 +115,9 @@ public class Rectangle extends StretcableShpae{
 					Rectangle.this.width = width;
 					Rectangle.this.height = height;
 					Rectangle.this.color = color;
+					Rectangle.this.roundWidth = roundWidthSlider.getValue();
+					Rectangle.this.roundHeight = roundHeightSlider.getValue();
+					Rectangle.this.isFilled = isFilledCheckBox.isSelected();
 					Main.getShapeList().updateImage(Rectangle.this);
 					editDialog.dispose();
 					Main.getBoard().repaint();
@@ -118,6 +143,9 @@ public class Rectangle extends StretcableShpae{
 					Rectangle.this.width = width;
 					Rectangle.this.height = height;
 					Rectangle.this.color = color;
+					Rectangle.this.roundWidth = roundWidthSlider.getValue();
+					Rectangle.this.roundHeight = roundHeightSlider.getValue();
+					Rectangle.this.isFilled = isFilledCheckBox.isSelected();
 					Main.getShapeList().updateImage(Rectangle.this);
 					Main.getBoard().repaint();
 				} catch (Exception e2) {
