@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import install.Decoder;
 import install.DefaultSettings;
 import install.Resources;
 import le.gui.dialogs.LDialogs;
@@ -113,8 +114,9 @@ public class Account {
 				try {
 					login(userNameField.getText(), new String(passwordField.getPassword()));
 					if (rememberMe.isSelected()) {
-						Main.install.writeToFile(Main.install.getFile("Data/Settings/user.txt"), Main.myAccount.userName + "\n"
-								 + Main.myAccount.password);
+						Main.install.writeToFile(Main.install.getFile("Data/Settings/user.txt"), 
+								Decoder.encode(Main.myAccount.userName + "\n"
+								 + Main.myAccount.password));
 					}
 				} catch (AccountUndefindException e2) {
 					LDialogs.showMessageDialog(Main.f, "Failed to Login");
@@ -152,7 +154,7 @@ public class Account {
 		if (this.isPremium) {
 			personalDataPanel.add(Main.theme.affect(new JLabel("<html><i>Premium Account</i></html>")));
 		}
-		personalDataPanel.add(Main.theme.affect(new JLabel("UserName: " + this.userName)));
+		personalDataPanel.add(Main.theme.affect(new JLabel("Username: " + this.userName)));
 		personalDataPanel.add(Main.theme.affect(new JLabel("Gender: " + this.gender)));
 		
 		d.add(personalDataPanel);
