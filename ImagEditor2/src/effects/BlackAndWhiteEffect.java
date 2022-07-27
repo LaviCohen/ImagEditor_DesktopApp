@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 
 import le.gui.components.LSlider;
 import main.Main;
+import shapes.Picture;
 
 public class BlackAndWhiteEffect extends Effect{
 	int redStrength = 100;
@@ -36,7 +37,7 @@ public class BlackAndWhiteEffect extends Effect{
 		return new Color(avg, avg, avg, c.getAlpha()).getRGB();
 	}
 	@Override
-	public void edit() {
+	public void edit(Picture parent) {
 		JDialog editBlackAwhiteDialog = new JDialog(Main.f);
 		editBlackAwhiteDialog.getContentPane().setBackground(Main.theme.getBackgroundColor());
 		editBlackAwhiteDialog.setTitle("Edit Black & White");
@@ -63,6 +64,7 @@ public class BlackAndWhiteEffect extends Effect{
 				greenStrength = green.getValue();
 				blueStrength = blue.getValue();
 				editBlackAwhiteDialog.dispose();
+				parent.lastDrawn = null;
 				Main.getBoard().repaint();
 			}
 		});

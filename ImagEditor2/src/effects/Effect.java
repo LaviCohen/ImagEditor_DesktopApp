@@ -2,9 +2,11 @@ package effects;
 
 import java.awt.image.BufferedImage;
 
+import shapes.Picture;
+
 public abstract class Effect {
 	public abstract BufferedImage getImage(BufferedImage bf);
-	public abstract void edit();
+	public abstract void edit(Picture parent);
 	public String encodeEffect() {
 		return this.getClass().getName();
 	}

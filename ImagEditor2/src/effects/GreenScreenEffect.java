@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import le.gui.components.LSlider;
 import le.gui.dialogs.LDialogs;
 import main.Main;
+import shapes.Picture;
 
 public class GreenScreenEffect extends Effect{
 	int colorRed = 0;
@@ -51,7 +52,7 @@ public class GreenScreenEffect extends Effect{
 		return (redDiff + greenDiff + blueDiff)/3;
 	}
 	@Override
-	public void edit() {
+	public void edit(Picture parent) {
 		Color greenScreenColor = new Color(colorRed, colorGreen, colorBlue);
 		JDialog editGreenScreenDialog = new JDialog(Main.f);
 		editGreenScreenDialog.setTitle("Green Screen");
@@ -111,6 +112,7 @@ public class GreenScreenEffect extends Effect{
 				colorBlue = colorLabel.getBackground().getBlue();
 				accuracy = accuracySlider.getValue();
 				editGreenScreenDialog.dispose();
+				parent.lastDrawn = null;
 				Main.getBoard().repaint();
 			}
 		});

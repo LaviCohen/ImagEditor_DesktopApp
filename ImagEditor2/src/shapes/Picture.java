@@ -216,8 +216,7 @@ public class Picture extends StretcableShpae{
 		editDialog.setVisible(true);
 	}
 	public void editEffects() {
-		effectsManger.edit();
-		lastDrawn = null;
+		effectsManger.edit(this);
 	}
 	public static BufferedImage getScaledImage(Image srcImg, int width, int height){
 	    BufferedImage resizedImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);

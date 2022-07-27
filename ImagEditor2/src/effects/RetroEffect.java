@@ -11,6 +11,7 @@ import javax.swing.JDialog;
 
 import le.gui.components.LSlider;
 import main.Main;
+import shapes.Picture;
 
 public class RetroEffect extends Effect{
 
@@ -41,7 +42,7 @@ public class RetroEffect extends Effect{
 	}
 
 	@Override
-	public void edit() {
+	public void edit(Picture parent) {
 		JDialog editDialog = new JDialog(Main.f);
 		editDialog.setTitle("Edit Retro Effect");
 		editDialog.setLayout(new GridLayout(2, 1));
@@ -56,6 +57,8 @@ public class RetroEffect extends Effect{
 			public void actionPerformed(ActionEvent e) {
 				variety = varietySlider.getValue();
 				editDialog.dispose();
+				parent.lastDrawn = null;
+				Main.getBoard().repaint();
 			}
 		});
 		editDialog.add(apply);

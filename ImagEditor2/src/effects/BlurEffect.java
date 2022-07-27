@@ -11,6 +11,7 @@ import javax.swing.JDialog;
 
 import le.gui.components.LSlider;
 import main.Main;
+import shapes.Picture;
 
 public class BlurEffect extends Effect{
 	int radius = 3;
@@ -24,7 +25,7 @@ public class BlurEffect extends Effect{
 		return bf;
 	}
 	@Override
-	public void edit() {
+	public void edit(Picture parent) {
 		JDialog editDialog = new JDialog(Main.f);
 		editDialog.getContentPane().setBackground(Main.theme.getBackgroundColor());
 		editDialog.setLayout(new GridLayout(2, 1));
@@ -38,6 +39,8 @@ public class BlurEffect extends Effect{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				radius = radiusSlider.getValue();
+				parent.lastDrawn = null;
+				Main.getBoard().repaint();
 				editDialog.dispose();
 			}
 		});

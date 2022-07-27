@@ -39,7 +39,7 @@ public class EffectsManager extends Effect{
 		return bufferedImage;
 	}
 	@Override
-	public void edit() {
+	public void edit(Picture parent) {
 		JDialog effectManagerDialog = new JDialog(Main.f);
 		effectManagerDialog.setBackground(Main.theme.getBackgroundColor());
 		effectManagerDialog.setTitle("Effects Manager");
@@ -82,7 +82,7 @@ public class EffectsManager extends Effect{
 				effectsLayout.setRows(effectsLayout.getRows() + 1);
 				allEffects.add(getPanelForEffect(effect, effectManagerDialog));
 				effectManagerDialog.pack();
-				effect.edit();
+				effect.edit(parent);
 				parent.lastDrawn = null;
 				Main.getBoard().repaint();
 			}
@@ -141,7 +141,7 @@ public class EffectsManager extends Effect{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				effect.edit();
+				effect.edit(parent);
 			}
 		});
 		actionsPanel.add(edit);
