@@ -26,17 +26,19 @@ public class EffectsManager extends Effect{
 		this.parent = picture;
 	}
 	public BufferedImage getImage(BufferedImage bufferedImage) {
+		BufferedImage ret = bufferedImage;
 		for(Effect effect:effects.keySet()) {
 			if (effect instanceof GreenScreenEffect && effects.get(effect)) {
-				bufferedImage = effect.getImage(bufferedImage);
+				ret = effect.getImage(ret);
 			}
 		}
 		for(Effect effect:effects.keySet()) {
 			if (!(effect instanceof GreenScreenEffect) && effects.get(effect)) {
-				bufferedImage = effect.getImage(bufferedImage);
+//				System.out.println("Performing " + effect.getClass().getName() + " Effect");
+				ret = effect.getImage(ret);
 			}
 		}
-		return bufferedImage;
+		return ret;
 	}
 	@Override
 	public void edit(Picture parent) {
@@ -59,7 +61,7 @@ public class EffectsManager extends Effect{
 			public void actionPerformed(ActionEvent e) {
 				Object ans = LDialogs.showInputDialog(Main.f, "Choose Effect:", "Add Effect",
 						LDialogs.QUESTION_MESSAGE,
-						new String[] {"Green Screen", "Blur", "Black & White", "Retro"},
+						new String[] {"Green Screen", "Blur", "Black & White", "Retro", "Outline"},
 						null);
 				if (ans == null) {
 					return;
@@ -74,6 +76,8 @@ public class EffectsManager extends Effect{
 					effect = new BlackAndWhiteEffect();
 				}else if(effectName.equals("Retro")) {
 					effect = new RetroEffect();
+				}else if(effectName.equals("Outline")) {
+					effect = new OutlineEffect();
 				}
 				if (effect == null) {
 					return;

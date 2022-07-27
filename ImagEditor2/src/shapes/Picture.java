@@ -72,8 +72,7 @@ public class Picture extends StretcableShpae{
 		BufferedImage displayImage = getScaledImage(image.getSubimage(
 				(int)cutFromLeft, (int)cutFromTop, (int)getCutWidth(), (int)getCutHeight()), 
 				getWidthOnBoard(), getHeightOnBoard());
-    	effectsManger.getImage(displayImage);
-    	return displayImage;
+    	return effectsManger.getImage(displayImage);
 	}
 	public double getCutHeight() {
 		return image.getHeight() - cutFromTop - cutFromBottom;

@@ -48,7 +48,7 @@ public class Main {
 	/**
 	 * Holds the number of the version with minor version (after the decimal point)
 	 */
-	public static final double version = 2.5;
+	public static final double version = 2.6;
 	/**
 	 * The frame of the program.
 	 */
