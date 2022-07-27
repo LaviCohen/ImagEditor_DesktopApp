@@ -2,7 +2,7 @@ package gui.components;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -84,7 +84,7 @@ public class ShapeList extends JPanel{
 			int y = (int)s.getY();
 			s.setY(0);
 			s.setX(0);
-			Graphics g = display.getGraphics();
+			Graphics2D g = display.createGraphics();
 			g.setColor(Color.WHITE);
 			g.fillRect(0, 0, max, max);
 			s.draw(g);

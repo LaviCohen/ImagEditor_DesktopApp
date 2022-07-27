@@ -2,7 +2,6 @@ package gui.components;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
@@ -26,7 +25,7 @@ public class Board extends JPanel{
 	private static final long serialVersionUID = 1L;
 	
 	public JLabel displayLabel;
-	public Graphics g;
+	public Graphics2D g;
 	public Color backgroundColor;
 	public BufferedImage paper;
 	public LinkedList<Shape> shapes = new LinkedList<Shape>();
@@ -39,7 +38,7 @@ public class Board extends JPanel{
 		paper = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		displayLabel = new JLabel(new ImageIcon(paper));
 		this.add(displayLabel, BorderLayout.CENTER);
-		g = paper.getGraphics();
+		g = paper.createGraphics();
 		inited = true;
 		MouseAdapter mouseListener = new MouseAdapter() {
 			Shape shapeInFocus = null;
@@ -258,7 +257,7 @@ public class Board extends JPanel{
 	private void paintShapes() {
 		paintShapes(g);
 	}
-	public void paintShapes(Graphics g) {
+	public void paintShapes(Graphics2D g) {
 		g.setColor(backgroundColor);
 		g.fillRect(0, 0, paper.getWidth(), paper.getHeight());
 		for (Shape shape:shapes) {
@@ -273,7 +272,7 @@ public class Board extends JPanel{
 	public void setPaperSize(int width, int height) {
 		paper = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		System.gc();
-		g = paper.getGraphics();
+		g = paper.createGraphics();
 		this.displayLabel.setIcon(new ImageIcon(paper));
 		Main.updateSizeLabel();
 		Main.f.revalidate();

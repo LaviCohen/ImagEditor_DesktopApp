@@ -1,7 +1,7 @@
 package shapes;
 
 import java.awt.BorderLayout;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,7 +45,7 @@ public class Code extends Shape{
 	}
 
 	@Override
-	public void draw(Graphics g) {
+	public void draw(Graphics2D g) {
 		BufferedImage bf = new BufferedImage(getWidthOnBoard(), getHeightOnBoard(), 
 				BufferedImage.TYPE_INT_ARGB);
 		pane.paint(bf.getGraphics());

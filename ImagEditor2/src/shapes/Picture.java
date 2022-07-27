@@ -1,7 +1,6 @@
 package shapes;
 
 import java.awt.BorderLayout;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -58,7 +57,7 @@ public class Picture extends StretcableShpae{
 	}
 	//Methods
 	@Override
-	public void draw(Graphics g) {
+	public void draw(Graphics2D g) {
 		if (!DefaultSettings.useMoreRAM) {
 			//In case the setting has been changed while the program is running, so previous lastDrawn won't stuck in the memory
 			lastDrawn = null;

@@ -1,6 +1,6 @@
 package shapes.abstractShapes;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -65,7 +65,7 @@ public abstract class Shape {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public abstract void draw(Graphics g);
+	public abstract void draw(Graphics2D g);
 	public abstract void edit();
 	public abstract int getWidthOnBoard();
 	public abstract int getHeightOnBoard();

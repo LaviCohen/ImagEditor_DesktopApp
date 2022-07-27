@@ -15,8 +15,6 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-
-import le.gui.dialogs.LDialogs;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ChangeEvent;
@@ -33,6 +31,7 @@ import install.saveSystem.Project;
 import languages.Translator;
 import le.gui.components.LMenu;
 import le.gui.components.LSlider;
+import le.gui.dialogs.LDialogs;
 import le.log.ExceptionUtils;
 import le.log.Logger;
 import shapes.abstractShapes.Shape;

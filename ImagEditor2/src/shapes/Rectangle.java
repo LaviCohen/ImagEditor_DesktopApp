@@ -2,7 +2,7 @@ package shapes;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,13 +22,14 @@ public class Rectangle extends StretcableShpae{
 
 	Color color;
 	
+	
 	public Rectangle(int x, int y, boolean visible, String name, double width, double height, Color color) {
 		super(x, y, visible, name, width, height);
 		this.color = color;
 	}
 
 	@Override
-	public void draw(Graphics g) {
+	public void draw(Graphics2D g) {
 		g.setColor(color);
 		g.fillRect((int)x, (int)y, (int)width, (int)height);
 	}

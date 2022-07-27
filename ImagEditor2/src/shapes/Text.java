@@ -3,7 +3,7 @@ package shapes;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -34,7 +34,7 @@ public class Text extends Shape{
 	}
 
 	@Override
-	public void draw(Graphics g) {
+	public void draw(Graphics2D g) {
 		g.setColor(color);
 		g.setFont(font);
 		g.drawString(text, (int)x, (int)y + getHeightOnBoard());
