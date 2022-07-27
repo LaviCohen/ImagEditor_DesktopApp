@@ -85,7 +85,7 @@ public class Text extends Shape{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				colorLabel.setBackground(JColorChooser.showDialog(editDialog, "Choose Text color", color));
+				colorLabel.setBackground(JColorChooser.showDialog(editDialog, "Choose Text color", colorLabel.getBackground()));
 			}
 		});
 		colorPanel.add(setColorButton, Main.translator.getAfterTextBorder());

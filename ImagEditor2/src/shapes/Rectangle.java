@@ -84,7 +84,7 @@ public class Rectangle extends StretcableShpae{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				colorLabel.setBackground(JColorChooser.showDialog(editDialog, "Choose Rectangle color", color));
+				colorLabel.setBackground(JColorChooser.showDialog(editDialog, "Choose Rectangle color", colorLabel.getBackground()));
 			}
 		});
 		colorPanel.add(setColorButton, Main.translator.getAfterTextBorder());
