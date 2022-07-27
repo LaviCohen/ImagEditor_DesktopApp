@@ -40,7 +40,6 @@ public class Board extends JPanel{
 		this.add(displayLabel, BorderLayout.CENTER);
 		g = paper.getGraphics();
 		inited = true;
-		final Board cur = this;
 		MouseAdapter mouseListener = new MouseAdapter() {
 			Shape shapeInFocus = null;
 			
@@ -63,12 +62,13 @@ public class Board extends JPanel{
 				if (shapeInFocus != null) {
 					touchedWrapper = touchWrapper(e);
 				}
+				Main.getShapeList().setSelection(shapeInFocus);
 			}
 			private double getTopGap() {
-				return ((cur.getHeight() - (cur.paper.getHeight() * getZoomRate()))/2);
+				return ((Board.this.getHeight() - (Board.this.paper.getHeight() * getZoomRate()))/2);
 			}
 			private double getLeftGap() {
-				return ((cur.getWidth()  - (cur.paper.getWidth()  * getZoomRate()))/2);
+				return ((Board.this.getWidth()  - (Board.this.paper.getWidth()  * getZoomRate()))/2);
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -77,31 +77,29 @@ public class Board extends JPanel{
 				movementInX = 0;
 				movementInY = 0;
 				shapeInFocus = null;
+				Board.this.repaint();
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				shapeInFocus = getShapeAt(
-						(int)((e.getX() - getLeftGap()) / getZoomRate()),
-						(int)((e.getY() - getTopGap()) / getZoomRate()));
+				shapeInFocus = getShapeAt(screenToBoardCoordsX(e.getX()), screenToBoardCoordsY(e.getY()));
 				if (shapeInFocus != null && !shapeInFocus.isVisible()) {
 					shapeInFocus = null;
 				}
-				Main.getShapeList().setSelection(shapeInFocus);
 				if (e.getButton() == MouseEvent.BUTTON3) {
 					if (shapeInFocus != null) {
-						Main.getPopupMenuForShape(shapeInFocus).show(cur, e.getX(), e.getY());
+						Main.getPopupMenuForShape(shapeInFocus).show(Board.this, e.getX(), e.getY());
 					}
 				}
 				if(e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1 
 						&& shapeInFocus instanceof Text){
 					String text = LDialogs.
-							showInputDialog(cur, "Enter Text:", ((Text)shapeInFocus).getText());
+							showInputDialog(Board.this, "Enter Text:", ((Text)shapeInFocus).getText());
 					if (text != null && !text.equals(((Text)shapeInFocus).getText())) {
 						((Text)shapeInFocus).setText(text);
-						cur.repaint();
 						Main.getShapeList().updateImage(shapeInFocus);
 					}
 				}
+				Board.this.repaint();
 			}
 			public static final int TOP_LEFT_WRAPPER = 1;
 			public static final int TOP_RIGHT_WRAPPER = 2;
@@ -158,25 +156,37 @@ public class Board extends JPanel{
 				int x = screenToBoardCoordsX(e.getX());
 				int y = screenToBoardCoordsY(e.getY());
 				
-				double distance = 5;
+				int wrapperWidth = 9;
+				int wrapperHeight = 9;
 				
-				if (distance(x + 3, y + 3, shapeInFocus.getX(), shapeInFocus.getY()) < distance) {
+				if (isBetween(shapeInFocus.getX(), x, wrapperHeight) && 
+						isBetween(shapeInFocus.getY(), y, wrapperHeight)) {
 					return TOP_LEFT_WRAPPER;
 				}
-				if (distance(x - 3, y + 3, shapeInFocus.getX() + shapeInFocus.getWidthOnBoard(), shapeInFocus.getY()) < distance) {
+				if (isBetween(shapeInFocus.getX() + shapeInFocus.getWidthOnBoard(), x, -wrapperWidth) && 
+						isBetween(shapeInFocus.getY(), y, wrapperHeight)) {
 					return TOP_RIGHT_WRAPPER;
 				}
-				if (distance(x + 3, y - 3, shapeInFocus.getX(), shapeInFocus.getY() + shapeInFocus.getHeightOnBoard()) < distance) {
+				if (isBetween(shapeInFocus.getX(), x, wrapperWidth) && 
+						isBetween(shapeInFocus.getY() + shapeInFocus.getHeightOnBoard(), y, -wrapperHeight)) {
 					return BOTTOM_LEFT_WRAPPER;
 				}
-				if (distance(x - 3, y - 3, shapeInFocus.getX() + shapeInFocus.getWidthOnBoard(), shapeInFocus.getY() + shapeInFocus.getHeightOnBoard()) < distance) {
+				if (isBetween(shapeInFocus.getX() + shapeInFocus.getWidthOnBoard(), x, -wrapperWidth) && 
+						isBetween(shapeInFocus.getY() + shapeInFocus.getHeightOnBoard(), y, -wrapperHeight)) {
 					return BOTTOM_RIGHT_WRAPPER;
 				}
 				
 				return 0;
 			}
-			public double distance(int x1, int y1, int x2, int y2) {
-				return Math.sqrt(Math.abs(x1 - x2) + Math.abs(y1 - y2));
+			/**
+			 * Return if value is between start & start + difference
+			 * */
+			public boolean isBetween(int start, int value, int difference) {
+				if (difference < 0) {
+					start += difference;
+					difference = -difference;
+				}
+				return value >= start && value - difference <= start;
 			}
 		};
 		this.addMouseListener(mouseListener);
@@ -195,9 +205,6 @@ public class Board extends JPanel{
 	public void repaint() {
 		if (inited) {
 			paintShapes();
-			if (Main.shapeList != null) {
-				paintCornerWrappers(Main.getShapeList().getSelectedShape());
-			}
 			displayLabel.setIcon(new ImageIcon(
 					getScaledImage(paper, 
 							(int)(paper.getWidth() * getZoomRate()),
@@ -230,9 +237,12 @@ public class Board extends JPanel{
 	public void paintShapes(Graphics g) {
 		g.setColor(backgroundColor);
 		g.fillRect(0, 0, paper.getWidth(), paper.getHeight());
-		for (int i = 0; i < shapes.size(); i++) {
-			if (shapes.get(i).isVisible()) {
-				shapes.get(i).draw(g);
+		for (Shape shape:shapes) {
+			if (shape.isVisible()) {
+				shape.draw(g);
+				if (Main.shapeList.getSelectedShape() == shape) {
+					paintCornerWrappers(Main.getShapeList().getSelectedShape());
+				}
 			}
 		}
 	}

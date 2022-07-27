@@ -110,21 +110,27 @@ public class ShapeList extends JPanel{
 		return shapePanel;
 	}
 	public void setSelection(Shape s) {
-		for (int i = 0; i < shapePanels.size(); i++) {
-			if (s == shapePanels.get(i).shape) {
-				setSelection(shapePanels.get(i));
+		if (s == null) {
+			setSelection((ShapePanel)null);
+			return;
+		}
+		for (ShapePanel shapePanel: shapePanels) {
+			if (s == shapePanel.shape) {
+				setSelection(shapePanel);
 				return;
 			}
 		}
 	}
 	public void setSelection(ShapePanel shapePanel) {
 		if (selected != null) {
-			selected.setBackground(Color.WHITE);
+			selected.setBackground(Main.theme.getBackgroundColor());
 		}
 		selected = shapePanel;
-		selected.setBackground(Color.CYAN);
-		selected.revalidate();
-		selected.repaint();
+		if (selected != null) {
+			selected.setBackground(Color.CYAN);
+			selected.revalidate();
+			selected.repaint();
+		}
 	}
 	public Shape getSelectedShape() {
 		if (selected == null) {
