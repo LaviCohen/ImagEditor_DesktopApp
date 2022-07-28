@@ -7,15 +7,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import install.Resources;
 import le.gui.components.LSlider;
 import main.Main;
 import shapes.Picture;
@@ -33,6 +30,12 @@ public class OutlineEffect extends Effect{
 		this.objectRGB = Color.BLACK.getRGB();
 	}
 	
+	public OutlineEffect(String[] data) {
+		this.accuracy = Integer.parseInt(data[0]);
+		this.outlineRGB = Integer.parseInt(data[1]);
+		this.objectRGB = Integer.parseInt(data[2]);
+	}
+
 	@Override
 	public BufferedImage getImage(BufferedImage bf) {
 		BufferedImage ret = new BufferedImage(bf.getWidth(), bf.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -131,12 +134,8 @@ public class OutlineEffect extends Effect{
 		editDialog.pack();
 		editDialog.setVisible(true);
 	}
-	public static void maikjnkn(String[] args) {
-		JFrame f = new JFrame();
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Resources.init();
-		f.add(new JLabel(new ImageIcon(new OutlineEffect().getImage(Resources.defaultImage))));
-		f.pack();
-		f.setVisible(true);
+	@Override
+	public String encodeEffect() {
+		return super.encodeEffect() + "_" + this.accuracy + "_" + this.outlineRGB + "_" + this.objectRGB;
 	}
 }

@@ -5,7 +5,7 @@ public abstract class StretcableShpae extends Shape{
 	protected double width;
 	protected double height;
 	
-	public StretcableShpae(int x, int y, boolean visible, String name, double width, double height) {
+	public StretcableShpae(double x, double y, boolean visible, String name, double width, double height) {
 		super(x, y, visible, name);
 		this.width = width;
 		this.height = height;
@@ -15,6 +15,12 @@ public abstract class StretcableShpae extends Shape{
 		this.width += widthDiff;
 		this.height += heightDiff;
 	}
+	
+	@Override
+	public String encodeShape() {
+		return super.encodeShape() + "," + width + "," + height;
+	}
+	
 	@Override
 	public int getWidthOnBoard() {
 		return (int)getWidth();

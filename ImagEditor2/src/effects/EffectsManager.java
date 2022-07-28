@@ -166,7 +166,9 @@ public class EffectsManager extends Effect{
 		return panel;
 	}
 	public EffectsManager(String s, Picture parent) {
-		String[] data = s.split("^");
+		System.out.println("Decoding Effects Manager from Data: " + s);
+		String[] data = s.split("#");
+		System.out.println(data.length);
 		int effectsNum = data.length/2;
 		for (int i = 0; i < effectsNum; i++) {
 			effects.put(Effect.parseEffect(data[i * 2 + 1]),
@@ -181,7 +183,7 @@ public class EffectsManager extends Effect{
 		}
 		String s = "";
 		for (Object object : keys) {
-			s += "^" + ((Effect)object).encodeEffect() + "^" + effects.get(object);
+			s += "#" + ((Effect)object).encodeEffect() + "#" + effects.get(object);
 		}
 		return super.encodeEffect() + s;
 	}

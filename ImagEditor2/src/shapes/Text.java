@@ -26,7 +26,7 @@ public class Text extends Shape{
 	Color color;
 	Font font;
 	String text;
-	public Text(int x, int y, boolean visible, String name, Color color, Font font, String text) {
+	public Text(double x, double y, boolean visible, String name, Color color, Font font, String text) {
 		super(x, y, visible, name);
 		this.color = color;
 		this.font = font;
@@ -181,7 +181,7 @@ public class Text extends Shape{
 		this.text = text;
 	}
 	public Text(String[] data) {
-		this(Integer.parseInt(data[0]), Integer.parseInt(data[1]), 
+		this(Double.parseDouble(data[0]), Double.parseDouble(data[1]), 
 				Boolean.parseBoolean(data[2]), data[3], new Color(Integer.parseInt(data[4])),
 				new Font(data[5], Integer.parseInt(data[6]), Integer.parseInt(data[7])), data[8]);
 	}

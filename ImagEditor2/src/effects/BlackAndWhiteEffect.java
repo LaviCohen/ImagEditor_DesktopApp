@@ -82,6 +82,6 @@ public class BlackAndWhiteEffect extends Effect{
 	}
 	@Override
 	public String encodeEffect() {
-		return super.encodeEffect() + "|" + redStrength + "|" + greenStrength + "|" + blueStrength;
+		return super.encodeEffect() + "_" + redStrength + "_" + greenStrength + "_" + blueStrength;
 	}
 }

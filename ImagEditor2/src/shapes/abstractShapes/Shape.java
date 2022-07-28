@@ -25,7 +25,7 @@ public abstract class Shape {
 	protected boolean visible;
 	protected String name;
 	protected static int shapesCount = 1;
-	public Shape(int x, int y, boolean visible, String name) {
+	public Shape(double x, double y, boolean visible, String name) {
 		super();
 		this.x = x;
 		this.y = y;

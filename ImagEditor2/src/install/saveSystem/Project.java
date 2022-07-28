@@ -21,6 +21,7 @@ public class Project {
 		this.folder = null;
 		this.name = null;
 		this.board = new Board(Color.WHITE, DefaultSettings.paperWidth, DefaultSettings.paperHeight);
+		Main.theme.affect(board);
 	}
 	private Project(File file){
 		this.folder = file.getParentFile().getAbsolutePath();
@@ -32,6 +33,7 @@ public class Project {
 			String[] settings = scanner.nextLine().split(",");
 			this.board = new Board(new Color(Integer.parseInt(settings[2])), 
 					Integer.parseInt(settings[0]), Integer.parseInt(settings[1]));
+			Main.theme.affect(board);
 			String line = null;
 			while(scanner.hasNextLine()) {
 				line = scanner.nextLine();
@@ -47,6 +49,7 @@ public class Project {
 		String[] settings = lines[0].split(",");
 		this.board = new Board(new Color(Integer.parseInt(settings[2])), 
 				Integer.parseInt(settings[0]), Integer.parseInt(settings[1]));
+		Main.theme.affect(board);
 		for (int i = 1; i < lines.length; i++){
 			String line = lines[i];
 			try {

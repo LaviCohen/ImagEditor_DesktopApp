@@ -29,7 +29,7 @@ public class Rectangle extends StretcableShpae{
 	
 	boolean isFilled;
 	
-	public Rectangle(int x, int y, boolean visible, String name, double width, double height, Color color) {
+	public Rectangle(double x, double y, boolean visible, String name, double width, double height, Color color) {
 		super(x, y, visible, name, width, height);
 		this.color = color;
 		this.isFilled = true;
@@ -162,9 +162,12 @@ public class Rectangle extends StretcableShpae{
 		editDialog.setVisible(true);
 	}
 	public Rectangle(String[] data) {
-		this(Integer.parseInt(data[0]), Integer.parseInt(data[1]),
-				Boolean.parseBoolean(data[2]), data[3], Integer.parseInt(data[4]),
-				Integer.parseInt(data[5]), new Color(Integer.parseInt(data[6])));
+		this(Double.parseDouble(data[0]), Double.parseDouble(data[1]),
+				Boolean.parseBoolean(data[2]), data[3], Double.parseDouble(data[4]),
+				Double.parseDouble(data[5]), new Color(Integer.parseInt(data[6])));
+		this.isFilled = Boolean.parseBoolean(data[7]);
+		this.roundWidth = Integer.parseInt(data[8]);
+		this.roundHeight = Integer.parseInt(data[9]);
 	}
 	public Rectangle(String line) {
 		this(line.split(","));
@@ -172,6 +175,7 @@ public class Rectangle extends StretcableShpae{
 
 	@Override
 	public String encodeShape() {
-		return super.encodeShape() + "," + width + "," + height + "," + color.getRGB();
+		return super.encodeShape() + "," + color.getRGB() + "," + isFilled + "," + roundWidth
+				 + "," + roundHeight;
 	}
 }

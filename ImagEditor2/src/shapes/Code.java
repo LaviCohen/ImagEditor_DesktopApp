@@ -39,7 +39,7 @@ public class Code extends Shape{
 	}
 
 	public Code(String[] data) {
-		super(Integer.parseInt(data[0]), Integer.parseInt(data[1]), 
+		super(Double.parseDouble(data[0]), Double.parseDouble(data[1]), 
 				Boolean.parseBoolean(data[2]), data[3]);
 		this.code = data[4];
 	}

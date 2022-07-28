@@ -25,6 +25,10 @@ public class RetroEffect extends Effect{
 		this(32);
 	}
 
+	public RetroEffect(String[] data) {
+		this(Integer.parseInt(data[0]));
+	}
+
 	@Override
 	public BufferedImage getImage(BufferedImage bf) {
 		BufferedImage ret = new BufferedImage(bf.getWidth(), bf.getHeight(), 
@@ -67,4 +71,8 @@ public class RetroEffect extends Effect{
 		editDialog.setVisible(true);
 	}
 
+	@Override
+	public String encodeEffect() {
+		return super.encodeEffect() + "|" + this.variety;
+	}
 }

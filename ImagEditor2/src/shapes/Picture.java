@@ -51,7 +51,7 @@ public class Picture extends StretcableShpae{
 	EffectsManager effectsManger = new EffectsManager(this);
 	
 	//Constructor
-	public Picture(int x, int y, boolean visible, String name, BufferedImage img, double width, double height) {
+	public Picture(double x, double y, boolean visible, String name, double width, double height, BufferedImage img) {
 		super(x, y, visible, name, width, height);
 		this.image = img;
 	}
@@ -302,12 +302,12 @@ public class Picture extends StretcableShpae{
 		}else {
 			image = getImageToDisplay();
 		}
-		return new Picture(0, 0, true, "Copy of " + this.getName(), image, getWidth(), getHeight());		
+		return new Picture(0, 0, true, "Copy of " + this.getName(), getWidth(), getHeight(), image);		
 	}
 	public Picture(String[] data) throws NumberFormatException, IOException {
-		this(Integer.parseInt(data[0]), Integer.parseInt(data[1]), Boolean.parseBoolean(data[2]),
-				data[3], decodeSourceImage(data[4]), Integer.parseInt(data[5]), 
-				Integer.parseInt(data[6]));
+		this(Double.parseDouble(data[0]), Double.parseDouble(data[1]), Boolean.parseBoolean(data[2]),
+				data[3], Double.parseDouble(data[4]), Double.parseDouble(data[5]),
+				decodeSourceImage(data[6]));
 		this.effectsManger = new EffectsManager(data[7], this);
 	}
 	public Picture(String line) throws NumberFormatException, IOException {
@@ -315,8 +315,7 @@ public class Picture extends StretcableShpae{
 	}
 	@Override
 	public String encodeShape() {
-		return super.encodeShape() + "," + encodeSourceImge(image) + "," + width + "," + height
-				 + "," + effectsManger.encodeEffect();
+		return super.encodeShape() + "," + encodeSourceImge(image) + "," + effectsManger.encodeEffect();
 	}
 	public static String encodeSourceImge(BufferedImage bf) {
 		StringBuilder sb = new StringBuilder();
@@ -331,7 +330,7 @@ public class Picture extends StretcableShpae{
 	}
 	public static BufferedImage decodeSourceImage(String s) {
 		String[] data = s.split("!");
-		BufferedImage bf = new BufferedImage(Integer.parseInt(data[0]), Integer.parseInt(data[1]),
+		BufferedImage bf = new BufferedImage((int)Double.parseDouble(data[0]), (int)Double.parseDouble(data[1]),
 				BufferedImage.TYPE_INT_ARGB);
 		for (int i = 0; i < bf.getWidth(); i++) {
 			for (int j = 0; j < bf.getHeight(); j++) {

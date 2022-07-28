@@ -62,8 +62,10 @@ public class Actions {
 					e.printStackTrace();
 				}
 			}
-		}else if (command.equals("Save As Project")) {
+		}else if (command.equals("Save Project")) {
 			save();
+		}else if (command.equals("Save Project As...")) {
+			saveAs();
 		}else if (command.equals("Open Project from this Computer")) {
 			openProjectFromThisComputer();
 		}else if (command.equals("Open Project from Web")) {
@@ -321,9 +323,6 @@ public class Actions {
 			Main.switchProject(Project.loadProject(fc.getSelectedFile()));		
 		}
 	}
-	/**
-	 * Method that pop up a dialog to ask where to  save the project, and than save it as a project.
-	 * */
 	public static void save() {
 		if (Main.currentProject.hasFile()) {
 			int ans = LDialogs.showConfirmDialog(Main.f, 
@@ -331,19 +330,27 @@ public class Actions {
 			if (ans == LDialogs.YES_OPTION) {
 				try {
 					Main.currentProject.save();
+					System.out.println("Saving project to " + 
+							Main.currentProject.folder + "\\" + Main.currentProject.name + ".iep");
+					LDialogs.showMessageDialog(Main.f, "Project has been saved successfuly");
 					return;
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
 		}
+		saveAs();
+	}
+	/**
+	 * Method that pop up a dialog to ask where to  save the project, and than save it as a project.
+	 * */
+	public static void saveAs() {
 		JDialog saveDialog = new JDialog(Main.f);
 		saveDialog.setTitle("Save As Project");
 		saveDialog.setLayout(new GridLayout(3, 1));
 		JPanel dirPanel = new JPanel(new BorderLayout());
 		Main.theme.affect(dirPanel);
-		dirPanel.add(Main.theme.affect(dirPanel), Main.translator.getBeforeTextBorder());
+		dirPanel.add(Main.theme.affect(new JLabel("Directory:")), Main.translator.getBeforeTextBorder());
 		JTextField dirField = new JTextField();
 		Main.theme.affect(dirField);
 		dirField.setEditable(false);
@@ -390,6 +397,7 @@ public class Actions {
 				Main.currentProject.name = nameField.getText();
 				System.out.println("Saving project to " + 
 						dirField.getText() + "\\" + nameField.getText() + ".iep");
+				LDialogs.showMessageDialog(Main.f, "Project has been saved successfuly");
 				try {
 					Main.currentProject.save();
 				} catch (IOException e1) {
@@ -582,7 +590,7 @@ public class Actions {
 	 * Adds Picture to the current project.
 	 * */
 	public static void addPicture() {
-		Picture p = new Picture(0, 0, true, null, Resources.defaultImage, 150, 50);
+		Picture p = new Picture(0, 0, true, null, 150, 50, Resources.defaultImage);
 		Main.getBoard().addShape(p);
 		p.edit();
 	}

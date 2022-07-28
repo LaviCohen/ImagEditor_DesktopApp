@@ -93,6 +93,6 @@ public class BlurEffect extends Effect{
 	}
 	@Override
 	public String encodeEffect() {
-		return super.encodeEffect() + "|" + radius;
+		return super.encodeEffect() + "_" + radius;
 	}
 }

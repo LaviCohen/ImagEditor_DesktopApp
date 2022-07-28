@@ -132,7 +132,7 @@ public class GreenScreenEffect extends Effect{
 	}
 	@Override
 	public String encodeEffect() {
-		return super.encodeEffect() + "|" + colorRed + "|" + colorGreen + "|" + colorBlue
-				 + "|" + accuracy;
+		return super.encodeEffect() + "_" + colorRed + "_" + colorGreen + "_" + colorBlue
+				 + "_" + accuracy;
 	}
 }
