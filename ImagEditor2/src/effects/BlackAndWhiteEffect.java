@@ -73,7 +73,7 @@ public class BlackAndWhiteEffect extends Effect{
 		editBlackAwhiteDialog.setVisible(true);
 	}
 	public BlackAndWhiteEffect() {
-		// TODO Auto-generated constructor stub
+		
 	}
 	public BlackAndWhiteEffect(String[] data) {
 		this.redStrength = Integer.parseInt(data[0]);
