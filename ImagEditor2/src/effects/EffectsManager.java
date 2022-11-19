@@ -23,22 +23,15 @@ public class EffectsManager extends Effect{
 	public Picture parent;
 	public HashMap<Effect, Boolean> effects = new HashMap<Effect, Boolean>();
 	public EffectsManager(Picture picture) {
+		System.out.println(picture);
 		this.parent = picture;
 	}
-	public BufferedImage getImage(BufferedImage bufferedImage) {
-		BufferedImage ret = bufferedImage;
+	public void affectImage(BufferedImage bufferedImage) {
 		for(Effect effect:effects.keySet()) {
-			if (effect instanceof GreenScreenEffect && effects.get(effect)) {
-				ret = effect.getImage(ret);
+			if (effects.get(effect) == true) {// == true isn't needed, but code is more readable now
+				effect.affectImage(bufferedImage);
 			}
 		}
-		for(Effect effect:effects.keySet()) {
-			if (!(effect instanceof GreenScreenEffect) && effects.get(effect)) {
-//				System.out.println("Performing " + effect.getClass().getName() + " Effect");
-				ret = effect.getImage(ret);
-			}
-		}
-		return ret;
 	}
 	@Override
 	public void edit(Picture parent) {
@@ -166,6 +159,7 @@ public class EffectsManager extends Effect{
 		return panel;
 	}
 	public EffectsManager(String s, Picture parent) {
+		this(parent);
 		System.out.println("Decoding Effects Manager from Data: " + s);
 		String[] data = s.split("#");
 		System.out.println(data.length);

@@ -28,7 +28,7 @@ public class GreenScreenEffect extends Effect{
 	
 	int accuracy = 50;
 	@Override
-	public BufferedImage getImage(BufferedImage bf) {
+	public void affectImage(BufferedImage bf) {
 		int width = bf.getWidth();
 		int height = bf.getHeight();
 		for (int i = 0; i < width; i++) {
@@ -36,7 +36,6 @@ public class GreenScreenEffect extends Effect{
 				bf.setRGB(i, j, getColor(bf.getRGB(i, j)));
 			}
 		}
-		return bf;
 	}
 	public int getColor(int rgb) {
 		Color c = new Color(rgb);
@@ -124,7 +123,7 @@ public class GreenScreenEffect extends Effect{
 	public GreenScreenEffect(String[] data) {
 		this.colorRed = Integer.parseInt(data[0]);
 		this.colorGreen = Integer.parseInt(data[1]);
-		this.colorRed = Integer.parseInt(data[2]);
+		this.colorBlue = Integer.parseInt(data[2]);
 		this.accuracy = Integer.parseInt(data[3]);
 	}
 	public GreenScreenEffect() {

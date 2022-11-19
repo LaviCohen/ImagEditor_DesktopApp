@@ -16,13 +16,14 @@ import shapes.Picture;
 public class BlurEffect extends Effect{
 	int radius = 3;
 	@Override
-	public BufferedImage getImage(BufferedImage bf) {
+	public void affectImage(BufferedImage bf) {
+		BufferedImage ret = new BufferedImage(bf.getWidth(), bf.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		for (int i = 0; i < bf.getWidth(); i++) {
 			for (int j = 0; j < bf.getHeight(); j++) {
-				bf.setRGB(i, j, getAverageColor(bf, i, j, radius).getRGB());
+				ret.setRGB(i, j, getAverageColor(bf, i, j, radius).getRGB());
 			}
 		}
-		return bf;
+		bf.createGraphics().drawImage(bf, 0, 0, null);
 	}
 	@Override
 	public void edit(Picture parent) {

@@ -18,9 +18,9 @@ import javax.swing.JTextField;
 import le.gui.components.LSlider;
 import le.gui.dialogs.LDialogs;
 import main.Main;
-import shapes.abstractShapes.StretcableShpae;
+import shapes.abstractShapes.StretchableShpae;
 
-public class Rectangle extends StretcableShpae{
+public class Rectangle extends StretchableShpae{
 
 	Color color;
 	

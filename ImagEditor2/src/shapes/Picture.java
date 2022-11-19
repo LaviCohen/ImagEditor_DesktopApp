@@ -26,9 +26,9 @@ import effects.EffectsManager;
 import install.DefaultSettings;
 import le.gui.dialogs.LDialogs;
 import main.Main;
-import shapes.abstractShapes.StretcableShpae;
+import shapes.abstractShapes.StretchableShpae;
 
-public class Picture extends StretcableShpae{
+public class Picture extends StretchableShpae{
 	
 	public static final int MINIMUM = 5;
 	
@@ -69,10 +69,16 @@ public class Picture extends StretcableShpae{
 		g.drawImage(lastDrawn, (int)x, (int)y, getWidthOnBoard(), getHeightOnBoard(), null);
 	}
 	public BufferedImage getImageToDisplay() {
-		BufferedImage displayImage = getScaledImage(image.getSubimage(
-				(int)cutFromLeft, (int)cutFromTop, (int)getCutWidth(), (int)getCutHeight()), 
-				getWidthOnBoard(), getHeightOnBoard());
-    	return effectsManger.getImage(displayImage);
+		BufferedImage displayImage =  image.getSubimage(
+				(int)cutFromLeft, (int)cutFromTop, (int)getCutWidth(), (int)getCutHeight());
+		if (getWidthOnBoard() * getHeightOnBoard() > image.getHeight() * image.getWidth()) {
+			effectsManger.affectImage(displayImage);
+			displayImage = getScaledImage(displayImage, getWidthOnBoard(), getHeightOnBoard());
+		} else {
+			displayImage = getScaledImage(displayImage, getWidthOnBoard(), getHeightOnBoard());
+			effectsManger.affectImage(displayImage);
+		}
+		return displayImage;
 	}
 	public double getCutHeight() {
 		return image.getHeight() - cutFromTop - cutFromBottom;

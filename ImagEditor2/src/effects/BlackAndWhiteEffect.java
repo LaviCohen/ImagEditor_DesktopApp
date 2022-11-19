@@ -19,7 +19,8 @@ public class BlackAndWhiteEffect extends Effect{
 	int redStrength = 100;
 	int greenStrength = 100;
 	int blueStrength = 100;
-	public BufferedImage getImage(BufferedImage bf) {
+	@Override
+	public void affectImage(BufferedImage bf) {
 		int width = bf.getWidth();
 		int height = bf.getHeight();
 		for (int i = 0; i < width; i++) {
@@ -27,7 +28,6 @@ public class BlackAndWhiteEffect extends Effect{
 				bf.setRGB(i, j, getColor(bf.getRGB(i, j)));
 			}
 		}
-		return bf;
 	}
 	public int getColor(int rgb) {
 		Color c = new Color(rgb);

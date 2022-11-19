@@ -139,13 +139,19 @@ public class Main {
 	};
 	public static void main(String[] args) {
 		startup();
-		createProgramVars();
+		createProgramExternalVars();
 		checkIfPreviousRunFailed();
 		initializeLogger();
 		applyExceptionsHandling();
 		checkIfInstalled();
 		initNormalSetting();
 		initResources();
+		initGUI();
+		displayFrame();
+		finishStartup();
+		websiteChecks();
+	}
+	private static void initGUI() {
 		initProgramFrame();
 		initMenuBar();
 		initControlBar();
@@ -155,9 +161,6 @@ public class Main {
 		initSideBarPanel();
 		updateShapeList();
 		applyThemeColors();
-		displayFrame();
-		finishStartup();
-		websiteChecks();
 	}
 	private static void initProject() {
 		Main.currentProject = new Project();
@@ -182,7 +185,7 @@ public class Main {
 		startUpMillis = System.currentTimeMillis();
 		System.out.println("Start-Up");
 	}
-	private static void createProgramVars() {
+	private static void createProgramExternalVars() {
 		Main.install = new Install("C:\\ImagEditor" + Main.version);
 		Main.translator = new Translator(install);
 		Main.logger = new Logger(install);

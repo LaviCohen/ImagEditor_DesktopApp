@@ -19,7 +19,7 @@ import main.Main;
 import shapes.Picture;
 import shapes.Text;
 import shapes.abstractShapes.Shape;
-import shapes.abstractShapes.StretcableShpae;
+import shapes.abstractShapes.StretchableShpae;
 
 public class Board extends JPanel{
 	private static final long serialVersionUID = 1L;
@@ -141,25 +141,25 @@ public class Board extends JPanel{
 						case TOP_LEFT_WRAPPER:
 							shapeInFocus.setX(shapeInFocus.getX() + movementInX);
 							shapeInFocus.setY(shapeInFocus.getY() + movementInY);
-							if (shapeInFocus instanceof StretcableShpae) {
-								((StretcableShpae)shapeInFocus).strecthBy(-movementInX, -movementInY);
+							if (shapeInFocus instanceof StretchableShpae) {
+								((StretchableShpae)shapeInFocus).strecthBy(-movementInX, -movementInY);
 							}
 							break;
 						case TOP_RIGHT_WRAPPER:
 							shapeInFocus.setY(shapeInFocus.getY() + movementInY);
-							if (shapeInFocus instanceof StretcableShpae) {
-								((StretcableShpae)shapeInFocus).strecthBy(movementInX, -movementInY);
+							if (shapeInFocus instanceof StretchableShpae) {
+								((StretchableShpae)shapeInFocus).strecthBy(movementInX, -movementInY);
 							}
 							break;
 						case BOTTOM_LEFT_WRAPPER:
 							shapeInFocus.setX(shapeInFocus.getX() + movementInX);
-							if (shapeInFocus instanceof StretcableShpae) {
-								((StretcableShpae)shapeInFocus).strecthBy(-movementInX, movementInY);
+							if (shapeInFocus instanceof StretchableShpae) {
+								((StretchableShpae)shapeInFocus).strecthBy(-movementInX, movementInY);
 							}
 							break;
 						case BOTTOM_RIGHT_WRAPPER:
-							if (shapeInFocus instanceof StretcableShpae) {
-								((StretcableShpae)shapeInFocus).strecthBy(movementInX, movementInY);
+							if (shapeInFocus instanceof StretchableShpae) {
+								((StretchableShpae)shapeInFocus).strecthBy(movementInX, movementInY);
 							}
 							break;
 						}

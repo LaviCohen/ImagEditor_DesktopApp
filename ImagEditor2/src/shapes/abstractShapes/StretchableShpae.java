@@ -1,11 +1,11 @@
 package shapes.abstractShapes;
 
-public abstract class StretcableShpae extends Shape{
+public abstract class StretchableShpae extends Shape{
 	
 	protected double width;
 	protected double height;
 	
-	public StretcableShpae(double x, double y, boolean visible, String name, double width, double height) {
+	public StretchableShpae(double x, double y, boolean visible, String name, double width, double height) {
 		super(x, y, visible, name);
 		this.width = width;
 		this.height = height;

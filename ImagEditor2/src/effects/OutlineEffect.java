@@ -37,7 +37,7 @@ public class OutlineEffect extends Effect{
 	}
 
 	@Override
-	public BufferedImage getImage(BufferedImage bf) {
+	public void affectImage(BufferedImage bf) {
 		BufferedImage ret = new BufferedImage(bf.getWidth(), bf.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		for (int i = 0; i < bf.getWidth(); i++) {
 			for (int j = 0; j < bf.getHeight(); j++) {
@@ -62,7 +62,7 @@ public class OutlineEffect extends Effect{
 				}
 			}
 		}
-		return ret;
+		bf.createGraphics().drawImage(ret, 0, 0, null);
 	}
 	
 	public boolean isAlike(int rgb1, int rgb2) {
