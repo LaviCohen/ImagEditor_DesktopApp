@@ -1,6 +1,7 @@
 package operatins;
 
-public abstract interface Operation {
+public interface Operation {
 
-	public abstract void undo();
+	public void undo();
+	public void redo();
 }

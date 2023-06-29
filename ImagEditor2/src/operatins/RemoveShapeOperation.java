@@ -19,4 +19,11 @@ public class RemoveShapeOperation implements Operation{
 		Main.updateShapeList();
 	}
 
+	@Override
+	public void redo() {
+		Main.getBoard().getShapesList().remove(s);
+		Main.getBoard().repaint();
+		Main.updateShapeList();
+	}
+
 }

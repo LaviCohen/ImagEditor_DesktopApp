@@ -34,8 +34,6 @@ import le.gui.components.LSlider;
 import le.gui.dialogs.LDialogs;
 import le.log.ExceptionUtils;
 import le.log.Logger;
-import operatins.OperationsManager;
-import operatins.RemoveShapeOperation;
 import shapes.abstractShapes.Shape;
 import webServices.Account;
 import webServices.AccountUndefindException;
@@ -395,13 +393,7 @@ public class Main {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (getShapeList().getSelectedShape() != null) {
-					OperationsManager.addOperation(new RemoveShapeOperation(
-							getShapeList().getSelectedShape()));
-					getBoard().getShapesList().remove(getShapeList().getSelectedShape());
-					getBoard().repaint();
-					updateShapeList();
-				}
+				Actions.remove();
 			}
 		});
 		sideBarPanel.add(actionsPanel, BorderLayout.SOUTH);
@@ -488,7 +480,7 @@ public class Main {
 						Main.translator.get("Visit Website") },
 				{ Main.translator.get("Actions"), Main.translator.get("Edit") + "#e",
 						Main.translator.get("Set Paper Size"), Main.translator.get("Refresh") + "#r" ,
-						Main.translator.get("Undo") + "#z"},
+						Main.translator.get("Undo") + "#z", Main.translator.get("Redo") + "#y"},
 				{ Main.translator.get("Add"), Main.translator.get("Rectangle") + "@r",
 						Main.translator.get("Text") + "@t", Main.translator.get("Picture") + "@p"
 						, Main.translator.get("Code") + "@c"},

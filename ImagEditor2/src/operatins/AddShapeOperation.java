@@ -19,4 +19,11 @@ public class AddShapeOperation implements Operation{
 		Main.updateShapeList();
 	}
 
+	@Override
+	public void redo() {
+		Main.getBoard().getShapesList().add(s);
+		Main.getBoard().repaint();
+		Main.updateShapeList();
+	}
+
 }
