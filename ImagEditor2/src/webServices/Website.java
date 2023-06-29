@@ -69,4 +69,16 @@ public class Website extends AbstractWebsite{
 		}
 	}
 
+	public boolean showInavaliabilityMessage() {
+		int option = LDialogs.showConfirmDialog(Main.f, "<html>You can't preform this operation because website is inavaliable."
+				+ "<br/>Do you want to retry connecting?</html>", "Website Inavaliable");
+		if (option == LDialogs.YES_OPTION) {
+			Main.website.checkUpdate();
+			if (Main.website.isWebsiteAvaliable()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

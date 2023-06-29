@@ -53,15 +53,7 @@ public class Actions {
 		}else if (command.equals("Preferences")) {
 			openPreferencesDialog();
 		}else if (command.equals("Set Paper Size")) {
-			try {
-				Main.getBoard().setPaperSize(
-						Integer.parseInt(LDialogs.showInputDialog(Main.f, "Enter Width:")),
-						Integer.parseInt(LDialogs.showInputDialog(Main.f, "Enter Height:")));
-			} catch (Exception e) {
-				if (!(e instanceof NumberFormatException)) {
-					e.printStackTrace();
-				}
-			}
+			setPaperSize();
 		}else if (command.equals("Save Project")) {
 			save();
 		}else if (command.equals("Save Project As...")) {
@@ -95,6 +87,17 @@ public class Actions {
 			sendReport();
 		}else if (command.equals("Log")) {
 			openLog();
+		}
+	}
+	public static void setPaperSize() {
+		try {
+			Main.getBoard().setPaperSize(
+					Integer.parseInt(LDialogs.showInputDialog(Main.f, "Enter Width:")),
+					Integer.parseInt(LDialogs.showInputDialog(Main.f, "Enter Height:")));
+		} catch (Exception e) {
+			if (!(e instanceof NumberFormatException)) {
+				e.printStackTrace();
+			}
 		}
 	}
 	/**

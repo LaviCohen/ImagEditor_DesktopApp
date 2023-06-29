@@ -165,10 +165,17 @@ public class Account {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				boolean continueOperation = true;
+				if (!Main.website.isWebsiteAvaliable()) {
+					continueOperation = Main.website.showInavaliabilityMessage();
+				}
+				if (!continueOperation) {
+					return;
+				}
 				if (Main.myAccount == Account.LOCAL_ACCOUNT) {
 					d.dispose();
 					Account.GUILogin();
-				}else {	
+				}else {
 					d.dispose();
 					logout();
 					Main.myAccount.showAccount();
