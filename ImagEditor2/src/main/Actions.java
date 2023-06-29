@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -36,6 +35,7 @@ import le.gui.components.LTextArea;
 import le.gui.components.LTextField;
 import le.gui.dialogs.LDialogs;
 import le.log.Logger;
+import operatins.OperationsManager;
 import shapes.Code;
 import shapes.Picture;
 import shapes.Rectangle;
@@ -83,6 +83,8 @@ public class Actions {
 		}else if (command.equals("Refresh")) {
 			Main.getBoard().repaint();
 			Main.updateShapeList();
+		}else if (command.equals("Undo")) {
+			OperationsManager.undo();
 		}else if(command.equals("Profile")) {
 			Main.myAccount.showAccount();
 		}else if (command.equals("Visit Website")) {
