@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -44,6 +45,9 @@ import webServices.WebProjectsUtils;
  * The actions which handled inside this class are shortcuts and menu actions. 
  * **/
 public class Actions {
+	
+	
+	
 	/** This method take the action command as a string and call the right method in this class.
 	 * @param command - The action string command.
 	 * */

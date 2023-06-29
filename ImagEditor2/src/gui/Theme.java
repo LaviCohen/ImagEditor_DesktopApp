@@ -14,6 +14,7 @@ public class Theme implements ColorTheme{
 	private static Color darkModeBackgroundColor = new Color(66, 66, 66);
 	private static Color lightModeTextColor = Color.BLACK;
 	private static Color darkModeTextColor = Color.WHITE;
+	private boolean isAffectingButtons = false;
 	
 	@Override
 	public Color getBackgroundColor() {
@@ -35,8 +36,10 @@ public class Theme implements ColorTheme{
 			component.setBackground(getBackgroundColor().brighter());
 			component.setForeground(getTextColor());
 		}else if(component instanceof JButton){	
-			component.setBackground(getBackgroundColor().darker());
-			component.setForeground(getTextColor());
+			if (isAffectingButtons()) {
+				component.setBackground(getBackgroundColor().darker());
+				component.setForeground(getTextColor());
+			}
 		}else{
 			component.setOpaque(true);
 			ColorTheme.super.affect(component);
@@ -48,5 +51,9 @@ public class Theme implements ColorTheme{
 	}
 	public boolean isLightMode() {
 		return !DefaultSettings.darkMode;
+	}
+	@Override
+	public boolean isAffectingButtons() {
+		return isAffectingButtons ;
 	}
 }
