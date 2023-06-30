@@ -21,8 +21,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import gui.Theme;
-import gui.components.Board;
 import gui.components.ShapeList;
+import gui.components.board.Board;
 import install.Decoder;
 import install.DefaultSettings;
 import install.Install;
