@@ -88,8 +88,12 @@ public class Actions {
 			Main.updateShapeList();
 		}else if (command.equals("Undo")) {
 			OperationsManager.undo();
+			Main.getBoard().repaint();
+			Main.updateShapeList();
 		}else if (command.equals("Redo")) {
 			OperationsManager.redo();
+			Main.getBoard().repaint();
+			Main.updateShapeList();
 		}else if(command.equals("Profile")) {
 			Main.myAccount.showAccount();
 		}else if (command.equals("Visit Website")) {
@@ -102,7 +106,7 @@ public class Actions {
 	}
 	public static void setPaperSize() {
 		try {
-			OperationsManager.addOperation(new SetPaperSizeOperation(
+			OperationsManager.operate(new SetPaperSizeOperation(
 					Main.getBoard().getPaperWidth(), Main.getBoard().getPaperHeight(),
 					Integer.parseInt(LDialogs.showInputDialog(Main.f, "Enter Width:")),
 					Integer.parseInt(LDialogs.showInputDialog(Main.f, "Enter Height:"))));
@@ -589,7 +593,7 @@ public class Actions {
 	 * */
 	public static void addRectagle() {
 		Rectangle r = new Rectangle(0, 0, true, null, 100, 100, Color.BLUE);
-		OperationsManager.addOperation(new AddShapeOperation(r));
+		OperationsManager.operate(new AddShapeOperation(r));
 		r.edit();
 	}
 	/**
@@ -598,7 +602,7 @@ public class Actions {
 	public static void addText() {
 		Text t = new Text(
 				0, 0, true, null, Color.BLACK, new Font("Arial", Font.PLAIN, 20), "text");
-		OperationsManager.addOperation(new AddShapeOperation(t));
+		OperationsManager.operate(new AddShapeOperation(t));
 		t.edit();
 	}
 	/**
@@ -606,7 +610,7 @@ public class Actions {
 	 * */
 	public static void addPicture() {
 		Picture p = new Picture(0, 0, true, null, 150, 50, Resources.defaultImage);
-		OperationsManager.addOperation(new AddShapeOperation(p));
+		OperationsManager.operate(new AddShapeOperation(p));
 		p.edit();
 	}
 	/**
@@ -614,7 +618,7 @@ public class Actions {
 	 * */
 	public static void addCode() {
 		Code c = new Code("<html><i>Your Code</i></html>", true);
-		OperationsManager.addOperation(new AddShapeOperation(c));
+		OperationsManager.operate(new AddShapeOperation(c));
 		c.edit();
 	}
 	/**
@@ -634,7 +638,7 @@ public class Actions {
 			return;
 		}
 		if (LDialogs.showConfirmDialog(Main.f, "Are you sure?") == LDialogs.YES_OPTION) {
-			OperationsManager.addOperation(new RemoveShapeOperation(Main.getShapeList().getSelectedShape()));
+			OperationsManager.operate(new RemoveShapeOperation(Main.getShapeList().getSelectedShape()));
 		}
 	}
 	/**

@@ -10,12 +10,16 @@ public class OperationsManager {
 	private static int indexFromLastOperation;
 	
 	
+	public static void operate(Operation operation) {
+		operation.redo();
+		addOperation(operation);
+	}
+	
 	public static void addOperation(Operation operation) {
 		for (int i = 0; i < indexFromLastOperation; i++) {
 			operations.removeLast();
 		}
 		indexFromLastOperation = 0;
-		operation.redo();
 		operations.add(operation);
 	}
 	

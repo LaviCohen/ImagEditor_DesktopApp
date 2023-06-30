@@ -75,28 +75,16 @@ public class Code extends Shape{
 		textPanel.add(textArea);
 		editDialog.add(textPanel);
 		JButton apply = new JButton("Apply");
+		JButton preview = new JButton("Preview");
 		Main.theme.affect(apply);
 		apply.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					double x = Double.parseDouble(xField.getText());
-					double y = Double.parseDouble(yField.getText());
-					String code = textArea.getText();
-					Code.this.x = x;
-					Code.this.y = y;
-					Code.this.code = code;
-					Code.this.pane.setText(code);
-					editDialog.dispose();
-					Main.getShapeList().updateImage(Code.this);
-					Main.getBoard().repaint();
-				} catch (Exception e2) {
-					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
-				}
+				preview.getActionListeners()[0].actionPerformed(new ActionEvent(apply, 0, "apply"));
+				editDialog.dispose();
 			}
 		});
-		JButton preview = new JButton("Preview");
 		Main.theme.affect(preview);
 		preview.addActionListener(new ActionListener() {
 			

@@ -100,34 +100,16 @@ public class Rectangle extends StretchableShpae{
 		Main.theme.affect(isFilledCheckBox);
 		editDialog.add(isFilledCheckBox);
 		JButton apply = new JButton("Apply");
+		JButton preview = new JButton("Preview");
 		Main.theme.affect(apply);
 		apply.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					double x = Double.parseDouble(xField.getText());
-					double y = Double.parseDouble(yField.getText());
-					double width = Double.parseDouble(widthField.getText());
-					double height = Double.parseDouble(heightField.getText());
-					Color color = colorLabel.getBackground();
-					Rectangle.this.x = x;
-					Rectangle.this.y = y;
-					Rectangle.this.width = width;
-					Rectangle.this.height = height;
-					Rectangle.this.color = color;
-					Rectangle.this.roundWidth = roundWidthSlider.getValue();
-					Rectangle.this.roundHeight = roundHeightSlider.getValue();
-					Rectangle.this.isFilled = isFilledCheckBox.isSelected();
-					Main.getShapeList().updateImage(Rectangle.this);
-					editDialog.dispose();
-					Main.getBoard().repaint();
-				} catch (Exception e2) {
-					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
-				}
+				preview.getActionListeners()[0].actionPerformed(new ActionEvent(apply, 0, "apply"));
+				editDialog.dispose();
 			}
 		});
-		JButton preview = new JButton("Preview");
 		Main.theme.affect(preview);
 		preview.addActionListener(new ActionListener() {
 			

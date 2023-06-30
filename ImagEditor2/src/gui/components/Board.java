@@ -16,6 +16,10 @@ import javax.swing.JPanel;
 
 import le.gui.dialogs.LDialogs;
 import main.Main;
+import operatins.ChangesOperation;
+import operatins.OperationsManager;
+import operatins.changes.Change;
+import operatins.changes.NumericalChange;
 import shapes.Picture;
 import shapes.Text;
 import shapes.abstractShapes.Shape;
@@ -44,15 +48,23 @@ public class Board extends JPanel{
 			Shape shapeInFocus = null;
 			
 			
-			int firstX = 0;
-			int firstY = 0;
+			int previousX = 0;
+			int previousY = 0;
+			double totalMovementX = 0;
+			double totalMovementY = 0;
+			double totalStretchX = 0;
+			double totalStretchY = 0;
+			double totalCutFromBottom = 0;
+			double totalCutFromTop = 0;
+			double totalCutFromRight = 0;
+			double totalCutFromLeft = 0;
 			int movementInX = 0;
 			int movementInY = 0;
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
-				firstX = e.getXOnScreen();
-				firstY = e.getYOnScreen();
+				previousX = e.getXOnScreen();
+				previousY = e.getYOnScreen();
 				shapeInFocus = getShapeAt(
 						(int)((e.getX() - getLeftGap()) / getZoomRate()),
 						(int)((e.getY() - getTopGap()) / getZoomRate()));
@@ -72,8 +84,50 @@ public class Board extends JPanel{
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				firstX = 0;
-				firstY = 0;
+				if (shapeInFocus != null) {
+					LinkedList<Change> changes = new LinkedList<Change>();
+					System.out.println("Total Movment: " + totalMovementX + ", " + totalMovementY);
+					if (totalMovementX != 0) {
+						changes.add(new NumericalChange(Change.X_CHANGE, totalMovementX));
+					}
+					if (totalMovementY != 0) {
+						changes.add(new NumericalChange(Change.Y_CHANGE, totalMovementY));
+					}
+					if (totalStretchX != 0) {
+						changes.add(new NumericalChange(Change.WIDTH_CHANGE, totalStretchX));
+					}
+					if (totalStretchY != 0) {
+						changes.add(new NumericalChange(Change.HEIGHT_CHANGE, totalStretchY));
+					}
+					if (totalCutFromBottom != 0) {
+						changes.add(new NumericalChange(Change.CUT_FROM_BOTTOM_CHANGE, totalCutFromBottom));
+					}
+					if (totalCutFromTop != 0) {
+						changes.add(new NumericalChange(Change.CUT_FROM_TOP_CHANGE, totalCutFromTop));
+					}
+					if (totalCutFromRight != 0) {
+						changes.add(new NumericalChange(Change.CUT_FROM_RIGHT_CHANGE, totalCutFromRight));
+					}
+					if (totalCutFromLeft != 0) {
+						changes.add(new NumericalChange(Change.CUT_FROM_LEFT_CHANGE, totalCutFromLeft));
+					}
+					
+					if (!changes.isEmpty()) {
+						OperationsManager.addOperation(new ChangesOperation(shapeInFocus, 
+								changes.toArray(new Change[0])));
+					}
+					
+				}
+				previousX = 0;
+				previousY = 0;
+				totalMovementX = 0;
+				totalMovementY = 0;
+				totalStretchX = 0;
+				totalStretchY = 0;
+				totalCutFromBottom = 0;
+				totalCutFromTop= 0;
+				totalCutFromRight = 0;
+				totalCutFromLeft = 0;
 				movementInX = 0;
 				movementInY = 0;
 				shapeInFocus = null;
@@ -109,26 +163,34 @@ public class Board extends JPanel{
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				if (shapeInFocus != null) {
-					movementInX = (int)(e.getXOnScreen() - firstX) * 100 / Main.getZoomSlider().getValue();
-					movementInY = (int)(e.getYOnScreen() - firstY) * 100 / Main.getZoomSlider().getValue();
+					movementInX = (int)(e.getXOnScreen() - previousX) * 100 / Main.getZoomSlider().getValue();
+					movementInY = (int)(e.getYOnScreen() - previousY) * 100 / Main.getZoomSlider().getValue();
 					if(shapeInFocus instanceof Picture && ((Picture)shapeInFocus).isCutting() && touchedWrapper != 0) {
 						Picture p = ((Picture)shapeInFocus);
 						switch(touchedWrapper){
 						case TOP_LEFT_WRAPPER:
 							p.addToCutFromLeft(movementInX);
+							totalCutFromLeft += movementInX;
 							p.addToCutFromTop(movementInY);
+							totalCutFromTop += movementInY;
 							break;
 						case TOP_RIGHT_WRAPPER:
 							p.addToCutFromRight(-movementInX);
+							totalCutFromRight -= movementInX;
 							p.addToCutFromTop(movementInY);
+							totalCutFromTop += movementInY;
 							break;
 						case BOTTOM_LEFT_WRAPPER:
 							p.addToCutFromLeft(movementInX);
+							totalCutFromLeft += movementInX;
 							p.addToCutFromBottom(-movementInY);
+							totalCutFromBottom -= movementInX;
 							break;
 						case BOTTOM_RIGHT_WRAPPER:
 							p.addToCutFromRight(-movementInX);
+							totalCutFromRight -= movementInX;
 							p.addToCutFromBottom(-movementInY);
+							totalCutFromBottom += movementInY;
 							break;
 						}
 						p.lastDrawn = null;
@@ -136,36 +198,50 @@ public class Board extends JPanel{
 						switch(touchedWrapper){
 						case 0:
 							shapeInFocus.setX(shapeInFocus.getX() + movementInX);
+							totalMovementX += movementInX;
 							shapeInFocus.setY(shapeInFocus.getY() + movementInY);
+							totalMovementY += movementInY;
 							break;
 						case TOP_LEFT_WRAPPER:
 							shapeInFocus.setX(shapeInFocus.getX() + movementInX);
+							totalMovementX += movementInX;
 							shapeInFocus.setY(shapeInFocus.getY() + movementInY);
+							totalMovementY += movementInY;
 							if (shapeInFocus instanceof StretchableShpae) {
 								((StretchableShpae)shapeInFocus).strecthBy(-movementInX, -movementInY);
+								totalStretchX -= movementInX;
+								totalStretchY -= movementInY;
 							}
 							break;
 						case TOP_RIGHT_WRAPPER:
 							shapeInFocus.setY(shapeInFocus.getY() + movementInY);
+							totalMovementY += movementInY;
 							if (shapeInFocus instanceof StretchableShpae) {
 								((StretchableShpae)shapeInFocus).strecthBy(movementInX, -movementInY);
+								totalStretchX += movementInX;
+								totalStretchY -= movementInY;
 							}
 							break;
 						case BOTTOM_LEFT_WRAPPER:
 							shapeInFocus.setX(shapeInFocus.getX() + movementInX);
+							totalMovementX += movementInX;
 							if (shapeInFocus instanceof StretchableShpae) {
 								((StretchableShpae)shapeInFocus).strecthBy(-movementInX, movementInY);
+								totalStretchX -= movementInX;
+								totalStretchY += movementInY;
 							}
 							break;
 						case BOTTOM_RIGHT_WRAPPER:
 							if (shapeInFocus instanceof StretchableShpae) {
 								((StretchableShpae)shapeInFocus).strecthBy(movementInX, movementInY);
+								totalStretchX += movementInX;
+								totalStretchY += movementInY;
 							}
 							break;
 						}
 					}
-					firstX = e.getXOnScreen();
-					firstY = e.getYOnScreen();
+					previousX = e.getXOnScreen();
+					previousY = e.getYOnScreen();
 					Main.getBoard().repaint();
 				}
 			}

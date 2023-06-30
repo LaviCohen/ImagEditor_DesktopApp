@@ -21,7 +21,7 @@ public class NumericalChange extends Change{
 			s.setX(s.getX() + changeValue);
 			break;
 		case Y_CHANGE:
-			s.setX(s.getX() + changeValue);
+			s.setY(s.getY() + changeValue);
 			break;
 		case WIDTH_CHANGE:
 			((StretchableShpae)s).setWidth(((StretchableShpae)s).getWidth() + changeValue);
@@ -59,7 +59,7 @@ public class NumericalChange extends Change{
 			s.setX(s.getX() - changeValue);
 			break;
 		case Y_CHANGE:
-			s.setX(s.getX() - changeValue);
+			s.setY(s.getY() - changeValue);
 			break;
 		case WIDTH_CHANGE:
 			((StretchableShpae)s).setWidth(((StretchableShpae)s).getWidth() - changeValue);

@@ -10,12 +10,12 @@ import shapes.Rectangle;
 import shapes.Text;
 import shapes.abstractShapes.Shape;
 
-public class StringChange extends Change{
+public class ObjectChange extends Change{
 
 	private Object oldObject;
 	private Object newObject;
 	
-	public StringChange(int fieldID, Object oldString, Object newString) {
+	public ObjectChange(int fieldID, Object oldString, Object newString) {
 		super(fieldID);
 		this.oldObject = oldString;
 		this.newObject = newString;

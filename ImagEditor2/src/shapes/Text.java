@@ -91,30 +91,16 @@ public class Text extends Shape{
 		colorPanel.add(setColorButton, Main.translator.getAfterTextBorder());
 		editDialog.add(colorPanel);
 		JButton apply = new JButton("Apply");
+		JButton preview = new JButton("Preview");
 		Main.theme.affect(apply);
 		apply.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					double x = Double.parseDouble(xField.getText());
-					double y = Double.parseDouble(yField.getText());
-					String text = textField.getText();
-					Color color = colorLabel.getBackground();
-					Text.this.x = x;
-					Text.this.y = y;
-					Text.this.text = text;
-					Text.this.color = color;
-					Text.this.font = fontHolder.getFont();
-					editDialog.dispose();
-					Main.getShapeList().updateImage(Text.this);
-					Main.getBoard().repaint();
-				} catch (Exception e2) {
-					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
-				}
+				preview.getActionListeners()[0].actionPerformed(new ActionEvent(apply, 0, "apply"));
+				editDialog.dispose();
 			}
 		});
-		JButton preview = new JButton("Preview");
 		Main.theme.affect(preview);
 		preview.addActionListener(new ActionListener() {
 			

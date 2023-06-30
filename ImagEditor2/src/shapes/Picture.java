@@ -148,38 +148,15 @@ public class Picture extends StretchableShpae{
 		sourcePanel.add(browse, Main.translator.getAfterTextBorder());
 		editDialog.add(sourcePanel);
 		JButton apply = new JButton("Apply");
+		JButton preview = new JButton("Preview");
 		Main.theme.affect(apply);
 		apply.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					lastDrawn = null;
-					double x = Double.parseDouble(xField.getText());
-					double y = Double.parseDouble(yField.getText());
-					double width = Double.parseDouble(widthField.getText());
-					double height = Double.parseDouble(heightField.getText());
-					if (!sourceField.getText().equals("don\'t change")) {
-						File f = new File(sourceField.getText());
-						try {
-							Picture.this.image = readImage(f);
-						} catch (Exception e2) {
-							LDialogs.showMessageDialog(editDialog, "Invalid File Destination",
-									"ERROR", LDialogs.ERROR_MESSAGE);
-						}
-					}
-					Picture.this.x = x;
-					Picture.this.y = y;
-					Picture.this.width = width;
-					Picture.this.height = height;
-				} catch (Exception e2) {
-					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
-				}
-				Main.getBoard().repaint();
-				Main.getShapeList().updateImage(Picture.this);
+				preview.getActionListeners()[0].actionPerformed(new ActionEvent(apply, 0, "apply"));
 				editDialog.dispose();
 			}
 		});
-		JButton preview = new JButton("Preview");
 		Main.theme.affect(preview);
 		preview.addActionListener(new ActionListener() {
 			
