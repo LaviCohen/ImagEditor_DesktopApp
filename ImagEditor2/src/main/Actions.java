@@ -102,12 +102,10 @@ public class Actions {
 	}
 	public static void setPaperSize() {
 		try {
-			int oldWidth = Main.getBoard().getPaperWidth(), oldHeight = Main.getBoard().getPaperHeight();
-			Main.getBoard().setPaperSize(
+			OperationsManager.addOperation(new SetPaperSizeOperation(
+					Main.getBoard().getPaperWidth(), Main.getBoard().getPaperHeight(),
 					Integer.parseInt(LDialogs.showInputDialog(Main.f, "Enter Width:")),
-					Integer.parseInt(LDialogs.showInputDialog(Main.f, "Enter Height:")));
-			OperationsManager.addOperation(new SetPaperSizeOperation(oldWidth, oldHeight,
-					Main.getBoard().getPaperWidth(), Main.getBoard().getPaperHeight()));
+					Integer.parseInt(LDialogs.showInputDialog(Main.f, "Enter Height:"))));
 		} catch (Exception e) {
 			if (!(e instanceof NumberFormatException)) {
 				e.printStackTrace();
@@ -591,9 +589,8 @@ public class Actions {
 	 * */
 	public static void addRectagle() {
 		Rectangle r = new Rectangle(0, 0, true, null, 100, 100, Color.BLUE);
-		Main.getBoard().addShape(r);
-		r.edit();
 		OperationsManager.addOperation(new AddShapeOperation(r));
+		r.edit();
 	}
 	/**
 	 * Adds Text to the current project.
@@ -601,27 +598,24 @@ public class Actions {
 	public static void addText() {
 		Text t = new Text(
 				0, 0, true, null, Color.BLACK, new Font("Arial", Font.PLAIN, 20), "text");
-		Main.getBoard().addShape(t);
-		t.edit();
 		OperationsManager.addOperation(new AddShapeOperation(t));
+		t.edit();
 	}
 	/**
 	 * Adds Picture to the current project.
 	 * */
 	public static void addPicture() {
 		Picture p = new Picture(0, 0, true, null, 150, 50, Resources.defaultImage);
-		Main.getBoard().addShape(p);
-		p.edit();
 		OperationsManager.addOperation(new AddShapeOperation(p));
+		p.edit();
 	}
 	/**
 	 * Adds Code to the current project.
 	 * */
 	public static void addCode() {
 		Code c = new Code("<html><i>Your Code</i></html>", true);
-		Main.getBoard().addShape(c);
-		c.edit();
 		OperationsManager.addOperation(new AddShapeOperation(c));
+		c.edit();
 	}
 	/**
 	 * Edits the current selected shape.
@@ -641,9 +635,6 @@ public class Actions {
 		}
 		if (LDialogs.showConfirmDialog(Main.f, "Are you sure?") == LDialogs.YES_OPTION) {
 			OperationsManager.addOperation(new RemoveShapeOperation(Main.getShapeList().getSelectedShape()));
-			Main.getBoard().getShapesList().remove(Main.getShapeList().getSelectedShape());
-			Main.getBoard().repaint();
-			Main.updateShapeList();
 		}
 	}
 	/**

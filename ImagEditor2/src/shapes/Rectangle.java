@@ -27,6 +27,7 @@ public class Rectangle extends StretchableShpae{
 	int roundWidth;
 	int roundHeight;
 	
+	
 	boolean isFilled;
 	
 	public Rectangle(double x, double y, boolean visible, String name, double width, double height, Color color) {
@@ -178,4 +179,37 @@ public class Rectangle extends StretchableShpae{
 		return super.encodeShape() + "," + color.getRGB() + "," + isFilled + "," + roundWidth
 				 + "," + roundHeight;
 	}
+	
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
+	public int getRoundWidth() {
+		return roundWidth;
+	}
+
+	public void setRoundWidth(int roundWidth) {
+		this.roundWidth = roundWidth;
+	}
+
+	public int getRoundHeight() {
+		return roundHeight;
+	}
+
+	public void setRoundHeight(int roundHeight) {
+		this.roundHeight = roundHeight;
+	}
+
+	public boolean isFilled() {
+		return isFilled;
+	}
+
+	public void setFilled(boolean isFilled) {
+		this.isFilled = isFilled;
+	}
+
 }

@@ -15,6 +15,7 @@ public class OperationsManager {
 			operations.removeLast();
 		}
 		indexFromLastOperation = 0;
+		operation.redo();
 		operations.add(operation);
 	}
 	

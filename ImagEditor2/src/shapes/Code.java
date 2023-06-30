@@ -21,7 +21,7 @@ import shapes.abstractShapes.Shape;
 
 public class Code extends Shape{
 	
-	public String code;
+	private String code;
 
 	private JEditorPane pane;
 	
@@ -125,6 +125,14 @@ public class Code extends Shape{
 		editDialog.setSize(editDialog.getWidth() + 50, editDialog.getHeight());
 		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		editDialog.setVisible(true);
+	}
+	
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	@Override
