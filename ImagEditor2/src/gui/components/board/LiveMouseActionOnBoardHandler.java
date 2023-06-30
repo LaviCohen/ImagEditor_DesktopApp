@@ -91,8 +91,7 @@ public class LiveMouseActionOnBoardHandler extends MouseAdapter{
 			}
 			
 			if (!changes.isEmpty()) {
-				OperationsManager.addOperation(new ChangesOperation(shapeInFocus, 
-						changes.toArray(new Change[0])));
+				OperationsManager.addOperation(new ChangesOperation(shapeInFocus, changes));
 			}
 			
 		}
@@ -171,7 +170,7 @@ public class LiveMouseActionOnBoardHandler extends MouseAdapter{
 					totalCutFromBottom += movementInY;
 					break;
 				}
-				p.lastDrawn = null;
+				p.invalidate();
 			}else {
 				switch(touchedWrapper){
 				case 0:

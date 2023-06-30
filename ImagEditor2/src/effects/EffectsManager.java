@@ -80,7 +80,7 @@ public class EffectsManager extends Effect{
 				allEffects.add(getPanelForEffect(effect, effectManagerDialog));
 				effectManagerDialog.pack();
 				effect.edit(parent);
-				parent.lastDrawn = null;
+				parent.invalidate();
 				Main.getBoard().repaint();
 			}
 		});
@@ -123,7 +123,7 @@ public class EffectsManager extends Effect{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				effects.put(effect, active.isSelected());
-				parent.lastDrawn = null;
+				parent.invalidate();
 				Main.getBoard().repaint();
 			}
 		});
@@ -150,7 +150,7 @@ public class EffectsManager extends Effect{
 			public void actionPerformed(ActionEvent e) {
 				effects.remove(effect);
 				dialog.dispose();
-				parent.lastDrawn = null;
+				parent.invalidate();
 				Main.getBoard().repaint();
 			}
 		});

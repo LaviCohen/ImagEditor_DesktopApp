@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedList;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -18,6 +19,12 @@ import javax.swing.JTextField;
 import le.gui.components.LSlider;
 import le.gui.dialogs.LDialogs;
 import main.Main;
+import operatins.ChangesOperation;
+import operatins.OperationsManager;
+import operatins.changes.BooleanChange;
+import operatins.changes.Change;
+import operatins.changes.NumericalChange;
+import operatins.changes.ObjectChange;
 import shapes.abstractShapes.StretchableShpae;
 
 public class Rectangle extends StretchableShpae{
@@ -121,16 +128,37 @@ public class Rectangle extends StretchableShpae{
 					double width = Double.parseDouble(widthField.getText());
 					double height = Double.parseDouble(heightField.getText());
 					Color color = colorLabel.getBackground();
-					Rectangle.this.x = x;
-					Rectangle.this.y = y;
-					Rectangle.this.width = width;
-					Rectangle.this.height = height;
-					Rectangle.this.color = color;
-					Rectangle.this.roundWidth = roundWidthSlider.getValue();
-					Rectangle.this.roundHeight = roundHeightSlider.getValue();
-					Rectangle.this.isFilled = isFilledCheckBox.isSelected();
-					Main.getShapeList().updateImage(Rectangle.this);
-					Main.getBoard().repaint();
+					LinkedList<Change> changes = new LinkedList<>();
+					if (Rectangle.this.x != x) {
+						changes.add(new NumericalChange(Change.X_CHANGE, x - Rectangle.this.x));
+					}
+					if (Rectangle.this.y != y) {
+						changes.add(new NumericalChange(Change.Y_CHANGE, y - Rectangle.this.y));
+					}
+					if (Rectangle.this.width != width) {
+						changes.add(new NumericalChange(Change.WIDTH_CHANGE, width - Rectangle.this.width));
+					}
+					if (Rectangle.this.height != height) {
+						changes.add(new NumericalChange(Change.HEIGHT_CHANGE, height - Rectangle.this.height));
+					}
+					if (!Rectangle.this.color.equals(color)) {
+						changes.add(new ObjectChange(Change.RECTANGLE_COLOR_CHANGE, Rectangle.this.color, color));
+					}
+					if (Rectangle.this.roundWidth != roundWidthSlider.getValue()) {
+						changes.add(new NumericalChange(Change.ROUND_WIDTH_CHANGE, roundWidthSlider.getValue() - Rectangle.this.roundWidth));
+					}
+					if (Rectangle.this.roundHeight != roundHeightSlider.getValue()) {
+						changes.add(new NumericalChange(Change.ROUND_HEIGHT_CHANGE, roundHeightSlider.getValue() - Rectangle.this.roundHeight));
+					}
+					if (Rectangle.this.isFilled != isFilledCheckBox.isSelected()) {
+						changes.add(new BooleanChange(Change.IS_FILLED_CHANGE, isFilledCheckBox.isSelected()));
+					}
+					
+					if (!changes.isEmpty()) {
+						OperationsManager.operate(new ChangesOperation(Rectangle.this, changes));
+						Main.getShapeList().updateImage(Rectangle.this);
+						Main.getBoard().repaint();
+					}
 				} catch (Exception e2) {
 					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
 				}

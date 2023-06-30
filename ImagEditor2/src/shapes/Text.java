@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedList;
 
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -20,6 +21,11 @@ import le.gui.dialogs.LDialogs;
 import le.gui.dialogs.LFontChooser;
 import le.gui.dialogs.LFontChooser.FontHolder;
 import main.Main;
+import operatins.ChangesOperation;
+import operatins.OperationsManager;
+import operatins.changes.Change;
+import operatins.changes.NumericalChange;
+import operatins.changes.ObjectChange;
 import shapes.abstractShapes.Shape;
 
 public class Text extends Shape{
@@ -107,19 +113,35 @@ public class Text extends Shape{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					int x = Integer.parseInt(xField.getText());
-					int y = Integer.parseInt(yField.getText());
+					double x = Double.parseDouble(xField.getText());
+					double y = Double.parseDouble(yField.getText());
 					String text = textField.getText();
 					Color color = colorLabel.getBackground();
-					Text.this.x = x;
-					Text.this.y = y;
-					Text.this.text = text;
-					Text.this.color = color;
-					Text.this.font = fontHolder.getFont();
-					Main.getShapeList().updateImage(Text.this);
-					Main.getBoard().repaint();
+					LinkedList<Change> changes = new LinkedList<>();
+					if (Text.this.x != x) {
+						changes.add(new NumericalChange(Change.X_CHANGE, x - Text.this.x));
+					}
+					if (Text.this.y != y) {
+						changes.add(new NumericalChange(Change.Y_CHANGE, y - Text.this.y));
+					}
+					if (!Text.this.text.equals(text)) {
+						changes.add(new ObjectChange(Change.TEXT_CHANGE, Text.this.text, text));
+					}
+					if (!Text.this.color.equals(color)) {
+						changes.add(new ObjectChange(Change.TEXT_COLOR_CHANGE, Text.this.color, color));
+					}
+					if (!Text.this.font.equals(font)) {
+						changes.add(new ObjectChange(Change.FONT_CHANGE, Text.this.font, font));
+					}
+					
+					if (!changes.isEmpty()) {
+						OperationsManager.operate(new ChangesOperation(Text.this, changes));
+						Main.getShapeList().updateImage(Text.this);
+						Main.getBoard().repaint();
+					}
 				} catch (Exception e2) {
 					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
+					e2.printStackTrace();
 				}		
 			}
 		});

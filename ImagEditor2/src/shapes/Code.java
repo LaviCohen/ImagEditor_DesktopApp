@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -17,6 +18,11 @@ import javax.swing.JTextField;
 
 import le.gui.dialogs.LDialogs;
 import main.Main;
+import operatins.ChangesOperation;
+import operatins.OperationsManager;
+import operatins.changes.Change;
+import operatins.changes.NumericalChange;
+import operatins.changes.ObjectChange;
 import shapes.abstractShapes.Shape;
 
 public class Code extends Shape{
@@ -94,12 +100,21 @@ public class Code extends Shape{
 					double x = Double.parseDouble(xField.getText());
 					double y = Double.parseDouble(yField.getText());
 					String code = textArea.getText();
-					Code.this.x = x;
-					Code.this.y = y;
-					Code.this.code = code;
-					Code.this.pane.setText(code);
-					Main.getShapeList().updateImage(Code.this);
-					Main.getBoard().repaint();
+					LinkedList<Change> changes = new LinkedList<>();
+					if (Code.this.x != x) {
+						changes.add(new NumericalChange(Change.X_CHANGE, x - Code.this.x));
+					}
+					if (Code.this.y != y) {
+						changes.add(new NumericalChange(Change.Y_CHANGE, y - Code.this.y));
+					}
+					if (!Code.this.code.equals(code)) {
+						changes.add(new ObjectChange(Change.CODE_CHANGE, Code.this.code, code));
+					}
+					if (!changes.isEmpty()) {
+						OperationsManager.operate(new ChangesOperation(Code.this, changes));
+						Main.getShapeList().updateImage(Code.this);
+						Main.getBoard().repaint();
+					}
 				} catch (Exception e2) {
 					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
 				}		
@@ -121,6 +136,7 @@ public class Code extends Shape{
 
 	public void setCode(String code) {
 		this.code = code;
+		Code.this.pane.setText(code);
 	}
 
 	@Override

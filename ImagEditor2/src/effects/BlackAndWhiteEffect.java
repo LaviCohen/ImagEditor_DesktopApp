@@ -64,7 +64,7 @@ public class BlackAndWhiteEffect extends Effect{
 				greenStrength = green.getValue();
 				blueStrength = blue.getValue();
 				editBlackAwhiteDialog.dispose();
-				parent.lastDrawn = null;
+				parent.invalidate();
 				Main.getBoard().repaint();
 			}
 		});

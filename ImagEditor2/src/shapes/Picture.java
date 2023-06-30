@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -26,6 +27,11 @@ import effects.EffectsManager;
 import install.DefaultSettings;
 import le.gui.dialogs.LDialogs;
 import main.Main;
+import operatins.ChangesOperation;
+import operatins.OperationsManager;
+import operatins.changes.Change;
+import operatins.changes.NumericalChange;
+import operatins.changes.ObjectChange;
 import shapes.abstractShapes.StretchableShpae;
 
 public class Picture extends StretchableShpae{
@@ -36,7 +42,7 @@ public class Picture extends StretchableShpae{
 	BufferedImage image;
 	
 	//Last Drawn Image, For CPU Saving
-	public BufferedImage lastDrawn = null;
+	private BufferedImage lastDrawn = null;
 	
 	//Cut Variables
 	double cutFromLeft = 0;
@@ -60,7 +66,7 @@ public class Picture extends StretchableShpae{
 	public void draw(Graphics2D g) {
 		if (!DefaultSettings.useMoreRAM) {
 			//In case the setting has been changed while the program is running, so previous lastDrawn won't stuck in the memory
-			lastDrawn = null;
+			invalidate();
 			g.drawImage(getImageToDisplay(), (int)x, (int)y, getWidthOnBoard(), getHeightOnBoard(), null);
 		}
 		if (lastDrawn == null) {
@@ -163,29 +169,46 @@ public class Picture extends StretchableShpae{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					lastDrawn = null;
 					double x = Double.parseDouble(xField.getText());
 					double y = Double.parseDouble(yField.getText());
 					double width = Double.parseDouble(widthField.getText());
 					double height = Double.parseDouble(heightField.getText());
+					BufferedImage image = null;
 					if (!sourceField.getText().equals("don\'t change")) {
 						File f = new File(sourceField.getText());
 						try {
-							Picture.this.image = readImage(f);
+							image = readImage(f);
 						} catch (Exception e2) {
 							LDialogs.showMessageDialog(editDialog, "Invalid File Destination",
 									"ERROR", LDialogs.ERROR_MESSAGE);
 						}
 					}
-					Picture.this.x = x;
-					Picture.this.y = y;
-					Picture.this.width = width;
-					Picture.this.height = height;
+					LinkedList<Change> changes = new LinkedList<>();
+					if (Picture.this.x != x) {
+						changes.add(new NumericalChange(Change.X_CHANGE, x - Picture.this.x));
+					}
+					if (Picture.this.y != y) {
+						changes.add(new NumericalChange(Change.Y_CHANGE, y - Picture.this.y));
+					}
+					if (Picture.this.width != width) {
+						changes.add(new NumericalChange(Change.WIDTH_CHANGE, width - Picture.this.width));
+					}
+					if (Picture.this.height != height) {
+						changes.add(new NumericalChange(Change.HEIGHT_CHANGE, height - Picture.this.height));
+					}
+					if (image != null) {
+						changes.add(new ObjectChange(Change.SRC_IMAGE_CHANGE, Picture.this.image, image));
+					}
+					
+					if (!changes.isEmpty()) {
+						OperationsManager.operate(new ChangesOperation(Picture.this, changes));
+						invalidate();
+						Main.getShapeList().updateImage(Picture.this);
+						Main.getBoard().repaint();
+					}
 				} catch (Exception e2) {
 					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
 				}
-				Main.getShapeList().updateImage(Picture.this);
-				Main.getBoard().repaint();
 			}
 		});
 		JPanel actionPanel = new JPanel(new BorderLayout());
@@ -198,6 +221,9 @@ public class Picture extends StretchableShpae{
 	}
 	public void editEffects() {
 		effectsManger.edit(this);
+	}
+	public void invalidate() {
+		lastDrawn = null;
 	}
 	public static BufferedImage getScaledImage(Image srcImg, int width, int height){
 	    BufferedImage resizedImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -219,6 +245,7 @@ public class Picture extends StretchableShpae{
 		return this.image;
 	}
 	public void setImage(BufferedImage img) {
+		invalidate();
 		this.image = img;
 	}
 	public BufferedImage getLastDrawn() {
@@ -356,7 +383,7 @@ public class Picture extends StretchableShpae{
 				Picture.this.setCutFromTop(0);
 				Picture.this.setCutFromRight(0);
 				Picture.this.setCutFromBottom(0);
-				Picture.this.lastDrawn = null;
+				invalidate();
 				Main.getBoard().repaint();
 			}
 		});

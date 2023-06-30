@@ -63,6 +63,7 @@ public class ObjectChange extends Change{
 			((Code)s).setCode((String) oldObject);
 			break;
 		case SRC_IMAGE_CHANGE:
+			System.out.println("Reversing to " + oldObject);
 			((Picture)s).setImage((BufferedImage) oldObject);
 			break;
 		case FONT_CHANGE:

@@ -60,7 +60,7 @@ public class RetroEffect extends Effect{
 			public void actionPerformed(ActionEvent e) {
 				variety = varietySlider.getValue();
 				editDialog.dispose();
-				parent.lastDrawn = null;
+				parent.invalidate();;
 				Main.getBoard().repaint();
 			}
 		});

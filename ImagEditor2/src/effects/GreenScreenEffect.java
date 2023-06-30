@@ -111,7 +111,7 @@ public class GreenScreenEffect extends Effect{
 				colorBlue = colorLabel.getBackground().getBlue();
 				accuracy = accuracySlider.getValue();
 				editGreenScreenDialog.dispose();
-				parent.lastDrawn = null;
+				parent.invalidate();
 				Main.getBoard().repaint();
 			}
 		});

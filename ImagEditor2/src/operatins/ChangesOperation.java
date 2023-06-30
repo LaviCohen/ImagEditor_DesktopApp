@@ -1,16 +1,18 @@
 package operatins;
 
+import java.util.LinkedList;
+
 import operatins.changes.Change;
 import shapes.abstractShapes.Shape;
 
 public class ChangesOperation implements Operation{
 
-	private Change[] changes;
+	private LinkedList<Change> changes;
 	private Shape s;
 	
 	
 	
-	public ChangesOperation(Shape s, Change... changes) {
+	public ChangesOperation(Shape s, LinkedList<Change> changes) {
 		super();
 		this.changes = changes;
 		this.s = s;

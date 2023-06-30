@@ -125,7 +125,7 @@ public class OutlineEffect extends Effect{
 				OutlineEffect.this.accuracy = accuracySlider.getValue();
 				OutlineEffect.this.outlineRGB = outlineColorLabel.getBackground().getRGB();
 				OutlineEffect.this.objectRGB = objectColorLabel.getBackground().getRGB();
-				parent.lastDrawn = null;
+				parent.invalidate();
 				Main.getBoard().repaint();
 				editDialog.dispose();
 			}
