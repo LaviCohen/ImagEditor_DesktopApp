@@ -12,6 +12,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import gui.ToolListManager;
+import gui.components.board.adapters.BoardMouseAdapter;
+import gui.components.board.adapters.BrushMouseAdapter;
+import gui.components.board.adapters.PickingMouseAdapter;
 import main.Main;
 import shapes.abstractShapes.Shape;
 
@@ -24,6 +28,8 @@ public class Board extends JPanel{
 	public BufferedImage paper;
 	public LinkedList<Shape> shapes = new LinkedList<Shape>();
 	
+	private BoardMouseAdapter currentMouseAdapter = null;
+	
 	public boolean inited = false;
 	
 	public Board(Color color, int width, int height) {
@@ -34,10 +40,22 @@ public class Board extends JPanel{
 		this.add(displayLabel, BorderLayout.CENTER);
 		g = paper.createGraphics();
 		inited = true;
-		LiveMouseActionOnBoardHandler liveHandler = new LiveMouseActionOnBoardHandler(this);
-		this.addMouseListener(liveHandler);
-		this.addMouseMotionListener(liveHandler);
+		setMouseAdapterForTool(ToolListManager.getCurrentTool());
 		repaint();
+	}
+	public void setMouseAdapterForTool(int tool) {
+		if (currentMouseAdapter != null) {
+			currentMouseAdapter.invalidate();
+			this.removeMouseListener(currentMouseAdapter);
+			this.removeMouseMotionListener(currentMouseAdapter);
+		}
+		if (tool == ToolListManager.PICKER_TOOL) {
+			currentMouseAdapter = new PickingMouseAdapter(this);
+		} else if (tool == ToolListManager.BRUSH_TOOL) {
+			currentMouseAdapter = new BrushMouseAdapter(this);
+		}
+		this.addMouseListener(currentMouseAdapter);
+		this.addMouseMotionListener(currentMouseAdapter);
 	}
 	public void addShape(Shape s) {
 		shapes.add(s);
@@ -86,7 +104,8 @@ public class Board extends JPanel{
 		for (Shape shape:shapes) {
 			if (shape.isVisible()) {
 				shape.draw(g);
-				if (Main.shapeList.getSelectedShape() == shape) {
+				if (Main.shapeList.getSelectedShape() == shape && currentMouseAdapter instanceof
+						PickingMouseAdapter) {
 					paintCornerWrappers(Main.getShapeList().getSelectedShape());
 				}
 			}

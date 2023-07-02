@@ -21,6 +21,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import gui.Theme;
+import gui.ToolListManager;
 import gui.components.ShapeList;
 import gui.components.board.Board;
 import install.Decoder;
@@ -100,7 +101,11 @@ public class Main {
 	/**
 	 * The side bar which holds the shapeList and some action buttons.
 	 */
-	public static JPanel sideBarPanel;
+	public static JPanel layersSideBarPanel;
+	/**
+	 * The side bar which holds the tools icons.
+	 */
+	public static JPanel toolsSideBarPanel;
 	/**
 	 * GUI list of all the shapes are currently exist.
 	 */
@@ -158,9 +163,13 @@ public class Main {
 		initProject();
 		initBoardScrollPane();
 		updateSizeLabel();
-		initSideBarPanel();
+		initLayersSideBarPanel();
+		initToolsSideBarPanel();
 		updateShapeList();
 		applyThemeColors();
+	}
+	private static void initToolsSideBarPanel() {
+		toolsSideBarPanel = ToolListManager.createToolsPanel();
 	}
 	private static void initProject() {
 		Main.currentProject = new Project();
@@ -327,7 +336,7 @@ public class Main {
 		//Menu bar
 		Main.theme.affect(lMenu);
 		//Side bar
-		Main.theme.affect(sideBarPanel);
+		Main.theme.affect(layersSideBarPanel);
 		Main.theme.affect(shapeList);
 		Main.theme.affect(layersLabel);
 		//Board
@@ -364,11 +373,11 @@ public class Main {
 		controlBar.add(zoomSlider, Main.translator.getBeforeTextBorder());
 		f.add(controlBar, BorderLayout.SOUTH);
 	}
-	public static void initSideBarPanel() {
-		sideBarPanel = new JPanel(new BorderLayout());
+	public static void initLayersSideBarPanel() {
+		layersSideBarPanel = new JPanel(new BorderLayout());
 		layersLabel = new JLabel("<html><font size=30>" + 
 						Main.translator.get("Layers") + "</font></html>");
-		sideBarPanel.add(layersLabel, BorderLayout.NORTH);
+		layersSideBarPanel.add(layersLabel, BorderLayout.NORTH);
 		JPanel actionsPanel = new JPanel(new GridLayout(2, 2));
 		JButton edit = new JButton(Resources.editIcon);
 		edit.setToolTipText(Main.translator.get("Edit selected shape"));
@@ -396,7 +405,7 @@ public class Main {
 				Actions.remove();
 			}
 		});
-		sideBarPanel.add(actionsPanel, BorderLayout.SOUTH);
+		layersSideBarPanel.add(actionsPanel, BorderLayout.SOUTH);
 		JButton uplayer = new JButton(Resources.up_layerIcon);
 		uplayer.setToolTipText(Main.translator.get("Move selected shape 1 layer up"));
 		uplayer.setBackground(Color.WHITE);
@@ -423,7 +432,7 @@ public class Main {
 				}
 			}
 		});
-		sideBarPanel.add(actionsPanel, BorderLayout.SOUTH);
+		layersSideBarPanel.add(actionsPanel, BorderLayout.SOUTH);
 		JButton downlayer = new JButton(Resources.down_layerIcon);
 		downlayer.setToolTipText(Main.translator.get("Move selected shape 1 layer down"));
 		downlayer.setBackground(Color.WHITE);
@@ -450,19 +459,19 @@ public class Main {
 				}
 			}
 		});
-		sideBarPanel.add(actionsPanel, BorderLayout.SOUTH);
-		f.add(sideBarPanel, Main.translator.getBeforeTextBorder());
+		layersSideBarPanel.add(actionsPanel, BorderLayout.SOUTH);
+		f.add(layersSideBarPanel, Main.translator.getBeforeTextBorder());
 	}
 	public static void updateShapeList() {
 		System.out.println("Update shapeList");
 		Shape s = null;
 		if (getShapeList() != null) {
 			s = getShapeList().getSelectedShape();
-			sideBarPanel.remove(getShapeList());
+			layersSideBarPanel.remove(getShapeList());
 		}
 		shapeList = new ShapeList(getBoard().getShapesList().toArray(new Shape[0]));
 		shapeList.setBackground(Main.theme.getBackgroundColor());
-		sideBarPanel.add(getShapeList(), BorderLayout.CENTER);
+		layersSideBarPanel.add(getShapeList(), BorderLayout.CENTER);
 		if (s != null) {
 			getShapeList().setSelection(s);
 		}

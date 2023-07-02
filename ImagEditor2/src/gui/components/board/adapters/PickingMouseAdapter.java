@@ -1,9 +1,9 @@
-package gui.components.board;
+package gui.components.board.adapters;
 
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 
+import gui.components.board.Board;
 import le.gui.dialogs.LDialogs;
 import main.Main;
 import operatins.ChangesOperation;
@@ -15,9 +15,8 @@ import shapes.Text;
 import shapes.abstractShapes.Shape;
 import shapes.abstractShapes.StretchableShpae;
 
-public class LiveMouseActionOnBoardHandler extends MouseAdapter{
+public class PickingMouseAdapter extends BoardMouseAdapter{
 	
-	Board parent;
 	
 	Shape shapeInFocus = null;
 	
@@ -35,8 +34,8 @@ public class LiveMouseActionOnBoardHandler extends MouseAdapter{
 	int movementInX = 0;
 	int movementInY = 0;
 	
-	public LiveMouseActionOnBoardHandler(Board parent) {
-		this.parent = parent;
+	public PickingMouseAdapter(Board parent) {
+		super(parent);
 	}
 	
 	@Override
@@ -264,5 +263,10 @@ public class LiveMouseActionOnBoardHandler extends MouseAdapter{
 			difference = -difference;
 		}
 		return value >= start && value - difference <= start;
+	}
+
+	@Override
+	public void invalidate() {
+		
 	}
 }
