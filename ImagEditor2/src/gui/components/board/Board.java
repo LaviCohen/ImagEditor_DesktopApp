@@ -12,21 +12,22 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import drawables.Layer;
+import drawables.shapes.abstractShapes.Shape;
 import gui.ToolListManager;
 import gui.components.board.adapters.BoardMouseAdapter;
 import gui.components.board.adapters.BrushMouseAdapter;
 import gui.components.board.adapters.PickingMouseAdapter;
 import main.Main;
-import shapes.abstractShapes.Shape;
 
 public class Board extends JPanel{
 	private static final long serialVersionUID = 1L;
 	
-	public JLabel displayLabel;
-	public Graphics2D g;
-	public Color backgroundColor;
-	public BufferedImage paper;
-	public LinkedList<Shape> shapes = new LinkedList<Shape>();
+	private JLabel displayLabel;
+	private Graphics2D g;
+	private Color backgroundColor;
+	private BufferedImage paper;
+	private LinkedList<Layer> layers = new LinkedList<Layer>();
 	
 	private BoardMouseAdapter currentMouseAdapter = null;
 	
@@ -57,13 +58,13 @@ public class Board extends JPanel{
 		this.addMouseListener(currentMouseAdapter);
 		this.addMouseMotionListener(currentMouseAdapter);
 	}
-	public void addShape(Shape s) {
-		shapes.add(s);
+	public void addLayer(Layer layer) {
+		layers.add(layer);
 		if (inited) {
-			Main.updateShapeList();
+			Main.updateLayersList();
 		}
 		repaint();
-		System.out.println(s.getClass().getName() + " added");
+		System.out.println(layer.getShape().getClass().getName() + " added");
 	}
 	@Override
 	public void repaint() {
@@ -101,14 +102,8 @@ public class Board extends JPanel{
 	public void paintShapes(Graphics2D g) {
 		g.setColor(backgroundColor);
 		g.fillRect(0, 0, paper.getWidth(), paper.getHeight());
-		for (Shape shape:shapes) {
-			if (shape.isVisible()) {
-				shape.draw(g);
-				if (Main.shapeList.getSelectedShape() == shape && currentMouseAdapter instanceof
-						PickingMouseAdapter) {
-					paintCornerWrappers(Main.getShapeList().getSelectedShape());
-				}
-			}
+		for (Layer layer:layers) {
+			layer.draw(g);
 		}
 	}
 	public void setPaperSize(int width, int height) {
@@ -130,16 +125,16 @@ public class Board extends JPanel{
 
 	    return resizedImg;
 	}
-	public LinkedList<Shape> getShapesList() {
-		return shapes;
+	public LinkedList<Layer> getLayersList() {
+		return layers;
 	}
 	public double getZoomRate() {
 		return Main.getZoomSlider().getValue() / 100.0;
 	}
 	public Shape getShapeAt(int x, int y) {
 		Shape s = null;
-		for (int i = shapes.size() - 1; i > -1; i--) {
-			s = shapes.get(i);
+		for (int i = layers.size() - 1; i > -1; i--) {
+			s = layers.get(i).getShape();
 			if (s.getX() < x && s.getY() < y && s.getX() + s.getWidthOnBoard() > x && s.getY() + s.getHeightOnBoard() > y) {
 				return s;
 			}
@@ -151,5 +146,47 @@ public class Board extends JPanel{
 	}
 	public int getPaperHeight() {
 		return this.paper.getHeight();
+	}
+	public JLabel getDisplayLabel() {
+		return displayLabel;
+	}
+	public void setDisplayLabel(JLabel displayLabel) {
+		this.displayLabel = displayLabel;
+	}
+	public Graphics2D getG() {
+		return g;
+	}
+	public void setG(Graphics2D g) {
+		this.g = g;
+	}
+	public Color getBackgroundColor() {
+		return backgroundColor;
+	}
+	public void setBackgroundColor(Color backgroundColor) {
+		this.backgroundColor = backgroundColor;
+	}
+	public BufferedImage getPaper() {
+		return paper;
+	}
+	public void setPaper(BufferedImage paper) {
+		this.paper = paper;
+	}
+	public LinkedList<Layer> getLayers() {
+		return layers;
+	}
+	public void setLayers(LinkedList<Layer> layers) {
+		this.layers = layers;
+	}
+	public BoardMouseAdapter getCurrentMouseAdapter() {
+		return currentMouseAdapter;
+	}
+	public void setCurrentMouseAdapter(BoardMouseAdapter currentMouseAdapter) {
+		this.currentMouseAdapter = currentMouseAdapter;
+	}
+	public boolean isInited() {
+		return inited;
+	}
+	public void setInited(boolean inited) {
+		this.inited = inited;
 	}
 }

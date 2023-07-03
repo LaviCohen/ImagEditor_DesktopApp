@@ -1,4 +1,4 @@
-package shapes;
+package drawables.shapes;
 
 import java.awt.BorderLayout;
 import java.awt.Graphics2D;
@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import drawables.shapes.abstractShapes.Shape;
 import le.gui.dialogs.LDialogs;
 import main.Main;
 import operatins.ChangesOperation;
@@ -23,7 +24,6 @@ import operatins.OperationsManager;
 import operatins.changes.Change;
 import operatins.changes.NumericalChange;
 import operatins.changes.ObjectChange;
-import shapes.abstractShapes.Shape;
 
 public class Code extends Shape{
 	
@@ -112,7 +112,7 @@ public class Code extends Shape{
 					}
 					if (!changes.isEmpty()) {
 						OperationsManager.operate(new ChangesOperation(Code.this, changes));
-						Main.getShapeList().updateImage(Code.this);
+						Main.getLayersList().updateImage(Code.this);
 						Main.getBoard().repaint();
 					}
 				} catch (Exception e2) {

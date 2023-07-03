@@ -1,4 +1,4 @@
-package shapes.abstractShapes;
+package drawables.shapes.abstractShapes;
 
 public abstract class StretchableShpae extends Shape{
 	

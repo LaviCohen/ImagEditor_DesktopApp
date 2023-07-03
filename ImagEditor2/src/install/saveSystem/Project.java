@@ -6,10 +6,10 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
+import drawables.Layer;
 import gui.components.board.Board;
 import install.DefaultSettings;
 import main.Main;
-import shapes.abstractShapes.Shape;
 
 public class Project {
 	
@@ -37,7 +37,7 @@ public class Project {
 			String line = null;
 			while(scanner.hasNextLine()) {
 				line = scanner.nextLine();
-				this.board.addShape(Shape.parseShape(line));
+				this.board.addLayer(Layer.parseLayer(line));
 			}
 			scanner.close();
 		} catch (IOException | NumberFormatException e) {
@@ -53,7 +53,7 @@ public class Project {
 		for (int i = 1; i < lines.length; i++){
 			String line = lines[i];
 			try {
-				this.board.addShape(Shape.parseShape(line));
+				this.board.addLayer(Layer.parseLayer(line));
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -74,16 +74,16 @@ public class Project {
 		
 		sb.append(getSettings());
 		
-		LinkedList<Shape> shapes = board.getShapesList();
-		for (Shape shape : shapes) {
+		LinkedList<Layer> layers = board.getLayersList();
+		for (Layer layer : layers) {
 			sb.append('\n');
-			sb.append(shape.encodeShape());
+			sb.append(layer.encodeLayer());
 		}
 		return sb.toString();
 	}
 	private String getSettings() {
 		return board.getPaperWidth() + "," + board.getPaperHeight()
-		+ "," + board.backgroundColor.getRGB();
+		+ "," + board.getBackgroundColor().getRGB();
 	}
 	public boolean hasFile() {
 		return this.folder != null && this.name != null;

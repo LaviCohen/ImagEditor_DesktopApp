@@ -1,4 +1,4 @@
-package shapes;
+package drawables.shapes;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import drawables.shapes.abstractShapes.StretchableShpae;
 import le.gui.components.LSlider;
 import le.gui.dialogs.LDialogs;
 import main.Main;
@@ -25,7 +26,6 @@ import operatins.changes.BooleanChange;
 import operatins.changes.Change;
 import operatins.changes.NumericalChange;
 import operatins.changes.ObjectChange;
-import shapes.abstractShapes.StretchableShpae;
 
 public class Rectangle extends StretchableShpae{
 
@@ -156,7 +156,7 @@ public class Rectangle extends StretchableShpae{
 					
 					if (!changes.isEmpty()) {
 						OperationsManager.operate(new ChangesOperation(Rectangle.this, changes));
-						Main.getShapeList().updateImage(Rectangle.this);
+						Main.getLayersList().updateImage(Rectangle.this);
 						Main.getBoard().repaint();
 					}
 				} catch (Exception e2) {

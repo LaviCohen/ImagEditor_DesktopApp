@@ -1,4 +1,4 @@
-package shapes;
+package drawables.shapes;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import drawables.shapes.abstractShapes.Shape;
 import le.gui.dialogs.LDialogs;
 import le.gui.dialogs.LFontChooser;
 import le.gui.dialogs.LFontChooser.FontHolder;
@@ -26,7 +27,6 @@ import operatins.OperationsManager;
 import operatins.changes.Change;
 import operatins.changes.NumericalChange;
 import operatins.changes.ObjectChange;
-import shapes.abstractShapes.Shape;
 
 public class Text extends Shape{
 	Color color;
@@ -136,7 +136,7 @@ public class Text extends Shape{
 					
 					if (!changes.isEmpty()) {
 						OperationsManager.operate(new ChangesOperation(Text.this, changes));
-						Main.getShapeList().updateImage(Text.this);
+						Main.getLayersList().updateImage(Text.this);
 						Main.getBoard().repaint();
 					}
 				} catch (Exception e2) {

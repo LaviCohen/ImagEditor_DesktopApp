@@ -2,8 +2,8 @@ package operatins;
 
 import java.util.LinkedList;
 
+import drawables.shapes.abstractShapes.Shape;
 import operatins.changes.Change;
-import shapes.abstractShapes.Shape;
 
 public class ChangesOperation implements Operation{
 

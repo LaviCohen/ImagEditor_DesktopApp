@@ -3,6 +3,10 @@ package gui.components.board.adapters;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 
+import drawables.shapes.Picture;
+import drawables.shapes.Text;
+import drawables.shapes.abstractShapes.Shape;
+import drawables.shapes.abstractShapes.StretchableShpae;
 import gui.components.board.Board;
 import le.gui.dialogs.LDialogs;
 import main.Main;
@@ -10,10 +14,6 @@ import operatins.ChangesOperation;
 import operatins.OperationsManager;
 import operatins.changes.Change;
 import operatins.changes.NumericalChange;
-import shapes.Picture;
-import shapes.Text;
-import shapes.abstractShapes.Shape;
-import shapes.abstractShapes.StretchableShpae;
 
 public class PickingMouseAdapter extends BoardMouseAdapter{
 	
@@ -51,13 +51,13 @@ public class PickingMouseAdapter extends BoardMouseAdapter{
 		if (shapeInFocus != null) {
 			touchedWrapper = touchWrapper(e);
 		}
-		Main.getShapeList().setSelection(shapeInFocus);
+		Main.getLayersList().setSelection(shapeInFocus);
 	}
 	private double getTopGap() {
-		return ((parent.getHeight() - (parent.paper.getHeight() * parent.getZoomRate()))/2);
+		return ((parent.getHeight() - (parent.getPaper().getHeight() * parent.getZoomRate()))/2);
 	}
 	private double getLeftGap() {
-		return ((parent.getWidth()  - (parent.paper.getWidth()  * parent.getZoomRate()))/2);
+		return ((parent.getWidth()  - (parent.getPaper().getWidth()  * parent.getZoomRate()))/2);
 	}
 	@Override
 	public void mouseReleased(MouseEvent e) {
@@ -126,7 +126,7 @@ public class PickingMouseAdapter extends BoardMouseAdapter{
 					showInputDialog(parent, "Enter Text:", ((Text)shapeInFocus).getText());
 			if (text != null && !text.equals(((Text)shapeInFocus).getText())) {
 				((Text)shapeInFocus).setText(text);
-				Main.getShapeList().updateImage(shapeInFocus);
+				Main.getLayersList().updateImage(shapeInFocus);
 			}
 		}
 		parent.repaint();

@@ -1,4 +1,4 @@
-package shapes;
+package drawables.shapes;
 
 import java.awt.BorderLayout;
 import java.awt.Graphics2D;
@@ -23,6 +23,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
+import drawables.Layer;
+import drawables.shapes.abstractShapes.StretchableShpae;
 import effects.EffectsManager;
 import install.DefaultSettings;
 import le.gui.dialogs.LDialogs;
@@ -32,7 +34,6 @@ import operatins.OperationsManager;
 import operatins.changes.Change;
 import operatins.changes.NumericalChange;
 import operatins.changes.ObjectChange;
-import shapes.abstractShapes.StretchableShpae;
 
 public class Picture extends StretchableShpae{
 	
@@ -148,7 +149,9 @@ public class Picture extends StretchableShpae{
 						new JFileChooser(Main.install.getPath("Gallery")):new JFileChooser(new File(sourceField.getText()));
 				fc.showOpenDialog(editDialog);
 				File f = fc.getSelectedFile();
-				sourceField.setText(f.getAbsolutePath());
+				if (f != null) {
+					sourceField.setText(f.getAbsolutePath());
+				}
 			}
 		});
 		sourcePanel.add(browse, Main.translator.getAfterTextBorder());
@@ -203,7 +206,7 @@ public class Picture extends StretchableShpae{
 					if (!changes.isEmpty()) {
 						OperationsManager.operate(new ChangesOperation(Picture.this, changes));
 						invalidate();
-						Main.getShapeList().updateImage(Picture.this);
+						Main.getLayersList().updateImage(Picture.this);
 						Main.getBoard().repaint();
 					}
 				} catch (Exception e2) {
@@ -394,7 +397,7 @@ public class Picture extends StretchableShpae{
 	
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Main.getBoard().addShape(Picture.this.copy());
+				Main.getBoard().addLayer(new Layer(Picture.this.copy()));
 			}
 		});
 		popup.add(copy);

@@ -20,9 +20,10 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import drawables.Layer;
 import gui.Theme;
 import gui.ToolListManager;
-import gui.components.ShapeList;
+import gui.components.LayersList;
 import gui.components.board.Board;
 import install.Decoder;
 import install.DefaultSettings;
@@ -35,7 +36,6 @@ import le.gui.components.LSlider;
 import le.gui.dialogs.LDialogs;
 import le.log.ExceptionUtils;
 import le.log.Logger;
-import shapes.abstractShapes.Shape;
 import webServices.Account;
 import webServices.AccountUndefindException;
 import webServices.Website;
@@ -109,7 +109,7 @@ public class Main {
 	/**
 	 * GUI list of all the shapes are currently exist.
 	 */
-	public static ShapeList shapeList;
+	public static LayersList layersList;
 	/**
 	 * The label which holds the size of the paper (width x height).
 	 */
@@ -165,7 +165,7 @@ public class Main {
 		updateSizeLabel();
 		initLayersSideBarPanel();
 		initToolsSideBarPanel();
-		updateShapeList();
+		updateLayersList();
 		applyThemeColors();
 	}
 	private static void initToolsSideBarPanel() {
@@ -337,7 +337,7 @@ public class Main {
 		Main.theme.affect(lMenu);
 		//Side bar
 		Main.theme.affect(layersSideBarPanel);
-		Main.theme.affect(shapeList);
+		Main.theme.affect(layersList);
 		Main.theme.affect(layersLabel);
 		//Board
 		Main.theme.affect(getBoard());
@@ -387,9 +387,9 @@ public class Main {
 		edit.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (getShapeList().getSelectedShape() != null) {
-					getShapeList().getSelectedShape().edit();
+			public void actionPerformed(ActionEvent e) {
+				if (getLayersList().getSelectedLayer() != null) {
+					getLayersList().getSelectedLayer().getShape().edit();
 				}
 			}
 		});
@@ -414,21 +414,21 @@ public class Main {
 		uplayer.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (getShapeList().getSelectedShape() != null) {
-					Shape s = getShapeList().getSelectedShape();
-					if (getBoard().getShapesList().getLast() == s) {
+			public void actionPerformed(ActionEvent e) {
+				if (getLayersList().getSelectedLayer() != null) {
+					Layer layer = getLayersList().getSelectedLayer();
+					if (getBoard().getLayersList().getLast() == layer) {
 						LDialogs.showMessageDialog(Main.f, Main.translator.get("This is the top layer!"),
 								Main.translator.get("Warning"), LDialogs.WARNING_MESSAGE);
 						return;
 					}
-					int sIndex = getBoard().getShapesList().indexOf(s);
-					int upIndex = getBoard().getShapesList().indexOf(s) + 1;
-					Shape up = getBoard().getShapesList().get(upIndex);
-					getBoard().getShapesList().set(upIndex, s);
-					getBoard().getShapesList().set(sIndex, up);
+					int sIndex = getBoard().getLayersList().indexOf(layer);
+					int upIndex = getBoard().getLayersList().indexOf(layer) + 1;
+					Layer up = getBoard().getLayersList().get(upIndex);
+					getBoard().getLayersList().set(upIndex, layer);
+					getBoard().getLayersList().set(sIndex, up);
 					getBoard().repaint();
-					updateShapeList();
+					updateLayersList();
 				}
 			}
 		});
@@ -441,39 +441,39 @@ public class Main {
 		downlayer.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (getShapeList().getSelectedShape() != null) {
-					Shape s = getShapeList().getSelectedShape();
-					if (getBoard().getShapesList().getFirst() == s) {
-						LDialogs.showMessageDialog(Main.f, Main.translator.get("This is the down layer!"),
+			public void actionPerformed(ActionEvent e) {
+				if (getLayersList().getSelectedLayer() != null) {
+					Layer layer = getLayersList().getSelectedLayer();
+					if (getBoard().getLayersList().getFirst() == layer) {
+						LDialogs.showMessageDialog(Main.f, Main.translator.get("This is the bottom layer!"),
 								Main.translator.get("Warning"), LDialogs.WARNING_MESSAGE);
 						return;
 					}
-					int sIndex = getBoard().getShapesList().indexOf(s);
-					int downIndex = getBoard().getShapesList().indexOf(s) - 1;
-					Shape down = getBoard().getShapesList().get(downIndex);
-					getBoard().getShapesList().set(downIndex, s);
-					getBoard().getShapesList().set(sIndex, down);
+					int sIndex = getBoard().getLayersList().indexOf(layer);
+					int downIndex = getBoard().getLayersList().indexOf(layer) - 1;
+					Layer down = getBoard().getLayersList().get(downIndex);
+					getBoard().getLayersList().set(downIndex, layer);
+					getBoard().getLayersList().set(sIndex, down);
 					getBoard().repaint();
-					updateShapeList();
+					updateLayersList();
 				}
 			}
 		});
 		layersSideBarPanel.add(actionsPanel, BorderLayout.SOUTH);
 		f.add(layersSideBarPanel, Main.translator.getBeforeTextBorder());
 	}
-	public static void updateShapeList() {
+	public static void updateLayersList() {
 		System.out.println("Update shapeList");
-		Shape s = null;
-		if (getShapeList() != null) {
-			s = getShapeList().getSelectedShape();
-			layersSideBarPanel.remove(getShapeList());
+		Layer layer = null;
+		if (getLayersList() != null) {
+			layer = getLayersList().getSelectedLayer();
+			layersSideBarPanel.remove(getLayersList());
 		}
-		shapeList = new ShapeList(getBoard().getShapesList().toArray(new Shape[0]));
-		shapeList.setBackground(Main.theme.getBackgroundColor());
-		layersSideBarPanel.add(getShapeList(), BorderLayout.CENTER);
-		if (s != null) {
-			getShapeList().setSelection(s);
+		layersList = new LayersList(getBoard().getLayersList().toArray(new Layer[0]));
+		layersList.setBackground(Main.theme.getBackgroundColor());
+		layersSideBarPanel.add(getLayersList(), BorderLayout.CENTER);
+		if (layer != null) {
+			getLayersList().setSelection(layer);
 		}
 		f.revalidate();
 		f.repaint();
@@ -496,8 +496,8 @@ public class Main {
 				{ Main.translator.get("Account"), Main.translator.get("Profile") } }, menuListener);
 		f.setJMenuBar(lMenu);
 	}
-	public static ShapeList getShapeList() {
-		return shapeList;
+	public static LayersList getLayersList() {
+		return layersList;
 	}
 	public static LSlider getZoomSlider() {
 		return zoomSlider;
@@ -510,7 +510,7 @@ public class Main {
 	}
 	public static void switchProject(Project loadProject) {
 		currentProject = loadProject;
-		updateShapeList();
+		updateLayersList();
 		getBoard().repaint();
 		boardScrollPane.setViewportView(getBoard());
 		Main.updateSizeLabel();

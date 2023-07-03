@@ -27,6 +27,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import drawables.Layer;
+import drawables.shapes.Code;
+import drawables.shapes.Picture;
+import drawables.shapes.Rectangle;
+import drawables.shapes.Text;
 import install.DefaultSettings;
 import install.Resources;
 import install.saveSystem.Project;
@@ -35,14 +40,10 @@ import le.gui.components.LTextArea;
 import le.gui.components.LTextField;
 import le.gui.dialogs.LDialogs;
 import le.log.Logger;
-import operatins.AddShapeOperation;
+import operatins.AddLayerOperation;
 import operatins.OperationsManager;
-import operatins.RemoveShapeOperation;
+import operatins.RemoveLayerOperation;
 import operatins.SetPaperSizeOperation;
-import shapes.Code;
-import shapes.Picture;
-import shapes.Rectangle;
-import shapes.Text;
 import webServices.WebProjectsUtils;
 /** This class is the user-actions handler.
  * The actions which handled inside this class are shortcuts and menu actions. 
@@ -85,15 +86,15 @@ public class Actions {
 			edit();
 		}else if (command.equals("Refresh")) {
 			Main.getBoard().repaint();
-			Main.updateShapeList();
+			Main.updateLayersList();
 		}else if (command.equals("Undo")) {
 			OperationsManager.undo();
 			Main.getBoard().repaint();
-			Main.updateShapeList();
+			Main.updateLayersList();
 		}else if (command.equals("Redo")) {
 			OperationsManager.redo();
 			Main.getBoard().repaint();
-			Main.updateShapeList();
+			Main.updateLayersList();
 		}else if(command.equals("Profile")) {
 			Main.myAccount.showAccount();
 		}else if (command.equals("Visit Website")) {
@@ -593,7 +594,7 @@ public class Actions {
 	 * */
 	public static void addRectagle() {
 		Rectangle r = new Rectangle(0, 0, true, null, 100, 100, Color.BLUE);
-		OperationsManager.operate(new AddShapeOperation(r));
+		OperationsManager.operate(new AddLayerOperation(new Layer(r)));
 		r.edit();
 	}
 	/**
@@ -602,7 +603,7 @@ public class Actions {
 	public static void addText() {
 		Text t = new Text(
 				0, 0, true, null, Color.BLACK, new Font("Arial", Font.PLAIN, 20), "text");
-		OperationsManager.operate(new AddShapeOperation(t));
+		OperationsManager.operate(new AddLayerOperation(new Layer(t)));
 		t.edit();
 	}
 	/**
@@ -610,7 +611,7 @@ public class Actions {
 	 * */
 	public static void addPicture() {
 		Picture p = new Picture(0, 0, true, null, 150, 50, Resources.defaultImage);
-		OperationsManager.operate(new AddShapeOperation(p));
+		OperationsManager.operate(new AddLayerOperation(new Layer(p)));
 		p.edit();
 	}
 	/**
@@ -618,27 +619,27 @@ public class Actions {
 	 * */
 	public static void addCode() {
 		Code c = new Code("<html><i>Your Code</i></html>", true);
-		OperationsManager.operate(new AddShapeOperation(c));
+		OperationsManager.operate(new AddLayerOperation(new Layer(c)));
 		c.edit();
 	}
 	/**
 	 * Edits the current selected shape.
 	 * */
 	public static void edit() {
-		if (Main.getShapeList().getSelectedShape() == null) {
+		if (Main.getLayersList().getSelectedLayer() == null) {
 			return;
 		}
-		Main.getShapeList().getSelectedShape().edit();
+		Main.getLayersList().getSelectedLayer().getShape().edit();
 	}
 	/**
 	 * Removes the current selected shape.
 	 * */
 	public static void remove() {
-		if (Main.getShapeList().getSelectedShape() == null) {
+		if (Main.getLayersList().getSelectedLayer() == null) {
 			return;
 		}
 		if (LDialogs.showConfirmDialog(Main.f, "Are you sure?") == LDialogs.YES_OPTION) {
-			OperationsManager.operate(new RemoveShapeOperation(Main.getShapeList().getSelectedShape()));
+			OperationsManager.operate(new RemoveLayerOperation(Main.getLayersList().getSelectedLayer()));
 		}
 	}
 	/**

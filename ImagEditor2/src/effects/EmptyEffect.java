@@ -2,7 +2,7 @@ package effects;
 
 import java.awt.image.BufferedImage;
 
-import shapes.Picture;
+import drawables.shapes.Picture;
 
 public class EmptyEffect extends Effect {
 	@Override

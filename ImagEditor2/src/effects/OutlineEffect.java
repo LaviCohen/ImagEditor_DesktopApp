@@ -13,9 +13,9 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import drawables.shapes.Picture;
 import le.gui.components.LSlider;
 import main.Main;
-import shapes.Picture;
 
 public class OutlineEffect extends Effect{
 

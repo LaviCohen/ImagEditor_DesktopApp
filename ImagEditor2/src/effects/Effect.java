@@ -2,7 +2,7 @@ package effects;
 
 import java.awt.image.BufferedImage;
 
-import shapes.Picture;
+import drawables.shapes.Picture;
 
 public abstract class Effect {
 	public abstract void affectImage(BufferedImage bf);

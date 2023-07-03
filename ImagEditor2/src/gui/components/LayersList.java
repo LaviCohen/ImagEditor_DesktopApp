@@ -17,133 +17,138 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
+import drawables.Layer;
+import drawables.shapes.Picture;
+import drawables.shapes.abstractShapes.Shape;
 import gui.layouts.ListLayout;
 import install.Resources;
 import main.Main;
-import shapes.Picture;
-import shapes.abstractShapes.Shape;
 
-public class ShapeList extends JPanel{
+public class LayersList extends JPanel{
 	private static final long serialVersionUID = 1L;
-	public LinkedList<ShapePanel> shapePanels = new LinkedList<ShapeList.ShapePanel>();
-	public static class ShapePanel extends JPanel{
+	public LinkedList<LayerPanel> layerPanels = new LinkedList<LayersList.LayerPanel>();
+	public static class LayerPanel extends JPanel{
 		private static final long serialVersionUID = 1L;
-		public Shape shape;
+		public Layer layer;
 		public static int displayWidth = 50;
 		public static int displayHeight = 50;
-		public ShapePanel(Shape shape, ShapeList shapeList) {
+		public LayerPanel(Layer layer, LayersList layersList) {
 			super(new BorderLayout(5, 0));
 			this.setBackground(Main.theme.getBackgroundColor().brighter());
 			this.setOpaque(true);
-			this.shape = shape;
-			final ShapePanel cur = this;
-			JPopupMenu popup = shape.getPopupMenuForShape();
+			this.layer = layer;
+			final LayerPanel cur = this;
+			JPopupMenu popup = layer.getShape().getPopupMenuForShape();
 			JButton showNhide = new JButton(Resources.hideIcon);
-			showNhide.setToolTipText("hide this shape");
+			showNhide.setToolTipText("hide this layer");
 			showNhide.setFocusPainted(false);
 			showNhide.setBackground(Color.WHITE);
 			showNhide.addActionListener(new ActionListener() {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if (shape.isVisible()) {
-						shape.setVisible(false);
+					if (layer.getShape().isVisible()) {
+						layer.getShape().setVisible(false);
 						showNhide.setIcon(Resources.showIcon);
-						showNhide.setToolTipText("show this shape");
+						showNhide.setToolTipText("show this layer");
 					}else {
-						shape.setVisible(true);
+						layer.getShape().setVisible(true);
 						showNhide.setIcon(Resources.hideIcon);
-						showNhide.setToolTipText("hide this shape");
+						showNhide.setToolTipText("hide this layer");
 					}
 					Main.getBoard().repaint();
 					showNhide.repaint();
 				}
 			});
 			this.add(showNhide, Main.translator.getAfterTextBorder());
-			JLabel label = new JLabel(shape.getName());
+			JLabel label = new JLabel(layer.getShape().getName());
 			label.setBackground(Main.theme.getBackgroundColor());
 			label.setForeground(Main.theme.getTextColor());
 			this.add(label);
 			this.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					shapeList.setSelection(cur);
+					layersList.setSelection(cur);
 					if (e.getButton() == MouseEvent.BUTTON3) {
 						popup.show(cur, e.getX(), e.getY());
 					}
 				}
 			});
-			this.add(getSmallImage(shape), Main.translator.getBeforeTextBorder());
+			this.add(getSmallImage(layer), Main.translator.getBeforeTextBorder());
 		}
-		public static JPanel getSmallImage(Shape s) {
-			int shapeWidth = s.getWidthOnBoard();
-			int shapeHeight = s.getHeightOnBoard();
-			int max = Math.max(shapeWidth, shapeHeight);
+		public static JPanel getSmallImage(Layer layer) {
+			int layerWidth = layer.getShape().getWidthOnBoard();
+			int layerHeight = layer.getShape().getHeightOnBoard();
+			int max = Math.max(layerWidth, layerHeight);
 			BufferedImage display = new BufferedImage(max, max, BufferedImage.TYPE_INT_ARGB);
-			int x = (int)s.getX();
-			int y = (int)s.getY();
-			s.setY(0);
-			s.setX(0);
+			int x = (int)layer.getShape().getX();
+			int y = (int)layer.getShape().getY();
+			layer.getShape().setY(0);
+			layer.getShape().setX(0);
 			Graphics2D g = display.createGraphics();
 			g.setColor(Color.WHITE);
 			g.fillRect(0, 0, max, max);
-			s.draw(g);
-			s.setX(x);
-			s.setY(y);
+			layer.getShape().draw(g);
+			layer.getShape().setX(x);
+			layer.getShape().setY(y);
 			JPanel panel = new JPanel(new BorderLayout());
 			panel.add(new JLabel(new ImageIcon(
 					Picture.getScaledImage(display, displayWidth, displayHeight))));
 			return panel;
 		}
 	}
-	public ShapePanel selected = null;
-	public ShapeList(Shape[] shapes) {
+	public LayerPanel selected = null;
+	public LayersList(Layer[] layers) {
 		super(new ListLayout(0, 3));
-		for (int i = shapes.length - 1; i >= 0; i--) {
-			ShapePanel sp = (ShapePanel) getGUIforShape(shapes[i]);
-			shapePanels.add(sp);
+		for (int i = layers.length - 1; i >= 0; i--) {
+			LayerPanel sp = (LayerPanel) getGUIforlayer(layers[i]);
+			layerPanels.add(sp);
 			this.add(sp);
 		}
 	}
-	public JComponent getGUIforShape(Shape shape) {
-		ShapePanel shapePanel = new ShapePanel(shape, this);
-		return shapePanel;
+	public JComponent getGUIforlayer(Layer layer) {
+		LayerPanel layerPanel = new LayerPanel(layer, this);
+		return layerPanel;
 	}
-	public void setSelection(Shape s) {
-		if (s == null) {
-			setSelection((ShapePanel)null);
+	public void setSelection(Shape shape) {
+		setSelection(getLayerForShape(shape));
+	}
+	public void setSelection(Layer layer) {
+		if (layer == null) {
+			setSelection((LayerPanel)null);
 			return;
 		}
-		for (ShapePanel shapePanel: shapePanels) {
-			if (s == shapePanel.shape) {
-				setSelection(shapePanel);
+		for (LayerPanel layerPanel: layerPanels) {
+			if (layer == layerPanel.layer) {
+				setSelection(layerPanel);
 				return;
 			}
 		}
 	}
-	public void setSelection(ShapePanel shapePanel) {
+	public void setSelection(LayerPanel layerPanel) {
 		if (selected != null) {
 			selected.setBackground(Main.theme.getBackgroundColor());
 		}
-		selected = shapePanel;
+		selected = layerPanel;
 		if (selected != null) {
 			selected.setBackground(Color.CYAN);
 			selected.revalidate();
 			selected.repaint();
 		}
 	}
-	public Shape getSelectedShape() {
+	public Layer getSelectedLayer() {
 		if (selected == null) {
 			return null;
 		}
-		return selected.shape;
+		return selected.layer;
 	}
-	public void updateImage(Shape s) {
-		for (int i = 0; i < shapePanels.size(); i++) {
-			ShapePanel sp = shapePanels.get(i);
-			if (sp.shape == s) {
+	public void updateImage(Shape shape) {
+		Layer layer = getLayerForShape(shape);
+		for (int i = 0; i < layerPanels.size(); i++) {
+			LayerPanel sp = layerPanels.get(i);
+			if (sp.layer == layer) {
 				sp.remove(((BorderLayout)sp.getLayout()).getLayoutComponent(Main.translator.getBeforeTextBorder()));
-				sp.add(ShapePanel.getSmallImage(s), Main.translator.getBeforeTextBorder());
+				sp.add(LayerPanel.getSmallImage(layer), Main.translator.getBeforeTextBorder());
 				sp.revalidate();
 				sp.repaint();
 				this.revalidate();
@@ -151,5 +156,13 @@ public class ShapeList extends JPanel{
 				break;
 			}
 		}
+	}
+	public Layer getLayerForShape(Shape shape) {
+		for (LayerPanel layerPanel : layerPanels) {
+			if (layerPanel.layer.getShape() == shape) {
+				return layerPanel.layer;
+			}
+		}
+		return null;
 	}
 }

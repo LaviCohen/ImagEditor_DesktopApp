@@ -1,6 +1,5 @@
-package shapes.abstractShapes;
+package drawables.shapes.abstractShapes;
 
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -8,14 +7,15 @@ import java.io.IOException;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import drawables.Drawable;
+import drawables.shapes.Code;
+import drawables.shapes.Picture;
+import drawables.shapes.Rectangle;
+import drawables.shapes.Text;
 import le.gui.dialogs.LDialogs;
 import main.Main;
-import shapes.Code;
-import shapes.Picture;
-import shapes.Rectangle;
-import shapes.Text;
 
-public abstract class Shape {
+public abstract class Shape implements Drawable{
 	public static final int DEFAULT_X = 0;
 	public static final int DEFAULT_Y = 0;
 	public static final boolean DEFAULT_VISIBLE = true;
@@ -65,7 +65,6 @@ public abstract class Shape {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public abstract void draw(Graphics2D g);
 	public abstract void edit();
 	public abstract int getWidthOnBoard();
 	public abstract int getHeightOnBoard();
@@ -99,7 +98,7 @@ public abstract class Shape {
 			public void actionPerformed(ActionEvent e) {
 				Shape.this.setName(LDialogs
 						.showInputDialog(null, Main.translator.get("Enter the new name for") + " \"" + Shape.this.getName() + "\"", null));
-				Main.updateShapeList();
+				Main.updateLayersList();
 			}
 		});
 		popup.add(setName);

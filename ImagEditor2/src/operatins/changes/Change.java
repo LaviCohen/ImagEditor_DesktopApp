@@ -1,6 +1,6 @@
 package operatins.changes;
 
-import shapes.abstractShapes.Shape;
+import drawables.shapes.abstractShapes.Shape;
 
 public abstract class Change {
 	

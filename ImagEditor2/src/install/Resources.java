@@ -7,7 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-import shapes.Picture;
+import drawables.shapes.Picture;
 
 /**
  * The resources class holds all the resources used in the program.

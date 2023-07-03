@@ -1,7 +1,7 @@
 package operatins.changes;
 
-import shapes.Rectangle;
-import shapes.abstractShapes.Shape;
+import drawables.shapes.Rectangle;
+import drawables.shapes.abstractShapes.Shape;
 
 public class BooleanChange extends Change{
 

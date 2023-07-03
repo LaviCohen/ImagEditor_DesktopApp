@@ -4,11 +4,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 
-import shapes.Code;
-import shapes.Picture;
-import shapes.Rectangle;
-import shapes.Text;
-import shapes.abstractShapes.Shape;
+import drawables.shapes.Code;
+import drawables.shapes.Picture;
+import drawables.shapes.Rectangle;
+import drawables.shapes.Text;
+import drawables.shapes.abstractShapes.Shape;
 
 public class ObjectChange extends Change{
 

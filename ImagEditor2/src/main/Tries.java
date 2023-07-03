@@ -10,7 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import shapes.Picture;
+import drawables.shapes.Picture;
 
 public class Tries {
 	public static void main(String[] args) throws IOException {

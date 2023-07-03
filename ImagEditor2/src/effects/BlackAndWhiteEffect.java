@@ -11,9 +11,9 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
+import drawables.shapes.Picture;
 import le.gui.components.LSlider;
 import main.Main;
-import shapes.Picture;
 
 public class BlackAndWhiteEffect extends Effect{
 	int redStrength = 100;

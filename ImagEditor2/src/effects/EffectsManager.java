@@ -15,9 +15,9 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import drawables.shapes.Picture;
 import le.gui.dialogs.LDialogs;
 import main.Main;
-import shapes.Picture;
 
 public class EffectsManager extends Effect{
 	public Picture parent;

@@ -1,9 +1,9 @@
 package operatins.changes;
 
-import shapes.Picture;
-import shapes.Rectangle;
-import shapes.abstractShapes.Shape;
-import shapes.abstractShapes.StretchableShpae;
+import drawables.shapes.Picture;
+import drawables.shapes.Rectangle;
+import drawables.shapes.abstractShapes.Shape;
+import drawables.shapes.abstractShapes.StretchableShpae;
 
 public class NumericalChange extends Change{
 	
