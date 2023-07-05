@@ -1,5 +1,7 @@
 package drawables.shapes.abstractShapes;
 
+import main.Main;
+
 public abstract class StretchableShpae extends Shape{
 	
 	protected double width;
@@ -14,6 +16,7 @@ public abstract class StretchableShpae extends Shape{
 	public void strecthBy(int widthDiff, int heightDiff) {
 		this.width += widthDiff;
 		this.height += heightDiff;
+		Main.getLayersList().getLayerForShape(this).adjustTopSize((int)this.width, (int)this.height);
 	}
 	
 	@Override
@@ -34,11 +37,13 @@ public abstract class StretchableShpae extends Shape{
 	}
 	public void setWidth(double width) {
 		this.width = width;
+		Main.getLayersList().getLayerForShape(this).adjustTopSize((int)this.width, (int)this.height);
 	}
 	public double getHeight() {
 		return height;
 	}
 	public void setHeight(double height) {
 		this.height = height;
+		Main.getLayersList().getLayerForShape(this).adjustTopSize((int)this.width, (int)this.height);
 	}
 }

@@ -46,7 +46,6 @@ public class Board extends JPanel{
 	}
 	public void setMouseAdapterForTool(int tool) {
 		if (currentMouseAdapter != null) {
-			currentMouseAdapter.invalidate();
 			this.removeMouseListener(currentMouseAdapter);
 			this.removeMouseMotionListener(currentMouseAdapter);
 		}

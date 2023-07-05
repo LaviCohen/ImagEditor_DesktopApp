@@ -88,7 +88,7 @@ public class LayersList extends JPanel{
 			Graphics2D g = display.createGraphics();
 			g.setColor(Color.WHITE);
 			g.fillRect(0, 0, max, max);
-			layer.getShape().draw(g);
+			layer.draw(g);
 			layer.getShape().setX(x);
 			layer.getShape().setY(y);
 			JPanel panel = new JPanel(new BorderLayout());

@@ -42,9 +42,7 @@ public class PickingMouseAdapter extends BoardMouseAdapter{
 	public void mousePressed(MouseEvent e) {
 		previousX = e.getXOnScreen();
 		previousY = e.getYOnScreen();
-		shapeInFocus = parent.getShapeAt(
-				(int)((e.getX() - getLeftGap()) / parent.getZoomRate()),
-				(int)((e.getY() - getTopGap()) / parent.getZoomRate()));
+		shapeInFocus = parent.getShapeAt(screenToBoardCoordsX(e.getX()), screenToBoardCoordsY(e.getY()));
 		if (shapeInFocus != null && !shapeInFocus.isVisible()) {
 			shapeInFocus = null;
 		}
@@ -52,12 +50,6 @@ public class PickingMouseAdapter extends BoardMouseAdapter{
 			touchedWrapper = touchWrapper(e);
 		}
 		Main.getLayersList().setSelection(shapeInFocus);
-	}
-	private double getTopGap() {
-		return ((parent.getHeight() - (parent.getPaper().getHeight() * parent.getZoomRate()))/2);
-	}
-	private double getLeftGap() {
-		return ((parent.getWidth()  - (parent.getPaper().getWidth()  * parent.getZoomRate()))/2);
 	}
 	@Override
 	public void mouseReleased(MouseEvent e) {
@@ -221,12 +213,6 @@ public class PickingMouseAdapter extends BoardMouseAdapter{
 			Main.getBoard().repaint();
 		}
 	}
-	public int screenToBoardCoordsX(int screenX) {
-		return (int)((screenX - getLeftGap()) / parent.getZoomRate());
-	}
-	public int screenToBoardCoordsY(int screenY) {
-		return (int)((screenY - getTopGap()) / parent.getZoomRate());
-	}
 
 	public int touchWrapper(MouseEvent e) {
 		int x = screenToBoardCoordsX(e.getX());
@@ -253,20 +239,5 @@ public class PickingMouseAdapter extends BoardMouseAdapter{
 		}
 		
 		return 0;
-	}
-	/**
-	 * Return if value is between start & start + difference
-	 * */
-	public boolean isBetween(double start, double value, double difference) {
-		if (difference < 0) {
-			start += difference;
-			difference = -difference;
-		}
-		return value >= start && value - difference <= start;
-	}
-
-	@Override
-	public void invalidate() {
-		
 	}
 }
