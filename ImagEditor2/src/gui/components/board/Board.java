@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 
 import drawables.Layer;
 import drawables.shapes.abstractShapes.Shape;
-import gui.ToolListManager;
+import tools.ToolListManager;
 import gui.components.board.adapters.BoardMouseAdapter;
 import gui.components.board.adapters.BrushMouseAdapter;
 import gui.components.board.adapters.PickingMouseAdapter;

@@ -73,6 +73,17 @@ public class Text extends Shape{
 		colorLabel.setOpaque(true);
 		colorLabel.setBackground(color);
 		colorPanel.add(colorLabel);
+		JButton setColorButton = new JButton("Set Color");
+		Main.theme.affect(setColorButton);
+		setColorButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				colorLabel.setBackground(JColorChooser.showDialog(editDialog, "Choose Text color", colorLabel.getBackground()));
+			}
+		});
+		colorPanel.add(setColorButton, Main.translator.getAfterTextBorder());
+		editDialog.add(colorPanel);
 		FontHolder fontHolder = new FontHolder(this.font);
 		JButton setFontButton = new JButton("Set Font");
 		Main.theme.affect(setFontButton);
@@ -85,17 +96,6 @@ public class Text extends Shape{
 			}
 		});
 		editDialog.add(setFontButton);
-		JButton setColorButton = new JButton("Set Color");
-		Main.theme.affect(setColorButton);
-		setColorButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				colorLabel.setBackground(JColorChooser.showDialog(editDialog, "Choose Text color", colorLabel.getBackground()));
-			}
-		});
-		colorPanel.add(setColorButton, Main.translator.getAfterTextBorder());
-		editDialog.add(colorPanel);
 		JButton apply = new JButton("Apply");
 		JButton preview = new JButton("Preview");
 		Main.theme.affect(apply);

@@ -43,5 +43,23 @@ public class BrushMouseAdapter extends BoardMouseAdapter{
 	public void mouseClicked(MouseEvent e) {
 		paintWithBrush(e);
 	}
+
+	public Color getBrushColor() {
+		return brushColor;
+	}
+
+	public void setBrushColor(Color brushColor) {
+		this.brushColor = brushColor;
+	}
+
+	public int getBrushSize() {
+		return brushSize;
+	}
+
+	public void setBrushSize(int brushSize) {
+		this.brushSize = brushSize;
+	}
+	
+	
 	
 }

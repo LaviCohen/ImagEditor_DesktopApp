@@ -3,6 +3,7 @@ package main;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,7 +23,7 @@ import javax.swing.event.ChangeListener;
 
 import drawables.Layer;
 import gui.Theme;
-import gui.ToolListManager;
+import tools.ToolListManager;
 import gui.components.LayersList;
 import gui.components.board.Board;
 import install.Decoder;
@@ -107,6 +108,10 @@ public class Main {
 	 */
 	public static JPanel toolsSideBarPanel;
 	/**
+	 * The top bar which holds the tools settings.
+	 */
+	public static JPanel toolsSettingsPanel;
+	/**
 	 * GUI list of all the shapes are currently exist.
 	 */
 	public static LayersList layersList;
@@ -162,11 +167,18 @@ public class Main {
 		initControlBar();
 		initProject();
 		initBoardScrollPane();
-		updateSizeLabel();
 		initLayersSideBarPanel();
 		initToolsSideBarPanel();
+		initToolsSettingsPanel();
+		updateSizeLabel();
 		updateLayersList();
 		applyThemeColors();
+	}
+	private static void initToolsSettingsPanel() {
+		toolsSettingsPanel = new JPanel(new BorderLayout());
+		toolsSettingsPanel.add(new JPanel());
+		toolsSideBarPanel.setPreferredSize(new Dimension(100, 50));
+		f.add(toolsSettingsPanel, BorderLayout.NORTH);
 	}
 	private static void initToolsSideBarPanel() {
 		toolsSideBarPanel = ToolListManager.createToolsPanel();
