@@ -17,6 +17,7 @@ import drawables.shapes.abstractShapes.Shape;
 import tools.ToolListManager;
 import gui.components.board.adapters.BoardMouseAdapter;
 import gui.components.board.adapters.BrushMouseAdapter;
+import gui.components.board.adapters.EraserMouseAdapter;
 import gui.components.board.adapters.PickingMouseAdapter;
 import main.Main;
 
@@ -53,6 +54,8 @@ public class Board extends JPanel{
 			currentMouseAdapter = new PickingMouseAdapter(this);
 		} else if (tool == ToolListManager.BRUSH_TOOL) {
 			currentMouseAdapter = new BrushMouseAdapter(this);
+		}else if (tool == ToolListManager.ERASER_TOOL) {
+			currentMouseAdapter = new EraserMouseAdapter(this);
 		}
 		this.addMouseListener(currentMouseAdapter);
 		this.addMouseMotionListener(currentMouseAdapter);

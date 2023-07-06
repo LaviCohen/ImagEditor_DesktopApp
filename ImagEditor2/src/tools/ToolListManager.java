@@ -17,6 +17,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import gui.components.board.adapters.BrushMouseAdapter;
+import gui.components.board.adapters.EraserMouseAdapter;
 import gui.layouts.ListLayout;
 import install.Resources;
 import le.gui.components.LSlider;
@@ -26,6 +27,7 @@ public class ToolListManager {
 
 	public static final int PICKER_TOOL = 0;
 	public static final int BRUSH_TOOL = 1;
+	public static final int ERASER_TOOL = 2;
 	
 
 	private static int currentTool = 0;
@@ -33,6 +35,7 @@ public class ToolListManager {
 	
 	private static JLabel pickerToolLabel;
 	private static JLabel brushToolLabel;
+	private static JLabel eraserToolLabel;
 	
 	public static JPanel createToolsPanel() {
 		JPanel toolsSideBarPanel = new JPanel();
@@ -56,6 +59,15 @@ public class ToolListManager {
 			}
 		});
 		toolsSideBarPanel.add(brushToolLabel);
+		eraserToolLabel = new JLabel(Resources.eraserIcon);
+		eraserToolLabel.setOpaque(true);
+		eraserToolLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ToolListManager.setCurrentTool(ToolListManager.ERASER_TOOL);
+			}
+		});
+		toolsSideBarPanel.add(eraserToolLabel);
 		toolsSideBarPanel.setMaximumSize(new Dimension(50, 50));
 		Main.f.add(toolsSideBarPanel, Main.translator.getAfterTextBorder());
 		return toolsSideBarPanel;
@@ -109,6 +121,19 @@ public class ToolListManager {
 			});
 			optionsBar.add(brushSizeSlider);
 			p.add(optionsBar, Main.translator.getBeforeTextBorder());
+		} else if (tool == ERASER_TOOL) {
+			JPanel optionsBar = new JPanel(new GridLayout(1, 1, 3, 3));
+			LSlider brushSizeSlider = new LSlider("Eraser Size", 1, 100, 5);
+			brushSizeSlider.slider.addChangeListener(new ChangeListener() {
+				
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					((EraserMouseAdapter)Main.getBoard().getCurrentMouseAdapter())
+					.setEraserSize(brushSizeSlider.getValue());
+				}
+			});
+			optionsBar.add(brushSizeSlider);
+			p.add(optionsBar, Main.translator.getBeforeTextBorder());
 		} else if (tool == PICKER_TOOL) {
 //			((BorderLayout)p.getLayout()).setVgap(5);
 			p.add(new JLabel("<html><big>Picker Tool</big></html>"));
@@ -123,6 +148,9 @@ public class ToolListManager {
 		}
 		if (tool == BRUSH_TOOL) {
 			return brushToolLabel;
+		}
+		if (tool == ERASER_TOOL) {
+			return eraserToolLabel;
 		}
 		return null;
 	}

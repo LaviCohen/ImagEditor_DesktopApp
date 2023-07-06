@@ -44,7 +44,8 @@ public class Layer implements Drawable{
 	}
 	
 	public void initTop() {
-		top = new BufferedImage(shape.getWidthOnBoard(), shape.getHeightOnBoard(), BufferedImage.TYPE_INT_ARGB);
+		top = new BufferedImage(shape.getWidthOnBoard(), shape.getHeightOnBoard(), 
+				BufferedImage.TYPE_INT_ARGB_PRE);
 	}
 	
 	public void adjustTopSize(int width, int height) {
