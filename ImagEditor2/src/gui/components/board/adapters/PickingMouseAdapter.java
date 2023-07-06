@@ -17,6 +17,10 @@ import operatins.changes.NumericalChange;
 
 public class PickingMouseAdapter extends BoardMouseAdapter{
 	
+	public static final int TOP_LEFT_WRAPPER = 1;
+	public static final int TOP_RIGHT_WRAPPER = 2;
+	public static final int BOTTOM_LEFT_WRAPPER = 3;
+	public static final int BOTTOM_RIGHT_WRAPPER = 4;
 	
 	Shape shapeInFocus = null;
 	
@@ -33,6 +37,7 @@ public class PickingMouseAdapter extends BoardMouseAdapter{
 	double totalCutFromLeft = 0;
 	int movementInX = 0;
 	int movementInY = 0;
+	public int touchedWrapper = 0;
 	
 	public PickingMouseAdapter(Board parent) {
 		super(parent);
@@ -110,6 +115,8 @@ public class PickingMouseAdapter extends BoardMouseAdapter{
 		if (e.getButton() == MouseEvent.BUTTON3) {
 			if (shapeInFocus != null) {
 				shapeInFocus.getPopupMenuForShape().show(parent, e.getX(), e.getY());
+			} else {
+				openAddShapePopupMenu(e);
 			}
 		}
 		if(e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1 
@@ -123,11 +130,6 @@ public class PickingMouseAdapter extends BoardMouseAdapter{
 		}
 		parent.repaint();
 	}
-	public static final int TOP_LEFT_WRAPPER = 1;
-	public static final int TOP_RIGHT_WRAPPER = 2;
-	public static final int BOTTOM_LEFT_WRAPPER = 3;
-	public static final int BOTTOM_RIGHT_WRAPPER = 4;
-	public int touchedWrapper = 0;
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		if (shapeInFocus != null) {
@@ -213,7 +215,6 @@ public class PickingMouseAdapter extends BoardMouseAdapter{
 			Main.getBoard().repaint();
 		}
 	}
-
 	public int touchWrapper(MouseEvent e) {
 		int x = screenToBoardCoordsX(e.getX());
 		int y = screenToBoardCoordsY(e.getY());

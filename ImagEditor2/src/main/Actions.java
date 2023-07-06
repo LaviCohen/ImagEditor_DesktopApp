@@ -75,7 +75,7 @@ public class Actions {
 		}else if (command.equals("Set Language")) {
 			showChangeLanguageDialog();
 		}else if (command.equals("Rectangle")) {
-			addRectagle();
+			addRectangle();
 		}else if (command.equals("Text")) {
 			addText();
 		}else if (command.equals("Picture")) {
@@ -592,7 +592,7 @@ public class Actions {
 	/**
 	 * Adds Rectangle to the current project.
 	 * */
-	public static void addRectagle() {
+	public static void addRectangle() {
 		Rectangle r = new Rectangle(0, 0, true, null, 100, 100, Color.BLUE);
 		OperationsManager.operate(new AddLayerOperation(new Layer(r)));
 		r.edit();

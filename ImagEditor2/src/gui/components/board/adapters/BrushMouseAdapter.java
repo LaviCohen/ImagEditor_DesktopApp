@@ -33,15 +33,22 @@ public class BrushMouseAdapter extends BoardMouseAdapter{
 			parent.repaint();
 			Main.layersList.updateImage(layer.getShape());
 		}
+		
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		paintWithBrush(e);
+		if (e.getButton() == 0) {	
+			paintWithBrush(e);
+		}
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		paintWithBrush(e);
+		if (e.getButton() == 0) {	
+			paintWithBrush(e);
+		} else if (e.getButton() == MouseEvent.BUTTON3) {
+			openAddShapePopupMenu(e);
+		}
 	}
 
 	public Color getBrushColor() {
