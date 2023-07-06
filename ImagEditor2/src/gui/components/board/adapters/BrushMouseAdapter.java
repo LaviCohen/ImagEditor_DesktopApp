@@ -27,8 +27,9 @@ public class BrushMouseAdapter extends BoardMouseAdapter{
 			}
 			Graphics g = layer.getTop().getGraphics();
 			g.setColor(brushColor);
-			g.fillOval(screenToBoardCoordsX(e.getX()) - (int) layer.getShape().getX(), 
-					screenToBoardCoordsY(e.getY() - (int) layer.getShape().getY()), 
+			g.fillOval(
+					screenToBoardCoordsX(e.getX()) - (int) layer.getShape().getX() - brushSize/2, 
+					screenToBoardCoordsY(e.getY() - (int) layer.getShape().getY()) - brushSize/2, 
 					brushSize, brushSize);
 			parent.repaint();
 			Main.layersList.updateImage(layer.getShape());
