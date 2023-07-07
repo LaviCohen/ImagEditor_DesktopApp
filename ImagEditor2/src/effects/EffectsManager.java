@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
@@ -29,7 +27,10 @@ public class EffectsManager extends Effect{
 	public void affectImage(BufferedImage bufferedImage) {
 		for(Effect effect:effects.keySet()) {
 			if (effects.get(effect) == true) {// == true isn't needed, but code is more readable now
+				System.out.println("Affecting with " + effect);
 				effect.affectImage(bufferedImage);
+			} else {
+				System.out.println("Don't affecting with " + effect);
 			}
 		}
 	}
@@ -66,7 +67,7 @@ public class EffectsManager extends Effect{
 				}else if(effectName.equals("Blur")) {
 					effect = new BlurEffect();
 				}else if(effectName.equals("Black & White")) {
-					effect = new BlackAndWhiteEffect();
+					effect = new BlackNWhiteEffect();
 				}else if(effectName.equals("Retro")) {
 					effect = new RetroEffect();
 				}else if(effectName.equals("Outline")) {
@@ -86,31 +87,6 @@ public class EffectsManager extends Effect{
 		});
 		effectManagerDialog.add(addEffect, BorderLayout.SOUTH);
 		effectManagerDialog.pack();
-		effectManagerDialog.addComponentListener(new ComponentListener() {
-			
-			@Override
-			public void componentShown(ComponentEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void componentResized(ComponentEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void componentMoved(ComponentEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void componentHidden(ComponentEvent e) {
-				Main.getBoard().repaint();
-			}
-		});
 		effectManagerDialog.setVisible(true);
 	}
 	public JPanel getPanelForEffect(Effect effect, JDialog dialog) {
@@ -123,6 +99,7 @@ public class EffectsManager extends Effect{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				effects.put(effect, active.isSelected());
+				System.out.println(effect + " is " + (active.isSelected()?"active":"not active"));
 				parent.invalidate();
 				Main.getBoard().repaint();
 			}

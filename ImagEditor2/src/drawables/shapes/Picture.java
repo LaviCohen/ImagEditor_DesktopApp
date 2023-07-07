@@ -3,8 +3,6 @@ package drawables.shapes;
 import java.awt.BorderLayout;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -28,6 +26,7 @@ import drawables.shapes.abstractShapes.StretchableShpae;
 import effects.EffectsManager;
 import install.DefaultSettings;
 import le.gui.dialogs.LDialogs;
+import le.utils.PictureUtilities;
 import main.Main;
 import operatins.ChangesOperation;
 import operatins.OperationsManager;
@@ -69,6 +68,7 @@ public class Picture extends StretchableShpae{
 			//In case the setting has been changed while the program is running, so previous lastDrawn won't stuck in the memory
 			invalidate();
 			g.drawImage(getImageToDisplay(), (int)x, (int)y, getWidthOnBoard(), getHeightOnBoard(), null);
+			return;
 		}
 		if (lastDrawn == null) {
 			lastDrawn = getImageToDisplay();
@@ -76,13 +76,15 @@ public class Picture extends StretchableShpae{
 		g.drawImage(lastDrawn, (int)x, (int)y, getWidthOnBoard(), getHeightOnBoard(), null);
 	}
 	public BufferedImage getImageToDisplay() {
-		BufferedImage displayImage =  image.getSubimage(
-				(int)cutFromLeft, (int)cutFromTop, (int)getCutWidth(), (int)getCutHeight());
+		BufferedImage displayImage =  new BufferedImage((int)getCutWidth(), (int)getCutHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
+		displayImage.createGraphics().drawImage(image.getSubimage(
+				(int)cutFromLeft, (int)cutFromTop, (int)getCutWidth(), (int)getCutHeight()),
+				0, 0, null);
 		if (getWidthOnBoard() * getHeightOnBoard() > image.getHeight() * image.getWidth()) {
 			effectsManger.affectImage(displayImage);
-			displayImage = getScaledImage(displayImage, getWidthOnBoard(), getHeightOnBoard());
+			displayImage = PictureUtilities.getScaledImage(displayImage, getWidthOnBoard(), getHeightOnBoard());
 		} else {
-			displayImage = getScaledImage(displayImage, getWidthOnBoard(), getHeightOnBoard());
+			displayImage = PictureUtilities.getScaledImage(displayImage, getWidthOnBoard(), getHeightOnBoard());
 			effectsManger.affectImage(displayImage);
 		}
 		return displayImage;
@@ -227,14 +229,6 @@ public class Picture extends StretchableShpae{
 	}
 	public void invalidate() {
 		lastDrawn = null;
-	}
-	public static BufferedImage getScaledImage(Image srcImg, int width, int height){
-	    BufferedImage resizedImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-	    Graphics2D g2 = resizedImg.createGraphics();
-	    g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-	    g2.drawImage(srcImg, 0, 0, width, height, null);
-	    g2.dispose();
-	    return resizedImg;
 	}
 	public static BufferedImage readImage(File source) {
 		try {

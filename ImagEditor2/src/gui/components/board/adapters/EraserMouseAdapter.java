@@ -1,7 +1,6 @@
 package gui.components.board.adapters;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 
@@ -11,7 +10,7 @@ import main.Main;
 
 public class EraserMouseAdapter extends BoardMouseAdapter {
 
-protected int eraserSize = 5;
+	protected static int eraserSize = 5;
 	
 	public EraserMouseAdapter(Board parent) {
 		super(parent);
@@ -50,11 +49,11 @@ protected int eraserSize = 5;
 		}
 	}
 
-	public int getEraserSize() {
+	public static int getEraserSize() {
 		return eraserSize;
 	}
 
-	public void setEraserSize(int eraserSize) {
-		this.eraserSize = eraserSize;
+	public static void setEraserSize(int eraserSize) {
+		EraserMouseAdapter.eraserSize = eraserSize;
 	}
 }

@@ -10,9 +10,9 @@ import main.Main;
 
 public class BrushMouseAdapter extends BoardMouseAdapter{
 
-	protected Color brushColor = Color.BLACK;
+	protected static Color brushColor = Color.BLACK;
 	
-	protected int brushSize = 5;
+	protected static int brushSize = 5;
 	
 	public BrushMouseAdapter(Board parent) {
 		super(parent);
@@ -52,22 +52,19 @@ public class BrushMouseAdapter extends BoardMouseAdapter{
 		}
 	}
 
-	public Color getBrushColor() {
+	public static Color getBrushColor() {
 		return brushColor;
 	}
 
-	public void setBrushColor(Color brushColor) {
-		this.brushColor = brushColor;
+	public static void setBrushColor(Color brushColor) {
+		BrushMouseAdapter.brushColor = brushColor;
 	}
 
-	public int getBrushSize() {
+	public static int getBrushSize() {
 		return brushSize;
 	}
 
-	public void setBrushSize(int brushSize) {
-		this.brushSize = brushSize;
+	public static void setBrushSize(int brushSize) {
+		BrushMouseAdapter.brushSize = brushSize;
 	}
-	
-	
-	
 }

@@ -15,10 +15,10 @@ import drawables.shapes.Picture;
 import le.gui.components.LSlider;
 import main.Main;
 
-public class BlackAndWhiteEffect extends Effect{
-	int redStrength = 100;
-	int greenStrength = 100;
-	int blueStrength = 100;
+public class BlackNWhiteEffect extends Effect{
+	int redStrength;
+	int greenStrength;
+	int blueStrength;
 	@Override
 	public void affectImage(BufferedImage bf) {
 		int width = bf.getWidth();
@@ -38,10 +38,10 @@ public class BlackAndWhiteEffect extends Effect{
 	}
 	@Override
 	public void edit(Picture parent) {
-		JDialog editBlackAwhiteDialog = new JDialog(Main.f);
-		editBlackAwhiteDialog.getContentPane().setBackground(Main.theme.getBackgroundColor());
-		editBlackAwhiteDialog.setTitle("Edit Black & White");
-		editBlackAwhiteDialog.setLayout(new BorderLayout());
+		JDialog editBlackNwhiteDialog = new JDialog(Main.f);
+		editBlackNwhiteDialog.getContentPane().setBackground(Main.theme.getBackgroundColor());
+		editBlackNwhiteDialog.setTitle("Edit Black & White");
+		editBlackNwhiteDialog.setLayout(new BorderLayout());
 		JPanel slidersPanel = new JPanel(new GridLayout(3, 1));
 		Main.theme.affect(slidersPanel);
 		LSlider red = new LSlider("Red:", 0, 255, redStrength);
@@ -53,7 +53,7 @@ public class BlackAndWhiteEffect extends Effect{
 		LSlider blue = new LSlider("Blue:", 0, 255, blueStrength);
 		Main.theme.affect(blue);
 		slidersPanel.add(blue);
-		editBlackAwhiteDialog.add(slidersPanel);
+		editBlackNwhiteDialog.add(slidersPanel);
 		JButton apply = new JButton("Apply");
 		Main.theme.affect(apply);
 		apply.addActionListener(new ActionListener() {
@@ -63,19 +63,21 @@ public class BlackAndWhiteEffect extends Effect{
 				redStrength = red.getValue();
 				greenStrength = green.getValue();
 				blueStrength = blue.getValue();
-				editBlackAwhiteDialog.dispose();
+				editBlackNwhiteDialog.dispose();
 				parent.invalidate();
 				Main.getBoard().repaint();
 			}
 		});
-		editBlackAwhiteDialog.add(apply, BorderLayout.SOUTH);
-		editBlackAwhiteDialog.pack();
-		editBlackAwhiteDialog.setVisible(true);
+		editBlackNwhiteDialog.add(apply, BorderLayout.SOUTH);
+		editBlackNwhiteDialog.pack();
+		editBlackNwhiteDialog.setVisible(true);
 	}
-	public BlackAndWhiteEffect() {
-		
+	public BlackNWhiteEffect() {
+		this.redStrength = 100;
+		this.greenStrength = 100;
+		this.blueStrength = 100;
 	}
-	public BlackAndWhiteEffect(String[] data) {
+	public BlackNWhiteEffect(String[] data) {
 		this.redStrength = Integer.parseInt(data[0]);
 		this.greenStrength = Integer.parseInt(data[1]);
 		this.blueStrength = Integer.parseInt(data[2]);

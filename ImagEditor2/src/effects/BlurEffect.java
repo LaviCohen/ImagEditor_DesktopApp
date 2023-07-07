@@ -23,7 +23,7 @@ public class BlurEffect extends Effect{
 				ret.setRGB(i, j, getAverageColor(bf, i, j, radius).getRGB());
 			}
 		}
-		bf.createGraphics().drawImage(bf, 0, 0, null);
+		bf.createGraphics().drawImage(ret, 0, 0, null);
 	}
 	@Override
 	public void edit(Picture parent) {

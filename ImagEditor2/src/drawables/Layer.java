@@ -4,9 +4,9 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import drawables.shapes.Picture;
 import drawables.shapes.abstractShapes.Shape;
 import gui.components.board.adapters.PickingMouseAdapter;
+import le.utils.PictureUtilities;
 import main.Main;
 
 public class Layer implements Drawable{
@@ -49,7 +49,7 @@ public class Layer implements Drawable{
 	}
 	
 	public void adjustTopSize(int width, int height) {
-		top = Picture.getScaledImage(top, width, height);
+		top = PictureUtilities.getScaledImage(top, width, height);
 	}
 	
 	public String encodeLayer() {

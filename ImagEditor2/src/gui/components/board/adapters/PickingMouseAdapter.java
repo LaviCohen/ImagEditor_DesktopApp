@@ -204,6 +204,9 @@ public class PickingMouseAdapter extends BoardMouseAdapter{
 				case BOTTOM_RIGHT_WRAPPER:
 					if (shapeInFocus instanceof StretchableShpae) {
 						((StretchableShpae)shapeInFocus).strecthBy(movementInX, movementInY);
+						if(shapeInFocus instanceof Picture) {
+							((Picture)shapeInFocus).invalidate();
+						}
 						totalStretchX += movementInX;
 						totalStretchY += movementInY;
 					}

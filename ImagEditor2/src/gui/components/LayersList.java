@@ -18,10 +18,10 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 import drawables.Layer;
-import drawables.shapes.Picture;
 import drawables.shapes.abstractShapes.Shape;
 import gui.layouts.ListLayout;
 import install.Resources;
+import le.utils.PictureUtilities;
 import main.Main;
 
 public class LayersList extends JPanel{
@@ -93,7 +93,7 @@ public class LayersList extends JPanel{
 			layer.getShape().setY(y);
 			JPanel panel = new JPanel(new BorderLayout());
 			panel.add(new JLabel(new ImageIcon(
-					Picture.getScaledImage(display, displayWidth, displayHeight))));
+					PictureUtilities.getScaledImage(display, displayWidth, displayHeight))));
 			return panel;
 		}
 	}

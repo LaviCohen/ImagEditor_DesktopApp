@@ -95,7 +95,7 @@ public class ToolListManager {
 			colorPanel.add(Main.theme.affect(new JLabel("Color:")), Main.translator.getBeforeTextBorder());
 			JLabel colorLabel = new JLabel();
 			colorLabel.setOpaque(true);
-			colorLabel.setBackground(Color.BLACK);
+			colorLabel.setBackground(BrushMouseAdapter.getBrushColor());
 			colorPanel.add(colorLabel);
 			JButton setColorButton = new JButton("Set Color");
 			Main.theme.affect(setColorButton);
@@ -104,32 +104,29 @@ public class ToolListManager {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					colorLabel.setBackground(JColorChooser.showDialog(p, "Choose Text color", colorLabel.getBackground()));
-					((BrushMouseAdapter)Main.getBoard().getCurrentMouseAdapter()).
-					setBrushColor(colorLabel.getBackground());
+					BrushMouseAdapter.setBrushColor(colorLabel.getBackground());
 				}
 			});
 			colorPanel.add(setColorButton, Main.translator.getAfterTextBorder());
 			optionsBar.add(colorPanel);
-			LSlider brushSizeSlider = new LSlider("Brush Size", 1, 100, 5);
+			LSlider brushSizeSlider = new LSlider("Brush Size", 1, 100, BrushMouseAdapter.getBrushSize());
 			brushSizeSlider.slider.addChangeListener(new ChangeListener() {
 				
 				@Override
 				public void stateChanged(ChangeEvent e) {
-					((BrushMouseAdapter)Main.getBoard().getCurrentMouseAdapter())
-					.setBrushSize(brushSizeSlider.getValue());
+					BrushMouseAdapter.setBrushSize(brushSizeSlider.getValue());
 				}
 			});
 			optionsBar.add(brushSizeSlider);
 			p.add(optionsBar, Main.translator.getBeforeTextBorder());
 		} else if (tool == ERASER_TOOL) {
 			JPanel optionsBar = new JPanel(new GridLayout(1, 1, 3, 3));
-			LSlider brushSizeSlider = new LSlider("Eraser Size", 1, 100, 5);
+			LSlider brushSizeSlider = new LSlider("Eraser Size", 1, 100, EraserMouseAdapter.getEraserSize());
 			brushSizeSlider.slider.addChangeListener(new ChangeListener() {
 				
 				@Override
 				public void stateChanged(ChangeEvent e) {
-					((EraserMouseAdapter)Main.getBoard().getCurrentMouseAdapter())
-					.setEraserSize(brushSizeSlider.getValue());
+					EraserMouseAdapter.setEraserSize(brushSizeSlider.getValue());
 				}
 			});
 			optionsBar.add(brushSizeSlider);

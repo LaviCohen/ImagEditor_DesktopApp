@@ -11,8 +11,8 @@ public abstract class Effect {
 		return this.getClass().getName();
 	}
 	public static Effect parseEffect(String s) {
-		if (s.startsWith(BlackAndWhiteEffect.class.getName())) {
-			return new BlackAndWhiteEffect(s.substring(s.indexOf('_') + 1).split("_"));
+		if (s.startsWith(BlackNWhiteEffect.class.getName())) {
+			return new BlackNWhiteEffect(s.substring(s.indexOf('_') + 1).split("_"));
 		}else if (s.startsWith(BlurEffect.class.getName())) {
 			return new BlurEffect(s.substring(s.indexOf('_') + 1).split("_"));
 		}else if (s.startsWith(GreenScreenEffect.class.getName())) {

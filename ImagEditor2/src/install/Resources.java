@@ -7,7 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-import drawables.shapes.Picture;
+import le.utils.PictureUtilities;
 
 /**
  * The resources class holds all the resources used in the program.
@@ -70,6 +70,6 @@ public class Resources {
 		System.out.println("All images loaded successfully");
 	}
 	public static ImageIcon getIcon(Image image, int w, int h) {
-		return new ImageIcon(Picture.getScaledImage(image, w, h));
+		return new ImageIcon(PictureUtilities.getScaledImage(image, w, h));
 	}
 }
