@@ -5,9 +5,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import drawables.shapes.abstractShapes.Shape;
-import gui.components.board.adapters.PickingMouseAdapter;
 import le.utils.PictureUtilities;
 import main.Main;
+import tools.adapters.PickingMouseAdapter;
 
 public class Layer implements Drawable{
 	

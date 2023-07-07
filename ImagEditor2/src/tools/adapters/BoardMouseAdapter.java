@@ -1,4 +1,4 @@
-package gui.components.board.adapters;
+package tools.adapters;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

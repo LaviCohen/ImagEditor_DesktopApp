@@ -16,12 +16,12 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import gui.components.board.adapters.BrushMouseAdapter;
-import gui.components.board.adapters.EraserMouseAdapter;
 import gui.layouts.ListLayout;
 import install.Resources;
 import le.gui.components.LSlider;
 import main.Main;
+import tools.adapters.BrushMouseAdapter;
+import tools.adapters.EraserMouseAdapter;
 
 public class ToolListManager {
 

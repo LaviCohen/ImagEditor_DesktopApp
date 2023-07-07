@@ -15,10 +15,10 @@ import javax.swing.JPanel;
 import drawables.Layer;
 import drawables.shapes.abstractShapes.Shape;
 import tools.ToolListManager;
-import gui.components.board.adapters.BoardMouseAdapter;
-import gui.components.board.adapters.BrushMouseAdapter;
-import gui.components.board.adapters.EraserMouseAdapter;
-import gui.components.board.adapters.PickingMouseAdapter;
+import tools.adapters.BoardMouseAdapter;
+import tools.adapters.BrushMouseAdapter;
+import tools.adapters.EraserMouseAdapter;
+import tools.adapters.PickingMouseAdapter;
 import main.Main;
 
 public class Board extends JPanel{

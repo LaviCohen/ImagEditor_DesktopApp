@@ -1,4 +1,4 @@
-package gui.components.board.adapters;
+package tools.adapters;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
