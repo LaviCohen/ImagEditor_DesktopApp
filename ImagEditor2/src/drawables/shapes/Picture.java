@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
@@ -26,6 +27,7 @@ import drawables.shapes.abstractShapes.StretchableShpae;
 import effects.EffectsManager;
 import gui.components.EditPanel;
 import install.DefaultSettings;
+import le.gui.components.LSlider;
 import le.gui.dialogs.LDialogs;
 import le.utils.PictureUtilities;
 import main.Main;
@@ -51,6 +53,8 @@ public class Picture extends StretchableShpae{
 	double cutFromRight = 0;
 	double cutFromBottom = 0;
 	
+	int rotation;
+	
 	//Is the Picture currently cut
 	private boolean isCutting;
 	
@@ -58,8 +62,9 @@ public class Picture extends StretchableShpae{
 	EffectsManager effectsManger = new EffectsManager(this);
 	
 	//Constructor
-	public Picture(double x, double y, boolean visible, String name, double width, double height, BufferedImage img) {
+	public Picture(double x, double y, boolean visible, String name, double width, double height, int rotation, BufferedImage img) {
 		super(x, y, visible, name, width, height);
+		this.rotation = rotation;
 		this.image = img;
 	}
 	//Methods
@@ -68,26 +73,27 @@ public class Picture extends StretchableShpae{
 		if (!DefaultSettings.useMoreRAM) {
 			//In case the setting has been changed while the program is running, so previous lastDrawn won't stuck in the memory
 			invalidate();
-			g.drawImage(getImageToDisplay(), (int)x, (int)y, getWidthOnBoard(), getHeightOnBoard(), null);
+			g.drawImage(getImageToDisplay(), (int)x, (int)y, null);
 			return;
 		}
 		if (lastDrawn == null) {
 			lastDrawn = getImageToDisplay();
 		}
-		g.drawImage(lastDrawn, (int)x, (int)y, getWidthOnBoard(), getHeightOnBoard(), null);
+		g.drawImage(lastDrawn, (int)x, (int)y, null);
 	}
 	public BufferedImage getImageToDisplay() {
 		BufferedImage displayImage =  new BufferedImage((int)getCutWidth(), (int)getCutHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
 		displayImage.createGraphics().drawImage(image.getSubimage(
 				(int)cutFromLeft, (int)cutFromTop, (int)getCutWidth(), (int)getCutHeight()),
 				0, 0, null);
-		if (getWidthOnBoard() * getHeightOnBoard() > image.getHeight() * image.getWidth()) {
+		if (super.getWidthOnBoard() * super.getHeightOnBoard() > image.getHeight() * image.getWidth()) {
 			effectsManger.affectImage(displayImage);
-			displayImage = PictureUtilities.getScaledImage(displayImage, getWidthOnBoard(), getHeightOnBoard());
+			displayImage = PictureUtilities.getScaledImage(displayImage, super.getWidthOnBoard(), super.getHeightOnBoard());
 		} else {
-			displayImage = PictureUtilities.getScaledImage(displayImage, getWidthOnBoard(), getHeightOnBoard());
+			displayImage = PictureUtilities.getScaledImage(displayImage, super.getWidthOnBoard(), super.getHeightOnBoard());
 			effectsManger.affectImage(displayImage);
 		}
+		displayImage = PictureUtilities.rotateImageByDegrees(displayImage, rotation);
 		return displayImage;
 	}
 	public double getCutHeight() {
@@ -99,7 +105,7 @@ public class Picture extends StretchableShpae{
 	@Override
 	public void edit() {
 		JDialog editDialog = new JDialog(Main.f);
-		editDialog.setLayout(new GridLayout(4, 1));
+		editDialog.setLayout(new GridLayout(5, 1));
 		editDialog.setTitle("Edit Picture");
 		EditPanel positionPanel = createPositionPanel();
 		editDialog.add(positionPanel);
@@ -119,6 +125,8 @@ public class Picture extends StretchableShpae{
 		});
 		sizePanel.add(toNaturalImageSizeButton, Main.translator.getAfterTextBorder());
 		editDialog.add(sizePanel);
+		LSlider rotationSlider = new LSlider("Rotation", 0, 360, rotation);
+		editDialog.add(rotationSlider);
 		JPanel sourcePanel = new JPanel(new BorderLayout());
 		sourcePanel.add(new JLabel("Source:"),
 				Main.translator.getBeforeTextBorder());
@@ -154,6 +162,7 @@ public class Picture extends StretchableShpae{
 					Object[] sizeData = heightNwidthPanel.getData();
 					double width = (Double) sizeData[0];
 					double height = (Double) sizeData[1];
+					int rotation = rotationSlider.getValue();
 					BufferedImage image = null;
 					if (!sourceField.getText().equals("don\'t change")) {
 						File f = new File(sourceField.getText());
@@ -176,6 +185,9 @@ public class Picture extends StretchableShpae{
 					}
 					if (Picture.this.height != height) {
 						changes.add(new NumericalChange(Change.HEIGHT_CHANGE, height - Picture.this.height));
+					}
+					if (Picture.this.rotation != rotation) {
+						changes.add(new NumericalChange(Change.ROTATION_CHANGE, rotation - Picture.this.rotation));
 					}
 					if (image != null) {
 						changes.add(new ObjectChange(Change.SRC_IMAGE_CHANGE, Picture.this.image, image));
@@ -207,6 +219,16 @@ public class Picture extends StretchableShpae{
 	}
 	public void invalidate() {
 		lastDrawn = null;
+	}
+	@Override
+	public int getHeightOnBoard() {
+		return (int) Math.floor(super.getHeightOnBoard() * Math.cos(Math.toRadians(rotation))
+				+ super.getWidthOnBoard() * Math.sin(Math.toRadians(rotation)));
+	}
+	@Override
+	public int getWidthOnBoard() {
+		return (int) Math.floor(super.getHeightOnBoard() * Math.sin(Math.toRadians(rotation))
+				+ super.getWidthOnBoard() * Math.cos(Math.toRadians(rotation)));
 	}
 	public static BufferedImage readImage(File source) {
 		try {
@@ -285,20 +307,26 @@ public class Picture extends StretchableShpae{
 		if (lastDrawn == null) {
 			lastDrawn = getImageToDisplay();
 		}
-		return new Picture(0, 0, true, "Copy of " + this.getName(), getWidthOnBoard(), getHeightOnBoard(), lastDrawn);		
+		return new Picture(0, 0, true, "Copy of " + this.getName(), getWidthOnBoard(), getHeightOnBoard(), 0, lastDrawn);		
 	}
 	public Picture(String[] data) throws NumberFormatException, IOException {
 		this(Double.parseDouble(data[0]), Double.parseDouble(data[1]), Boolean.parseBoolean(data[2]),
 				data[3], Double.parseDouble(data[4]), Double.parseDouble(data[5]),
-				decodeSourceImage(data[6]));
-		this.effectsManger = new EffectsManager(data[7], this);
+				Integer.parseInt(data[6]), decodeSourceImage(data[11]));
+		this.cutFromLeft = Double.parseDouble(data[7]);
+		this.cutFromTop = Double.parseDouble(data[8]);
+		this.cutFromRight = Double.parseDouble(data[9]);
+		this.cutFromBottom = Double.parseDouble(data[10]);
+		this.effectsManger = new EffectsManager(data[12], this);
 	}
 	public Picture(String line) throws NumberFormatException, IOException {
 		this(line.split(","));
 	}
 	@Override
 	public String encodeShape() {
-		return super.encodeShape() + "," + encodeSourceImge(image) + "," + effectsManger.encodeEffect();
+		return super.encodeShape() + "," + rotation + "," + cutFromLeft + "," + cutFromTop
+				+ "," + cutFromRight + "," + cutFromBottom + "," + encodeSourceImge(image) + 
+				"," + effectsManger.encodeEffect();
 	}
 	public static String encodeSourceImge(BufferedImage bf) {
 		StringBuilder sb = new StringBuilder();
@@ -378,6 +406,12 @@ public class Picture extends StretchableShpae{
 	}
 	public double getHeightStretchRatio() {
 		return height / getCutHeight();
+	}
+	public int getRotation() {
+		return rotation;
+	}
+	public void setRotation(int rotation) {
+		this.rotation = rotation;
 	}
 	public boolean isCutting() {
 		return isCutting;

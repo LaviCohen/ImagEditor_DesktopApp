@@ -610,7 +610,7 @@ public class Actions {
 	 * Adds Picture to the current project.
 	 * */
 	public static void addPicture() {
-		Picture p = new Picture(0, 0, true, null, 150, 50, Resources.defaultImage);
+		Picture p = new Picture(0, 0, true, null, 150, 50, 0, Resources.defaultImage);
 		OperationsManager.operate(new AddLayerOperation(new Layer(p)));
 		p.edit();
 	}

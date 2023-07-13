@@ -30,16 +30,19 @@ public class NumericalChange extends Change{
 			((StretchableShpae)s).setHeight(((StretchableShpae)s).getHeight() + changeValue);
 			break;
 		case CUT_FROM_BOTTOM_CHANGE:
-			((Picture)s).setCutFromBottom(((Picture)s).getCutFromBottom() + changeValue);
+			((Picture)s).addToCutFromBottom((int) changeValue);
 			break;
 		case CUT_FROM_TOP_CHANGE:
-			((Picture)s).setCutFromTop(((Picture)s).getCutFromTop() + changeValue);
+			((Picture)s).addToCutFromTop((int) changeValue);
 			break;
 		case CUT_FROM_RIGHT_CHANGE:
-			((Picture)s).setCutFromRight(((Picture)s).getCutFromRight() + changeValue);
+			((Picture)s).addToCutFromRight((int) changeValue);
 			break;
 		case CUT_FROM_LEFT_CHANGE:
-			((Picture)s).setCutFromLeft(((Picture)s).getCutFromLeft() + changeValue);
+			((Picture)s).addToCutFromLeft((int) changeValue);
+			break;
+		case ROTATION_CHANGE:
+			((Picture)s).setRotation((int) (((Picture)s).getRotation() + changeValue));
 			break;
 		case ROUND_WIDTH_CHANGE:
 			((Rectangle)s).setRoundWidth((int) (((Rectangle)s).getRoundWidth() + changeValue));
@@ -68,16 +71,19 @@ public class NumericalChange extends Change{
 			((StretchableShpae)s).setHeight(((StretchableShpae)s).getHeight() - changeValue);
 			break;
 		case CUT_FROM_BOTTOM_CHANGE:
-			((Picture)s).setCutFromBottom(((Picture)s).getCutFromBottom() - changeValue);
+			((Picture)s).addToCutFromBottom((int) -changeValue);
 			break;
 		case CUT_FROM_TOP_CHANGE:
-			((Picture)s).setCutFromTop(((Picture)s).getCutFromTop() - changeValue);
+			((Picture)s).addToCutFromTop((int) -changeValue);
 			break;
 		case CUT_FROM_RIGHT_CHANGE:
-			((Picture)s).setCutFromRight(((Picture)s).getCutFromRight() - changeValue);
+			((Picture)s).addToCutFromRight((int) -changeValue);
 			break;
 		case CUT_FROM_LEFT_CHANGE:
-			((Picture)s).setCutFromLeft(((Picture)s).getCutFromLeft() - changeValue);
+			((Picture)s).addToCutFromLeft((int) -changeValue);
+			break;
+		case ROTATION_CHANGE:
+			((Picture)s).setRotation((int) (((Picture)s).getRotation() - changeValue));
 			break;
 		case ROUND_WIDTH_CHANGE:
 			((Rectangle)s).setRoundWidth((int) (((Rectangle)s).getRoundWidth() - changeValue));

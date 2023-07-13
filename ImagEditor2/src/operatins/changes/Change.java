@@ -20,6 +20,7 @@ public abstract class Change {
 	public static final int CUT_FROM_BOTTOM_CHANGE = 8;
 	public static final int CUT_FROM_TOP_CHANGE = 9;
 	public static final int SRC_IMAGE_CHANGE = 10;
+	public static final int ROTATION_CHANGE = 20;
 	
 	//Code Changes
 	public static final int CODE_CHANGE = 11;
@@ -34,6 +35,8 @@ public abstract class Change {
 	public static final int ROUND_HEIGHT_CHANGE = 16;
 	public static final int IS_FILLED_CHANGE = 17;
 	public static final int RECTANGLE_COLOR_CHANGE = 18;
+	
+	//Layer Change
 	public static final int LAYER_TOP_CHANGE = 19;
 	
 	
