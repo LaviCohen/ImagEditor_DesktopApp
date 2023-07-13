@@ -19,6 +19,7 @@ import tools.adapters.BoardMouseAdapter;
 import tools.adapters.BrushMouseAdapter;
 import tools.adapters.EraserMouseAdapter;
 import tools.adapters.PickingMouseAdapter;
+import tools.adapters.TextMouseAdapter;
 import main.Main;
 
 public class Board extends JPanel{
@@ -56,6 +57,8 @@ public class Board extends JPanel{
 			currentMouseAdapter = new BrushMouseAdapter(this);
 		}else if (tool == ToolListManager.ERASER_TOOL) {
 			currentMouseAdapter = new EraserMouseAdapter(this);
+		}else if (tool == ToolListManager.TEXT_TOOL) {
+			currentMouseAdapter = new TextMouseAdapter(this);
 		}
 		this.addMouseListener(currentMouseAdapter);
 		this.addMouseMotionListener(currentMouseAdapter);

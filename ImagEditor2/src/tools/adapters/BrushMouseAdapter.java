@@ -7,7 +7,6 @@ import java.awt.event.MouseEvent;
 
 import drawables.Layer;
 import gui.components.board.Board;
-import le.gui.dialogs.LDialogs;
 import main.Main;
 
 public class BrushMouseAdapter extends BoardMouseAdapter{
@@ -32,8 +31,8 @@ public class BrushMouseAdapter extends BoardMouseAdapter{
 			}
 			Graphics2D g = layer.getTop().createGraphics();
 			g.setColor(brushColor);
-			int x = screenToBoardCoordsX(e.getX()) - (int) layer.getShape().getX();
-			int y = screenToBoardCoordsX(e.getY()) - (int) layer.getShape().getY();
+			int x = boardToPaperCoordinatesX(e.getX()) - (int) layer.getShape().getX();
+			int y = boardToPaperCoordinatesX(e.getY()) - (int) layer.getShape().getY();
 			g.fillOval(x - brushSize/2, y - brushSize/2, brushSize, brushSize);
 			drawConnectionLine(lastX, lastY, x, y, g);
 			lastX = x;
@@ -97,8 +96,10 @@ public class BrushMouseAdapter extends BoardMouseAdapter{
 	@Override
 	public void mousePressed(MouseEvent e) {
 		Layer layer = Main.getLayersList().getSelectedLayer();
-		lastX = screenToBoardCoordsX(e.getX()) - (int) layer.getShape().getX();
-		lastY = screenToBoardCoordsX(e.getY()) - (int) layer.getShape().getY();
+		if (layer != null) {
+			lastX = boardToPaperCoordinatesX(e.getX()) - (int) layer.getShape().getX();
+			lastY = boardToPaperCoordinatesX(e.getY()) - (int) layer.getShape().getY();
+		}
 		
 	}
 	

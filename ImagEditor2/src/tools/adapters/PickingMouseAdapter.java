@@ -47,7 +47,7 @@ public class PickingMouseAdapter extends BoardMouseAdapter{
 	public void mousePressed(MouseEvent e) {
 		previousX = e.getXOnScreen();
 		previousY = e.getYOnScreen();
-		shapeInFocus = parent.getShapeAt(screenToBoardCoordsX(e.getX()), screenToBoardCoordsY(e.getY()));
+		shapeInFocus = parent.getShapeAt(boardToPaperCoordinatesX(e.getX()), boardToPaperCoordinatesY(e.getY()));
 		if (shapeInFocus != null && !shapeInFocus.isVisible()) {
 			shapeInFocus = null;
 		}
@@ -108,7 +108,7 @@ public class PickingMouseAdapter extends BoardMouseAdapter{
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		shapeInFocus = parent.getShapeAt(screenToBoardCoordsX(e.getX()), screenToBoardCoordsY(e.getY()));
+		shapeInFocus = parent.getShapeAt(boardToPaperCoordinatesX(e.getX()), boardToPaperCoordinatesY(e.getY()));
 		if (shapeInFocus != null && !shapeInFocus.isVisible()) {
 			shapeInFocus = null;
 		}
@@ -219,8 +219,8 @@ public class PickingMouseAdapter extends BoardMouseAdapter{
 		}
 	}
 	public int touchWrapper(MouseEvent e) {
-		int x = screenToBoardCoordsX(e.getX());
-		int y = screenToBoardCoordsY(e.getY());
+		int x = boardToPaperCoordinatesX(e.getX());
+		int y = boardToPaperCoordinatesY(e.getY());
 		
 		int wrapperWidth = 9;
 		int wrapperHeight = 9;

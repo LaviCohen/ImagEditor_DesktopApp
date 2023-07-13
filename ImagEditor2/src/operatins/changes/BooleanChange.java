@@ -20,6 +20,7 @@ public class BooleanChange extends Change{
 			break;
 		case IS_FILLED_CHANGE:
 			((Rectangle)s).setFilled(newValue);
+			break;
 		default:
 			throw new IllegalArgumentException("ID " + fieldID + " is not valid for boolean change");
 		}

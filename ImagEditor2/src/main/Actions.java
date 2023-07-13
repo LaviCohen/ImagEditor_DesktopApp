@@ -602,7 +602,7 @@ public class Actions {
 	 * */
 	public static void addText() {
 		Text t = new Text(
-				0, 0, true, null, Color.BLACK, new Font("Arial", Font.PLAIN, 20), "text");
+				0, 0, true, null, Color.BLACK, new Font("Arial", Font.PLAIN, 20), "Text");
 		OperationsManager.operate(new AddLayerOperation(new Layer(t)));
 		t.edit();
 	}

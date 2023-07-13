@@ -66,11 +66,11 @@ public abstract class BoardMouseAdapter extends MouseAdapter{
 	protected double getLeftGap() {
 		return ((parent.getWidth()  - (parent.getPaper().getWidth()  * parent.getZoomRate()))/2);
 	}
-	protected int screenToBoardCoordsX(int screenX) {
-		return (int)((screenX - getLeftGap()) / parent.getZoomRate());
+	protected int boardToPaperCoordinatesX(int boardX) {
+		return (int)((boardX - getLeftGap()) / parent.getZoomRate());
 	}
-	protected int screenToBoardCoordsY(int screenY) {
-		return (int)((screenY - getTopGap()) / parent.getZoomRate());
+	protected int boardToPaperCoordinatesY(int boardY) {
+		return (int)((boardY - getTopGap()) / parent.getZoomRate());
 	}
 	
 	/**

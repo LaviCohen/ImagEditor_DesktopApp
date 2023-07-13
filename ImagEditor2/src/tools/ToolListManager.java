@@ -28,6 +28,7 @@ public class ToolListManager {
 	public static final int PICKER_TOOL = 0;
 	public static final int BRUSH_TOOL = 1;
 	public static final int ERASER_TOOL = 2;
+	public static final int TEXT_TOOL = 4;
 	
 
 	private static int currentTool = 0;
@@ -36,6 +37,7 @@ public class ToolListManager {
 	private static JLabel pickerToolLabel;
 	private static JLabel brushToolLabel;
 	private static JLabel eraserToolLabel;
+	private static JLabel textToolLabel;
 	
 	public static JPanel createToolsPanel() {
 		JPanel toolsSideBarPanel = new JPanel();
@@ -68,6 +70,15 @@ public class ToolListManager {
 			}
 		});
 		toolsSideBarPanel.add(eraserToolLabel);
+		textToolLabel = new JLabel(Resources.textIcon);
+		textToolLabel.setOpaque(true);
+		textToolLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ToolListManager.setCurrentTool(ToolListManager.TEXT_TOOL);
+			}
+		});
+		toolsSideBarPanel.add(textToolLabel);
 		toolsSideBarPanel.setMaximumSize(new Dimension(50, 50));
 		Main.f.add(toolsSideBarPanel, Main.translator.getAfterTextBorder());
 		return toolsSideBarPanel;
@@ -86,11 +97,20 @@ public class ToolListManager {
 	}
 	
 	public static JPanel createTopPanelForTool(int tool) {
-		JPanel p = new JPanel();
-		p.setLayout(new BorderLayout());
+		JPanel p = new JPanel(new BorderLayout());
+		
+		if (tool == PICKER_TOOL) {
+			p.add(new JLabel("<html><big>Picker Tool: </big></html>"), Main.translator.getBeforeTextBorder());
+		} else if (tool == BRUSH_TOOL) {
+			p.add(new JLabel("<html><big>Brush Tool: </big></html>"), Main.translator.getBeforeTextBorder());
+		}else if (tool == ERASER_TOOL) {
+			p.add(new JLabel("<html><big>Eraser Tool: </big></html>"), Main.translator.getBeforeTextBorder());
+		}else if (tool == TEXT_TOOL) {
+			p.add(new JLabel("<html><big>Text Tool: </big></html>"), Main.translator.getBeforeTextBorder());
+		}
 		
 		if (tool == BRUSH_TOOL) {
-			JPanel optionsBar = new JPanel(new GridLayout(1, 2, 3, 3));
+			JPanel optionsBar = new JPanel(new GridLayout(1, 2, 8, 3));
 			JPanel colorPanel = new JPanel(new BorderLayout());
 			colorPanel.add(Main.theme.affect(new JLabel("Color:")), Main.translator.getBeforeTextBorder());
 			JLabel colorLabel = new JLabel();
@@ -109,7 +129,7 @@ public class ToolListManager {
 			});
 			colorPanel.add(setColorButton, Main.translator.getAfterTextBorder());
 			optionsBar.add(colorPanel);
-			LSlider brushSizeSlider = new LSlider("Brush Size", 1, 100, BrushMouseAdapter.getBrushSize());
+			LSlider brushSizeSlider = new LSlider("Size", 1, 100, BrushMouseAdapter.getBrushSize());
 			brushSizeSlider.slider.addChangeListener(new ChangeListener() {
 				
 				@Override
@@ -118,10 +138,10 @@ public class ToolListManager {
 				}
 			});
 			optionsBar.add(brushSizeSlider);
-			p.add(optionsBar, Main.translator.getBeforeTextBorder());
+			p.add(optionsBar);
 		} else if (tool == ERASER_TOOL) {
 			JPanel optionsBar = new JPanel(new GridLayout(1, 1, 3, 3));
-			LSlider brushSizeSlider = new LSlider("Eraser Size", 1, 100, EraserMouseAdapter.getEraserSize());
+			LSlider brushSizeSlider = new LSlider("Size", 1, 100, EraserMouseAdapter.getEraserSize());
 			brushSizeSlider.slider.addChangeListener(new ChangeListener() {
 				
 				@Override
@@ -130,12 +150,8 @@ public class ToolListManager {
 				}
 			});
 			optionsBar.add(brushSizeSlider);
-			p.add(optionsBar, Main.translator.getBeforeTextBorder());
-		} else if (tool == PICKER_TOOL) {
-//			((BorderLayout)p.getLayout()).setVgap(5);
-			p.add(new JLabel("<html><big>Picker Tool</big></html>"));
+			p.add(optionsBar);
 		}
-		
 		return p;
 	}
 	
@@ -148,6 +164,9 @@ public class ToolListManager {
 		}
 		if (tool == ERASER_TOOL) {
 			return eraserToolLabel;
+		}
+		if (tool == TEXT_TOOL) {
+			return textToolLabel;
 		}
 		return null;
 	}

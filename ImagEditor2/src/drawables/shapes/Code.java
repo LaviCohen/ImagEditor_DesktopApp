@@ -32,12 +32,11 @@ public class Code extends Shape{
 	private JEditorPane pane;
 	
 	public Code(String code, boolean isHTML) {
-		this.code = code;
 		this.pane = new JEditorPane();
 		if (isHTML) {
 			this.pane.setContentType("text/html");
 		}
-		this.pane.setText(code);
+		setCode(code);
 	}
 	
 	public Code(String line) {
@@ -49,12 +48,15 @@ public class Code extends Shape{
 				Boolean.parseBoolean(data[2]), data[3]);
 		this.code = data[4];
 	}
+	
+	static int fileID = 0;
 
 	@Override
 	public void draw(Graphics2D g) {
 		BufferedImage bf = new BufferedImage(getWidthOnBoard(), getHeightOnBoard(), 
 				BufferedImage.TYPE_INT_ARGB);
-		pane.paint(bf.getGraphics());
+		Graphics2D g2 = bf.createGraphics();
+		pane.paint(g2);
 		g.drawImage(bf, (int)this.x, (int)this.y, null);
 	}
 
@@ -137,6 +139,12 @@ public class Code extends Shape{
 	public void setCode(String code) {
 		this.code = code;
 		Code.this.pane.setText(code);
+
+		JDialog d = new JDialog(Main.f);
+		d.add(pane);
+		d.pack();
+		d.repaint();
+		d.dispose();
 	}
 
 	@Override

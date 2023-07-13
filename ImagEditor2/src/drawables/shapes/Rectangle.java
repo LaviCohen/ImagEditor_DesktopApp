@@ -100,7 +100,7 @@ public class Rectangle extends StretchableShpae{
 		LSlider roundWidthSlider = new LSlider("Round Width:", 0, (int) this.width, roundWidth);
 		Main.theme.affect(roundWidthSlider);
 		editDialog.add(roundWidthSlider);
-		LSlider roundHeightSlider = new LSlider("Round Height:", 0, (int) this.height, roundWidth);
+		LSlider roundHeightSlider = new LSlider("Round Height:", 0, (int) this.height, roundHeight);
 		Main.theme.affect(roundHeightSlider);
 		editDialog.add(roundHeightSlider);
 		JCheckBox isFilledCheckBox = new JCheckBox("Fill Rectangle", isFilled);
@@ -161,6 +161,7 @@ public class Rectangle extends StretchableShpae{
 					}
 				} catch (Exception e2) {
 					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
+					e2.printStackTrace();
 				}
 			}
 		});
