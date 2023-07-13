@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import drawables.Layer;
 import drawables.shapes.abstractShapes.Shape;
 import tools.ToolListManager;
-import tools.adapters.BoardMouseAdapter;
+import tools.adapters.BoardAdapter;
 import tools.adapters.BrushMouseAdapter;
 import tools.adapters.EraserMouseAdapter;
 import tools.adapters.PickingMouseAdapter;
@@ -31,15 +31,17 @@ public class Board extends JPanel{
 	private BufferedImage paper;
 	private LinkedList<Layer> layers = new LinkedList<Layer>();
 	
-	private BoardMouseAdapter currentMouseAdapter = null;
+	private BoardAdapter currentBoardAdapter = null;
 	
 	public boolean inited = false;
 	
 	public Board(Color color, int width, int height) {
 		this.setLayout(new BorderLayout());
+		this.setFocusable(true);
 		this.backgroundColor = color;
 		paper = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		displayLabel = new JLabel(new ImageIcon(paper));
+		displayLabel.setFocusable(true);
 		this.add(displayLabel, BorderLayout.CENTER);
 		g = paper.createGraphics();
 		inited = true;
@@ -47,21 +49,21 @@ public class Board extends JPanel{
 		repaint();
 	}
 	public void setMouseAdapterForTool(int tool) {
-		if (currentMouseAdapter != null) {
-			this.removeMouseListener(currentMouseAdapter);
-			this.removeMouseMotionListener(currentMouseAdapter);
+		if (currentBoardAdapter != null) {
+			this.removeMouseListener(currentBoardAdapter);
+			this.removeMouseMotionListener(currentBoardAdapter);
 		}
 		if (tool == ToolListManager.PICKER_TOOL) {
-			currentMouseAdapter = new PickingMouseAdapter(this);
+			currentBoardAdapter = new PickingMouseAdapter(this);
 		} else if (tool == ToolListManager.BRUSH_TOOL) {
-			currentMouseAdapter = new BrushMouseAdapter(this);
+			currentBoardAdapter = new BrushMouseAdapter(this);
 		}else if (tool == ToolListManager.ERASER_TOOL) {
-			currentMouseAdapter = new EraserMouseAdapter(this);
+			currentBoardAdapter = new EraserMouseAdapter(this);
 		}else if (tool == ToolListManager.TEXT_TOOL) {
-			currentMouseAdapter = new TextMouseAdapter(this);
+			currentBoardAdapter = new TextMouseAdapter(this);
 		}
-		this.addMouseListener(currentMouseAdapter);
-		this.addMouseMotionListener(currentMouseAdapter);
+		this.addMouseListener(currentBoardAdapter);
+		this.addMouseMotionListener(currentBoardAdapter);
 	}
 	public void addLayer(Layer layer) {
 		layers.add(layer);
@@ -182,11 +184,11 @@ public class Board extends JPanel{
 	public void setLayers(LinkedList<Layer> layers) {
 		this.layers = layers;
 	}
-	public BoardMouseAdapter getCurrentMouseAdapter() {
-		return currentMouseAdapter;
+	public BoardAdapter getCurrentMouseAdapter() {
+		return currentBoardAdapter;
 	}
-	public void setCurrentMouseAdapter(BoardMouseAdapter currentMouseAdapter) {
-		this.currentMouseAdapter = currentMouseAdapter;
+	public void setCurrentMouseAdapter(BoardAdapter currentMouseAdapter) {
+		this.currentBoardAdapter = currentMouseAdapter;
 	}
 	public boolean isInited() {
 		return inited;

@@ -8,7 +8,7 @@ import drawables.Layer;
 import gui.components.board.Board;
 import main.Main;
 
-public class EraserMouseAdapter extends BoardMouseAdapter {
+public class EraserMouseAdapter extends BoardAdapter {
 
 	protected static int eraserSize = 5;
 	

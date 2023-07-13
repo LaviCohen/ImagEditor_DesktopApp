@@ -15,7 +15,7 @@ import operatins.OperationsManager;
 import operatins.changes.Change;
 import operatins.changes.NumericalChange;
 
-public class PickingMouseAdapter extends BoardMouseAdapter{
+public class PickingMouseAdapter extends BoardAdapter{
 	
 	public static final int TOP_LEFT_WRAPPER = 1;
 	public static final int TOP_RIGHT_WRAPPER = 2;

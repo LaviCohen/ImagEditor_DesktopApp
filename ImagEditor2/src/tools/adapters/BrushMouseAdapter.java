@@ -9,7 +9,7 @@ import drawables.Layer;
 import gui.components.board.Board;
 import main.Main;
 
-public class BrushMouseAdapter extends BoardMouseAdapter{
+public class BrushMouseAdapter extends BoardAdapter{
 
 	protected static Color brushColor = Color.BLACK;
 	

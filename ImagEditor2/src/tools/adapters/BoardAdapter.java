@@ -11,11 +11,11 @@ import javax.swing.JPopupMenu;
 import gui.components.board.Board;
 import main.Actions;
 
-public abstract class BoardMouseAdapter extends MouseAdapter{
+public abstract class BoardAdapter extends MouseAdapter{
 	
 	protected Board parent;
 	
-	public BoardMouseAdapter(Board parent) {
+	public BoardAdapter(Board parent) {
 		this.parent = parent;
 	}
 	
