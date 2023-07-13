@@ -283,12 +283,10 @@ public class Picture extends StretchableShpae{
 		this.cutFromBottom = cutFromBottom;
 	}
 	public Picture copy() {
-		if (lastDrawn != null) {
-			image = lastDrawn;
-		}else {
-			image = getImageToDisplay();
+		if (lastDrawn == null) {
+			lastDrawn = getImageToDisplay();
 		}
-		return new Picture(0, 0, true, "Copy of " + this.getName(), getWidth(), getHeight(), image);		
+		return new Picture(0, 0, true, "Copy of " + this.getName(), getWidthOnBoard(), getHeightOnBoard(), lastDrawn);		
 	}
 	public Picture(String[] data) throws NumberFormatException, IOException {
 		this(Double.parseDouble(data[0]), Double.parseDouble(data[1]), Boolean.parseBoolean(data[2]),

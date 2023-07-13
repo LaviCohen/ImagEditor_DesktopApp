@@ -34,6 +34,7 @@ public abstract class Change {
 	public static final int ROUND_HEIGHT_CHANGE = 16;
 	public static final int IS_FILLED_CHANGE = 17;
 	public static final int RECTANGLE_COLOR_CHANGE = 18;
+	public static final int LAYER_TOP_CHANGE = 19;
 	
 	
 	protected int fieldID;

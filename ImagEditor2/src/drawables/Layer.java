@@ -36,7 +36,7 @@ public class Layer implements Drawable{
 				graphics.drawImage(top, (int)shape.getX(), (int)shape.getY(), null);
 			}
 			if (Main.getLayersList().getSelectedLayer() != null &&
-					Main.layersList.getSelectedLayer().getShape() == shape
+					Main.getLayersList().getSelectedLayer().getShape() == shape
 					&& Main.getBoard().getCurrentMouseAdapter() instanceof PickingMouseAdapter) {
 				Main.getBoard().paintCornerWrappers(shape);
 			}
@@ -70,6 +70,10 @@ public class Layer implements Drawable{
 
 	public BufferedImage getTop() {
 		return top;
+	}
+
+	public void setTop(BufferedImage top) {
+		this.top = top;
 	}
 	
 }

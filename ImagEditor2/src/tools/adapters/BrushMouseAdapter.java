@@ -4,10 +4,17 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 import drawables.Layer;
 import gui.components.board.Board;
+import le.utils.PictureUtilities;
 import main.Main;
+import operatins.ChangesOperation;
+import operatins.OperationsManager;
+import operatins.changes.Change;
+import operatins.changes.ObjectChange;
 
 public class BrushMouseAdapter extends BoardAdapter{
 
@@ -17,6 +24,8 @@ public class BrushMouseAdapter extends BoardAdapter{
 	
 	protected int lastX;
 	protected int lastY;
+	
+	protected BufferedImage lastTop = null;
 	
 	public BrushMouseAdapter(Board parent) {
 		super(parent);
@@ -38,7 +47,7 @@ public class BrushMouseAdapter extends BoardAdapter{
 			lastX = x;
 			lastY = y;
 			parent.repaint();
-			Main.layersList.updateImage(layer.getShape());
+			Main.getLayersList().updateImage(layer.getShape());
 		}
 		
 	}
@@ -56,15 +65,13 @@ public class BrushMouseAdapter extends BoardAdapter{
 		int diffX = -(int)(Math.sin(deg) * brushSize/2);
 		int diffY = (int)(Math.cos(deg) * brushSize/2);
 
-//		System.out.println(lastX + ", " + lastY + " | " + x + ", " + y);
-//		System.out.println(incline + ", " + Math.toDegrees(deg) + ", " + diffX + ", " + diffY);
-		
 		Polygon p = new Polygon();
 		p.addPoint(lastX + diffX, lastY + diffY);
 		p.addPoint(x + diffX, y + diffY);
 		p.addPoint(x - diffX, y - diffY);
 		p.addPoint(lastX - diffX, lastY - diffY);
 		g.fillPolygon(p);
+		//My coolest ever debugging, worth keeping.
 //		System.out.println(String.format("%d, %d, %d, %d", lastX + diffX, lastY + diffY, x + diffX, y + diffY));
 //		System.out.println(String.format("%d, %d, %d, %d", lastX - diffX, lastY - diffY, x - diffX, y - diffY));
 //		g.setColor(Color.red);
@@ -99,8 +106,17 @@ public class BrushMouseAdapter extends BoardAdapter{
 		if (layer != null) {
 			lastX = boardToPaperCoordinatesX(e.getX()) - (int) layer.getShape().getX();
 			lastY = boardToPaperCoordinatesX(e.getY()) - (int) layer.getShape().getY();
-		}
-		
+			lastTop = PictureUtilities.copy(layer.getTop());
+		}	
+	}
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		LinkedList<Change> list = new LinkedList<Change>();
+		list.add(new ObjectChange(Change.LAYER_TOP_CHANGE, lastTop, 
+				PictureUtilities.copy(Main.getLayersList().getSelectedLayer().getTop())));
+		OperationsManager.addOperation(new ChangesOperation(
+				Main.getLayersList().getSelectedLayer().getShape(), list));
 	}
 	
 	public static Color getBrushColor() {

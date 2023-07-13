@@ -89,8 +89,8 @@ public class ToolListManager {
 		getLabelForTool(toolToChange).setBackground(getLabelForTool(currentTool).getBackground());
 		getLabelForTool(currentTool).setBackground(c);
 		Main.getBoard().setMouseAdapterForTool(toolToChange);
-		Main.toolsSettingsPanel.remove(0);
-		Main.toolsSettingsPanel.add(createTopPanelForTool(toolToChange), 
+		Main.getToolsSettingsPanel().remove(0);
+		Main.getToolsSettingsPanel().add(createTopPanelForTool(toolToChange), 
 				Main.translator.getBeforeTextBorder());
 		Main.f.revalidate();
 		Main.f.repaint();

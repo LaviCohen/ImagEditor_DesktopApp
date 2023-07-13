@@ -90,51 +90,51 @@ public class Main {
 	/**
 	 * The time took the program to initialize itself.
 	 * */
-	public static long initTime;
+	private static long initTime;
 	/**
 	 * The time the program started at.
 	 * */
-	public static long startUpMillis;
+	private static long startUpMillis;
 	/**
 	 * The bottom panel, which holds zoom and paper size.
 	 * */
-	public static JPanel controlBar;
+	private static JPanel controlBar;
 	/**
 	 * The side bar which holds the shapeList and some action buttons.
 	 */
-	public static JPanel layersSideBarPanel;
+	private static JPanel layersSideBarPanel;
 	/**
 	 * The side bar which holds the tools icons.
 	 */
-	public static JPanel toolsSideBarPanel;
+	private static JPanel toolsSideBarPanel;
 	/**
 	 * The top bar which holds the tools settings.
 	 */
-	public static JPanel toolsSettingsPanel;
+	private static JPanel toolsSettingsPanel;
 	/**
 	 * GUI list of all the shapes are currently exist.
 	 */
-	public static LayersList layersList;
+	private static LayersList layersList;
 	/**
 	 * The label which holds the size of the paper (width x height).
 	 */
-	public static JLabel sizeLabel;
+	private static JLabel sizeLabel;
 	/**
 	 * The "Layers" label.
 	 * */
-	public static JLabel layersLabel;
+	private static JLabel layersLabel;
 	/**
 	 * The slider which uses to set the zoom of the paper.
 	 */
-	public static LSlider zoomSlider;
+	private static LSlider zoomSlider;
 	/**
 	 * The scrollable wrapper of the paper.
 	 */
-	public static JScrollPane boardScrollPane;
+	private static JScrollPane boardScrollPane;
 	/**
 	 * The program's menu bar.
 	 * */
-	public static LMenu lMenu;
+	private static LMenu lMenu;
 	/**
 	 * ActionListener for all of the menu actions.
 	 */
@@ -175,10 +175,10 @@ public class Main {
 		applyThemeColors();
 	}
 	private static void initToolsSettingsPanel() {
-		toolsSettingsPanel = new JPanel(new BorderLayout());
-		toolsSettingsPanel.add(new JPanel());
+		setToolsSettingsPanel(new JPanel(new BorderLayout()));
+		getToolsSettingsPanel().add(new JPanel());
 		toolsSideBarPanel.setPreferredSize(new Dimension(100, 50));
-		f.add(toolsSettingsPanel, BorderLayout.NORTH);
+		f.add(getToolsSettingsPanel(), BorderLayout.NORTH);
 	}
 	private static void initToolsSideBarPanel() {
 		toolsSideBarPanel = ToolListManager.createToolsPanel();
@@ -529,5 +529,11 @@ public class Main {
 	}
 	public static void updateSizeLabel() {
 		Main.sizeLabel.setText(getBoard().getPaperWidth() + "px X " + getBoard().getPaperHeight() + "px");
+	}
+	public static JPanel getToolsSettingsPanel() {
+		return toolsSettingsPanel;
+	}
+	public static void setToolsSettingsPanel(JPanel toolsSettingsPanel) {
+		Main.toolsSettingsPanel = toolsSettingsPanel;
 	}
 }
