@@ -10,6 +10,7 @@ import javax.swing.JColorChooser;
 import javax.swing.JLabel;
 
 import gui.components.EditPanel;
+import le.gui.ColorTheme;
 import main.Main;
 
 public interface ColoredShape {
@@ -21,8 +22,8 @@ public interface ColoredShape {
 		JLabel colorLabel = new JLabel();
 		colorLabel.setOpaque(true);
 		colorLabel.setBackground(getColor());
+		colorLabel.setName(ColorTheme.DONT_AFFECT);
 		JButton setColorButton = new JButton("Set Color");
-		Main.theme.affect(setColorButton);
 		setColorButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -38,10 +39,9 @@ public interface ColoredShape {
 				return new Color[] {colorLabel.getBackground()};
 			}
 		};
-		colorPanel.add(Main.theme.affect(new JLabel("Color:")), Main.translator.getBeforeTextBorder());
+		colorPanel.add(new JLabel("Color:"), Main.translator.getBeforeTextBorder());
 		colorPanel.add(colorLabel);
 		colorPanel.add(setColorButton, Main.translator.getAfterTextBorder());
-		
 		return colorPanel;
 	}
 	

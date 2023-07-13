@@ -57,14 +57,12 @@ public class Text extends Shape implements ColoredShape{
 		textPanel.add(Main.theme.affect(new JLabel("Text:")), 
 				Main.translator.getBeforeTextBorder());
 		JTextField textField = new JTextField(text);
-		Main.theme.affect(textField);
 		textPanel.add(textField);
 		editDialog.add(textPanel);
 		EditPanel colorPanel = createColorPanel();
 		editDialog.add(colorPanel);
 		FontHolder fontHolder = new FontHolder(this.font);
 		JButton setFontButton = new JButton("Set Font");
-		Main.theme.affect(setFontButton);
 		setFontButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -117,6 +115,7 @@ public class Text extends Shape implements ColoredShape{
 			}
 		};
 		editDialog.add(createActionPanel(actionListener));
+		Main.theme.affect(editDialog);
 		editDialog.pack();
 		editDialog.setSize(editDialog.getWidth() + 50, editDialog.getHeight());
 		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

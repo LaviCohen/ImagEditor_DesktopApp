@@ -1,5 +1,6 @@
 package install;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -63,7 +64,9 @@ public class Resources {
 					Resources.class.getResourceAsStream("/images/noneShadow.png")), 150, 150);
 			logo = new ImageIcon(ImageIO.read(
 					Resources.class.getResourceAsStream("/images/logo.png")));
+			
 			loading = new ImageIcon(Resources.class.getResource("/images/loading.gif"));
+			
 			defaultImage = ImageIO.read(Resources.class.getResource("/images/default.jpg"));
 			
 		} catch (IOException e) {
@@ -73,6 +76,24 @@ public class Resources {
 		System.out.println("All images loaded successfully");
 	}
 	public static ImageIcon getIcon(Image image, int w, int h) {
-		return new ImageIcon(PictureUtilities.getScaledImage(image, w, h));
+		if (!DefaultSettings.darkMode) {
+			return new ImageIcon(PictureUtilities.getScaledImage(image, w, h));
+		} else {
+			return new ImageIcon(swapColors(PictureUtilities.getScaledImage(image, w, h)));
+		}
+	}
+	public static BufferedImage swapColors(BufferedImage bufferedImage) {
+		BufferedImage ret = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
+		for (int i = 0; i < bufferedImage.getWidth(); i++) {
+			for (int j = 0; j < bufferedImage.getHeight(); j++) {
+				ret.setRGB(i, j, swapRGB(bufferedImage.getRGB(i, j)));
+			}
+		}
+		return ret;
+	}
+	public static int swapRGB(int rgb) {
+		Color c = new Color(rgb);
+		return new Color(255 - c.getRed(), 255 - c.getRed(), 255 - c.getRed(), c.getAlpha())
+				.getRGB();
 	}
 }

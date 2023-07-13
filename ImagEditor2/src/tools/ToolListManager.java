@@ -152,6 +152,7 @@ public class ToolListManager {
 			optionsBar.add(brushSizeSlider);
 			p.add(optionsBar);
 		}
+		Main.theme.affect(p);
 		return p;
 	}
 	

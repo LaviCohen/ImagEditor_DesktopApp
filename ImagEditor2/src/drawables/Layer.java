@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import drawables.shapes.Picture;
 import drawables.shapes.abstractShapes.Shape;
 import le.utils.PictureUtilities;
 import main.Main;
@@ -53,11 +54,24 @@ public class Layer implements Drawable{
 	}
 	
 	public String encodeLayer() {
-		return shape.encodeShape();
+		return getTopEncoding() + "%" +  shape.encodeShape();
+	}
+	
+	private String getTopEncoding() {
+		if (top == null) {
+			return null;
+		}
+		return Picture.encodeSourceImge(top);
 	}
 	
 	public static Layer parseLayer(String encodedLayer) throws NumberFormatException, IOException {
-		return new Layer(Shape.parseShape(encodedLayer));
+		String[] data = encodedLayer.split("%");
+		if (data[0].equals("null")) {
+			return new Layer(Shape.parseShape(data[1]));
+		}
+		Layer l = new Layer(Shape.parseShape(data[1]));
+		l.setTop(Picture.decodeSourceImage(data[0]));
+		return l;
 	}
 	
 	public Shape getShape() {

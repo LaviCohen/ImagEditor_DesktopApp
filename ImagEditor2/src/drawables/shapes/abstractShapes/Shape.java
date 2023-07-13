@@ -162,11 +162,8 @@ public abstract class Shape implements Drawable{
 		JButton apply = new JButton("Apply");
 		applyNclose.addActionListener(actionListener);
 		apply.addActionListener(actionListener);
-		Main.theme.affect(applyNclose);
-		Main.theme.affect(applyNclose);
 		actionPanel.add(applyNclose);
 		actionPanel.add(apply, BorderLayout.EAST);
-		
 		return actionPanel;
 	}
 }

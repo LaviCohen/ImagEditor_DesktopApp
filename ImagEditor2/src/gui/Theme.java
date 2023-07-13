@@ -1,6 +1,8 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -30,19 +32,29 @@ public class Theme implements ColorTheme{
 		}
 		return darkModeTextColor;
 	}
+	
 	@Override
-	public JComponent affect(JComponent component) {
+	public Component affect(Component component) {
+		if (component.getName() != null && component.getName().equals(DONT_AFFECT)) {
+			return component;
+		}
 		if (component instanceof JTextComponent) {
 			component.setBackground(getBackgroundColor().brighter());
 			component.setForeground(getTextColor());
 		}else if(component instanceof JButton){	
-			if (isAffectingButtons()) {
-				component.setBackground(getBackgroundColor().darker());
-				component.setForeground(getTextColor());
-			}
+			component.setBackground(getBackgroundColor().darker());
+			component.setForeground(getTextColor());
 		}else{
-			component.setOpaque(true);
-			ColorTheme.super.affect(component);
+			if (component instanceof JComponent) {
+				((JComponent) component).setOpaque(true);
+				if (!isAffectingButtons() || !(component instanceof JButton)) {
+					component.setBackground(getBackgroundColor());
+					component.setForeground(getTextColor());
+				}
+			}
+		}
+		if (component instanceof Container) {
+			affectContainer((Container)component);
 		}
 		return component;
 	}
@@ -54,6 +66,6 @@ public class Theme implements ColorTheme{
 	}
 	@Override
 	public boolean isAffectingButtons() {
-		return isAffectingButtons ;
+		return isAffectingButtons;
 	}
 }

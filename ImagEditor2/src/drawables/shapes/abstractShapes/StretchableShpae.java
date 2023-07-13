@@ -55,10 +55,7 @@ public abstract class StretchableShpae extends Shape{
 	
 	protected EditPanel createSizePanel() {
 		JTextField widthField = new JTextField(this.width + "");
-		Main.theme.affect(widthField);
 		JTextField heightField = new JTextField(this.height + "");
-		Main.theme.affect(heightField);
-
 		EditPanel sizePanel = new EditPanel(new GridLayout(1, 4)) {
 			
 			private static final long serialVersionUID = 1L;
@@ -69,11 +66,10 @@ public abstract class StretchableShpae extends Shape{
 						Double.parseDouble(heightField.getText())};
 			}
 		};
-		sizePanel.add(Main.theme.affect(new JLabel("Width:")));
+		sizePanel.add(new JLabel("Width:"));
 		sizePanel.add(widthField);
-		sizePanel.add(Main.theme.affect(new JLabel("Height:")));
+		sizePanel.add(new JLabel("Height:"));
 		sizePanel.add(heightField);
-		
 		return sizePanel;
 	}
 }

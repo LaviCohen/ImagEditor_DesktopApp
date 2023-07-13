@@ -341,18 +341,7 @@ public class Main {
 	}
 	public static void applyThemeColors() {
 		System.out.println("Appling " + (Main.theme.isLightMode()?"Light":"Dark") + " Mode");
-		//Control panel
-		Main.theme.affect(controlBar);
-		Main.theme.affect(sizeLabel);
-		Main.theme.affect(zoomSlider);
-		//Menu bar
-		Main.theme.affect(lMenu);
-		//Side bar
-		Main.theme.affect(layersSideBarPanel);
-		Main.theme.affect(layersList);
-		Main.theme.affect(layersLabel);
-		//Board
-		Main.theme.affect(getBoard());
+		theme.affect(f);
 	}
 	public static void tryToLogIn() {
 		String data = Main.install.getText("Data/Settings/user.txt");

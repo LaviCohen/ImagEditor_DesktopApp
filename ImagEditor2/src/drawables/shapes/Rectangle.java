@@ -63,13 +63,10 @@ public class Rectangle extends StretchableShpae implements ColoredShape{
 		EditPanel colorPanel = createColorPanel();
 		editDialog.add(colorPanel);
 		LSlider roundWidthSlider = new LSlider("Round Width:", 0, (int) this.width, roundWidth);
-		Main.theme.affect(roundWidthSlider);
 		editDialog.add(roundWidthSlider);
 		LSlider roundHeightSlider = new LSlider("Round Height:", 0, (int) this.height, roundHeight);
-		Main.theme.affect(roundHeightSlider);
 		editDialog.add(roundHeightSlider);
 		JCheckBox isFilledCheckBox = new JCheckBox("Fill Rectangle", isFilled);
-		Main.theme.affect(isFilledCheckBox);
 		editDialog.add(isFilledCheckBox);
 		ActionListener actionListener =  new ActionListener() {
 			
@@ -125,6 +122,7 @@ public class Rectangle extends StretchableShpae implements ColoredShape{
 			}
 		};
 		editDialog.add(createActionPanel(actionListener));
+		Main.theme.affect(editDialog);
 		editDialog.pack();
 		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		editDialog.setVisible(true);

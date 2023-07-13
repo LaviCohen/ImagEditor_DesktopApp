@@ -107,7 +107,6 @@ public class Picture extends StretchableShpae{
 		EditPanel heightNwidthPanel = createSizePanel();
 		sizePanel.add(heightNwidthPanel);
 		JButton toNaturalImageSizeButton = new JButton("To Natural Image Size");
-		Main.theme.affect(toNaturalImageSizeButton);
 		toNaturalImageSizeButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -121,7 +120,7 @@ public class Picture extends StretchableShpae{
 		sizePanel.add(toNaturalImageSizeButton, Main.translator.getAfterTextBorder());
 		editDialog.add(sizePanel);
 		JPanel sourcePanel = new JPanel(new BorderLayout());
-		sourcePanel.add(Main.theme.affect(new JLabel("Source:")),
+		sourcePanel.add(new JLabel("Source:"),
 				Main.translator.getBeforeTextBorder());
 		JTextField sourceField = new JTextField("don\'t change");
 		sourceField.setBackground(Main.theme.getBackgroundColor());
@@ -129,7 +128,6 @@ public class Picture extends StretchableShpae{
 		sourceField.setEditable(false);
 		sourcePanel.add(sourceField);
 		JButton browse = new JButton("Browse");
-		Main.theme.affect(browse);
 		browse.addActionListener(new ActionListener() {
 			
 			@Override
@@ -199,6 +197,7 @@ public class Picture extends StretchableShpae{
 			}
 		};
 		editDialog.add(createActionPanel(actionListener));
+		Main.theme.affect(editDialog);
 		editDialog.pack();
 		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		editDialog.setVisible(true);

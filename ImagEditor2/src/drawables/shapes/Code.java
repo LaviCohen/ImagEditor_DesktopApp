@@ -69,7 +69,6 @@ public class Code extends Shape{
 		textPanel.add(Main.theme.affect(new JLabel("Code:")), 
 				BorderLayout.NORTH);
 		JTextArea textArea = new JTextArea(code);
-		Main.theme.affect(textArea);
 		textPanel.add(textArea);
 		editDialog.add(textPanel);
 		ActionListener actionListener = new ActionListener() {
@@ -105,6 +104,7 @@ public class Code extends Shape{
 			}
 		};
 		editDialog.add(createActionPanel(actionListener), BorderLayout.SOUTH);
+		Main.theme.affect(editDialog);
 		editDialog.pack();
 		editDialog.setSize(editDialog.getWidth() + 50, editDialog.getHeight());
 		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
