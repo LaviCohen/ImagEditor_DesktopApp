@@ -24,6 +24,7 @@ import javax.swing.JTextField;
 import drawables.Layer;
 import drawables.shapes.abstractShapes.StretchableShpae;
 import effects.EffectsManager;
+import gui.components.EditPanel;
 import install.DefaultSettings;
 import le.gui.dialogs.LDialogs;
 import le.utils.PictureUtilities;
@@ -100,33 +101,19 @@ public class Picture extends StretchableShpae{
 		JDialog editDialog = new JDialog(Main.f);
 		editDialog.setLayout(new GridLayout(4, 1));
 		editDialog.setTitle("Edit Picture");
-		JPanel positionPanel = new JPanel(new GridLayout(1, 4));
-		positionPanel.add(Main.theme.affect(new JLabel("X:")));
-		JTextField xField = new JTextField(this.x + "");
-		Main.theme.affect(xField);
-		positionPanel.add(xField);
-		positionPanel.add(Main.theme.affect(new JLabel("Y:")));
-		JTextField yField = new JTextField(this.y + "");
-		Main.theme.affect(yField);
-		positionPanel.add(yField);
+		EditPanel positionPanel = createPositionPanel();
 		editDialog.add(positionPanel);
 		JPanel sizePanel = new JPanel(new BorderLayout());
-		JPanel xNyPanel = new JPanel(new GridLayout(1, 4));
-		xNyPanel.add(Main.theme.affect(new JLabel("Width:")));
-		JTextField widthField = new JTextField(this.width + "");
-		Main.theme.affect(widthField);
-		xNyPanel.add(widthField);
-		xNyPanel.add(Main.theme.affect(new JLabel("Height:")));
-		JTextField heightField = new JTextField(this.height + "");
-		Main.theme.affect(heightField);
-		xNyPanel.add(heightField);
-		sizePanel.add(xNyPanel);
+		EditPanel heightNwidthPanel = createSizePanel();
+		sizePanel.add(heightNwidthPanel);
 		JButton toNaturalImageSizeButton = new JButton("To Natural Image Size");
 		Main.theme.affect(toNaturalImageSizeButton);
 		toNaturalImageSizeButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				JTextField widthField = (JTextField) heightNwidthPanel.getComponent(1);
+				JTextField heightField = (JTextField) heightNwidthPanel.getComponent(3);
 				widthField.setText(Picture.this.image.getWidth() + "");
 				heightField.setText(Picture.this.image.getHeight() + "");
 			}
@@ -158,26 +145,17 @@ public class Picture extends StretchableShpae{
 		});
 		sourcePanel.add(browse, Main.translator.getAfterTextBorder());
 		editDialog.add(sourcePanel);
-		JButton apply = new JButton("Apply");
-		JButton preview = new JButton("Preview");
-		Main.theme.affect(apply);
-		apply.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				preview.getActionListeners()[0].actionPerformed(new ActionEvent(apply, 0, "apply"));
-				editDialog.dispose();
-			}
-		});
-		Main.theme.affect(preview);
-		preview.addActionListener(new ActionListener() {
+		ActionListener actionListener = new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					double x = Double.parseDouble(xField.getText());
-					double y = Double.parseDouble(yField.getText());
-					double width = Double.parseDouble(widthField.getText());
-					double height = Double.parseDouble(heightField.getText());
+					Object[] positionData = positionPanel.getData();
+					double x = (Double) positionData[0];
+					double y = (Double) positionData[1];
+					Object[] sizeData = heightNwidthPanel.getData();
+					double width = (Double) sizeData[0];
+					double height = (Double) sizeData[1];
 					BufferedImage image = null;
 					if (!sourceField.getText().equals("don\'t change")) {
 						File f = new File(sourceField.getText());
@@ -214,12 +192,13 @@ public class Picture extends StretchableShpae{
 				} catch (Exception e2) {
 					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
 				}
+				
+				if (e.getActionCommand().equals("Apply & Close")) {
+					editDialog.dispose();
+				}
 			}
-		});
-		JPanel actionPanel = new JPanel(new BorderLayout());
-		actionPanel.add(apply);
-		actionPanel.add(preview, BorderLayout.EAST);
-		editDialog.add(actionPanel);
+		};
+		editDialog.add(createActionPanel(actionListener));
 		editDialog.pack();
 		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		editDialog.setVisible(true);

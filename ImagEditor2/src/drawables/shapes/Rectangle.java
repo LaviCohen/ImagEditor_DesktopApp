@@ -1,6 +1,5 @@
 package drawables.shapes;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -8,15 +7,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
 
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JColorChooser;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 
+import drawables.shapes.abstractShapes.ColoredShape;
 import drawables.shapes.abstractShapes.StretchableShpae;
+import gui.components.EditPanel;
 import le.gui.components.LSlider;
 import le.gui.dialogs.LDialogs;
 import main.Main;
@@ -27,7 +23,7 @@ import operatins.changes.Change;
 import operatins.changes.NumericalChange;
 import operatins.changes.ObjectChange;
 
-public class Rectangle extends StretchableShpae{
+public class Rectangle extends StretchableShpae implements ColoredShape{
 
 	Color color;
 	
@@ -60,42 +56,11 @@ public class Rectangle extends StretchableShpae{
 		JDialog editDialog = new JDialog(Main.f);
 		editDialog.setLayout(new GridLayout(7, 1));
 		editDialog.setTitle("Edit Rectangle");
-		JPanel positionPanel = new JPanel(new GridLayout(1, 4));
-		positionPanel.add(Main.theme.affect(new JLabel("X:")));
-		JTextField xField = new JTextField(this.x + "");
-		Main.theme.affect(xField);
-		positionPanel.add(xField);
-		positionPanel.add(Main.theme.affect(new JLabel("Y:")));
-		JTextField yField = new JTextField(this.y + "");
-		Main.theme.affect(yField);
-		positionPanel.add(yField);
+		EditPanel positionPanel = createPositionPanel();
 		editDialog.add(positionPanel);
-		JPanel sizePanel = new JPanel(new GridLayout(1, 4));
-		sizePanel.add(Main.theme.affect(new JLabel("Width:")));
-		JTextField widthField = new JTextField(this.width + "");
-		Main.theme.affect(widthField);
-		sizePanel.add(widthField);
-		sizePanel.add(Main.theme.affect(new JLabel("Height:")));
-		JTextField heightField = new JTextField(this.height + "");
-		Main.theme.affect(heightField);
-		sizePanel.add(heightField);
+		EditPanel sizePanel = createSizePanel();
 		editDialog.add(sizePanel);
-		JPanel colorPanel = new JPanel(new BorderLayout());
-		colorPanel.add(Main.theme.affect(new JLabel("Color:")), Main.translator.getBeforeTextBorder());
-		JLabel colorLabel = new JLabel();
-		colorLabel.setOpaque(true);
-		colorLabel.setBackground(color);
-		colorPanel.add(colorLabel);
-		JButton setColorButton = new JButton("Set Color");
-		Main.theme.affect(setColorButton);
-		setColorButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				colorLabel.setBackground(JColorChooser.showDialog(editDialog, "Choose Rectangle color", colorLabel.getBackground()));
-			}
-		});
-		colorPanel.add(setColorButton, Main.translator.getAfterTextBorder());
+		EditPanel colorPanel = createColorPanel();
 		editDialog.add(colorPanel);
 		LSlider roundWidthSlider = new LSlider("Round Width:", 0, (int) this.width, roundWidth);
 		Main.theme.affect(roundWidthSlider);
@@ -106,28 +71,18 @@ public class Rectangle extends StretchableShpae{
 		JCheckBox isFilledCheckBox = new JCheckBox("Fill Rectangle", isFilled);
 		Main.theme.affect(isFilledCheckBox);
 		editDialog.add(isFilledCheckBox);
-		JButton apply = new JButton("Apply");
-		JButton preview = new JButton("Preview");
-		Main.theme.affect(apply);
-		apply.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				preview.getActionListeners()[0].actionPerformed(new ActionEvent(apply, 0, "apply"));
-				editDialog.dispose();
-			}
-		});
-		Main.theme.affect(preview);
-		preview.addActionListener(new ActionListener() {
+		ActionListener actionListener =  new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					double x = Double.parseDouble(xField.getText());
-					double y = Double.parseDouble(yField.getText());
-					double width = Double.parseDouble(widthField.getText());
-					double height = Double.parseDouble(heightField.getText());
-					Color color = colorLabel.getBackground();
+					Object[] positionData = positionPanel.getData();
+					double x = (Double) positionData[0];
+					double y = (Double) positionData[1];
+					Object[] sizeData = sizePanel.getData();
+					double width = (Double) sizeData[0];
+					double height = (Double) sizeData[1];
+					Color color = (Color) colorPanel.getData()[0];
 					LinkedList<Change> changes = new LinkedList<>();
 					if (Rectangle.this.x != x) {
 						changes.add(new NumericalChange(Change.X_CHANGE, x - Rectangle.this.x));
@@ -163,12 +118,13 @@ public class Rectangle extends StretchableShpae{
 					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
 					e2.printStackTrace();
 				}
+				
+				if (e.getActionCommand().equals("Apply & Close")) {
+					editDialog.dispose();
+				}
 			}
-		});
-		JPanel actionPanel = new JPanel(new BorderLayout());
-		actionPanel.add(apply);
-		actionPanel.add(preview, BorderLayout.EAST);
-		editDialog.add(actionPanel);
+		};
+		editDialog.add(createActionPanel(actionListener));
 		editDialog.pack();
 		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		editDialog.setVisible(true);

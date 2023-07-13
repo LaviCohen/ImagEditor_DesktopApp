@@ -2,21 +2,19 @@ package drawables.shapes;
 
 import java.awt.BorderLayout;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 import drawables.shapes.abstractShapes.Shape;
+import gui.components.EditPanel;
 import le.gui.dialogs.LDialogs;
 import main.Main;
 import operatins.ChangesOperation;
@@ -65,15 +63,7 @@ public class Code extends Shape{
 		JDialog editDialog = new JDialog(Main.f);
 		editDialog.setLayout(new BorderLayout());
 		editDialog.setTitle("Edit Text");
-		JPanel positionPanel = new JPanel(new GridLayout(1, 4));
-		positionPanel.add(Main.theme.affect(new JLabel("X:")));
-		JTextField xField = new JTextField(this.x + "");
-		Main.theme.affect(xField);
-		positionPanel.add(xField);
-		positionPanel.add(Main.theme.affect(new JLabel("Y:")));
-		JTextField yField = new JTextField(this.y + "");
-		Main.theme.affect(yField);
-		positionPanel.add(yField);
+		EditPanel positionPanel = createPositionPanel();
 		editDialog.add(positionPanel, BorderLayout.NORTH);
 		JPanel textPanel = new JPanel(new BorderLayout());
 		textPanel.add(Main.theme.affect(new JLabel("Code:")), 
@@ -82,25 +72,14 @@ public class Code extends Shape{
 		Main.theme.affect(textArea);
 		textPanel.add(textArea);
 		editDialog.add(textPanel);
-		JButton apply = new JButton("Apply");
-		JButton preview = new JButton("Preview");
-		Main.theme.affect(apply);
-		apply.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				preview.getActionListeners()[0].actionPerformed(new ActionEvent(apply, 0, "apply"));
-				editDialog.dispose();
-			}
-		});
-		Main.theme.affect(preview);
-		preview.addActionListener(new ActionListener() {
+		ActionListener actionListener = new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					double x = Double.parseDouble(xField.getText());
-					double y = Double.parseDouble(yField.getText());
+					Object[] positionData = positionPanel.getData();
+					double x = (Double) positionData[0];
+					double y = (Double) positionData[1];
 					String code = textArea.getText();
 					LinkedList<Change> changes = new LinkedList<>();
 					if (Code.this.x != x) {
@@ -119,13 +98,13 @@ public class Code extends Shape{
 					}
 				} catch (Exception e2) {
 					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
-				}		
+				}
+				if (e.getActionCommand().equals("Apply & Close")) {
+					editDialog.dispose();
+				}
 			}
-		});
-		JPanel actionPanel = new JPanel(new BorderLayout());
-		actionPanel.add(apply);
-		actionPanel.add(preview, BorderLayout.EAST);
-		editDialog.add(actionPanel, BorderLayout.SOUTH);
+		};
+		editDialog.add(createActionPanel(actionListener), BorderLayout.SOUTH);
 		editDialog.pack();
 		editDialog.setSize(editDialog.getWidth() + 50, editDialog.getHeight());
 		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

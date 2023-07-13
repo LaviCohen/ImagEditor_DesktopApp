@@ -1,17 +1,24 @@
 package drawables.shapes.abstractShapes;
 
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextField;
 
 import drawables.Drawable;
 import drawables.shapes.Code;
 import drawables.shapes.Picture;
 import drawables.shapes.Rectangle;
 import drawables.shapes.Text;
+import gui.components.EditPanel;
 import le.gui.dialogs.LDialogs;
 import main.Main;
 
@@ -125,5 +132,41 @@ public abstract class Shape implements Drawable{
 			return new Code(line.substring(line.indexOf(':') + 1));
 		}
 		return null;
+	}
+	
+	protected EditPanel createPositionPanel() {
+		JTextField xField = new JTextField(this.x + "");
+		Main.theme.affect(xField);
+		JTextField yField = new JTextField(this.y + "");
+		Main.theme.affect(yField);
+		EditPanel positionPanel = new EditPanel(new GridLayout(1, 4)) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Object[] getData() {
+				return new Double[] {Double.parseDouble(xField.getText()), 
+						Double.parseDouble(yField.getText())};
+			}
+		};
+		positionPanel.add(Main.theme.affect(new JLabel("X:")));
+		positionPanel.add(xField);
+		positionPanel.add(Main.theme.affect(new JLabel("Y:")));
+		positionPanel.add(yField);
+		
+		return positionPanel;
+	}
+	
+	protected JPanel createActionPanel(ActionListener actionListener) {
+		JPanel actionPanel = new JPanel(new BorderLayout());
+		JButton applyNclose = new JButton("Apply & Close");
+		JButton apply = new JButton("Apply");
+		applyNclose.addActionListener(actionListener);
+		apply.addActionListener(actionListener);
+		Main.theme.affect(applyNclose);
+		Main.theme.affect(applyNclose);
+		actionPanel.add(applyNclose);
+		actionPanel.add(apply, BorderLayout.EAST);
+		
+		return actionPanel;
 	}
 }
