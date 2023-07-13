@@ -18,6 +18,7 @@ import javax.swing.event.ChangeListener;
 
 import gui.layouts.ListLayout;
 import install.Resources;
+import le.gui.ColorTheme;
 import le.gui.components.LSlider;
 import main.Main;
 import tools.adapters.BrushMouseAdapter;
@@ -115,6 +116,7 @@ public class ToolListManager {
 			colorPanel.add(Main.theme.affect(new JLabel("Color:")), Main.translator.getBeforeTextBorder());
 			JLabel colorLabel = new JLabel();
 			colorLabel.setOpaque(true);
+			colorLabel.setName(ColorTheme.DONT_AFFECT);
 			colorLabel.setBackground(BrushMouseAdapter.getBrushColor());
 			colorPanel.add(colorLabel);
 			JButton setColorButton = new JButton("Set Color");
