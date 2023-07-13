@@ -97,8 +97,8 @@ public class Text extends Shape implements ColoredShape{
 					if (!Text.this.color.equals(color)) {
 						changes.add(new ObjectChange(Change.TEXT_COLOR_CHANGE, Text.this.color, color));
 					}
-					if (!Text.this.font.equals(font)) {
-						changes.add(new ObjectChange(Change.FONT_CHANGE, Text.this.font, font));
+					if (!Text.this.font.equals(fontHolder.getFont())) {
+						changes.add(new ObjectChange(Change.FONT_CHANGE, Text.this.font, fontHolder.getFont()));
 					}
 					
 					if (!changes.isEmpty()) {
