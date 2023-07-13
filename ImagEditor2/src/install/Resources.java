@@ -92,7 +92,7 @@ public class Resources {
 		return ret;
 	}
 	public static int swapRGB(int rgb) {
-		Color c = new Color(rgb);
+		Color c = new Color(rgb, true);
 		return new Color(255 - c.getRed(), 255 - c.getRed(), 255 - c.getRed(), c.getAlpha())
 				.getRGB();
 	}

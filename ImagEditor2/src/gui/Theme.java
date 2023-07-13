@@ -42,12 +42,14 @@ public class Theme implements ColorTheme{
 			component.setBackground(getBackgroundColor().brighter());
 			component.setForeground(getTextColor());
 		}else if(component instanceof JButton){	
-			component.setBackground(getBackgroundColor().darker());
-			component.setForeground(getTextColor());
+			if (isAffectingButtons()) {
+				component.setBackground(getBackgroundColor().darker());
+				component.setForeground(getTextColor());
+			}
 		}else{
 			if (component instanceof JComponent) {
 				((JComponent) component).setOpaque(true);
-				if (!isAffectingButtons() || !(component instanceof JButton)) {
+				if (isAffectingButtons() || !(component instanceof JButton)) {
 					component.setBackground(getBackgroundColor());
 					component.setForeground(getTextColor());
 				}
@@ -66,6 +68,6 @@ public class Theme implements ColorTheme{
 	}
 	@Override
 	public boolean isAffectingButtons() {
-		return isAffectingButtons;
+		return isAffectingButtons || DefaultSettings.darkMode;
 	}
 }
