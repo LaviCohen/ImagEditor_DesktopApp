@@ -369,10 +369,8 @@ public class Actions {
 		saveDialog.setTitle("Save As Project");
 		saveDialog.setLayout(new GridLayout(3, 1));
 		JPanel dirPanel = new JPanel(new BorderLayout());
-		Main.theme.affect(dirPanel);
-		dirPanel.add(Main.theme.affect(new JLabel("Directory:")), Main.translator.getBeforeTextBorder());
-		JTextField dirField = new JTextField();
-		Main.theme.affect(dirField);
+		dirPanel.add(new JLabel("Directory:"), Main.translator.getBeforeTextBorder());
+		JTextField dirField = new JTextField(Main.install.getPath("Projects"));
 		dirField.setEditable(false);
 		if (Main.currentProject.folder != null) {
 			dirField.setText(Main.currentProject.folder);
@@ -380,7 +378,6 @@ public class Actions {
 		dirPanel.add(dirField);
 		saveDialog.add(dirPanel);
 		JButton browse = new JButton("Browse");
-		Main.theme.affect(browse);
 		browse.addActionListener(new ActionListener() {
 			
 			@Override
@@ -395,20 +392,16 @@ public class Actions {
 		});
 		dirPanel.add(browse, Main.translator.getAfterTextBorder());
 		JPanel namePanel = new JPanel(new BorderLayout());
-		Main.theme.affect(namePanel);
-		namePanel.add(Main.theme.affect(new JLabel("Name:")), Main.translator.getBeforeTextBorder());
+		namePanel.add(new JLabel("Name:"), Main.translator.getBeforeTextBorder());
 		JTextField nameField = new JTextField("project");
-		Main.theme.affect(nameField);
 		if (Main.currentProject.name != null) {
 			nameField.setText(Main.currentProject.name);
 		}
 		namePanel.add(nameField);
 		JLabel suffixLabel = new JLabel("<html><t/>.iep</html>");
-		Main.theme.affect(suffixLabel);
 		namePanel.add(suffixLabel, Main.translator.getAfterTextBorder());
 		saveDialog.add(namePanel);
 		JButton save = new JButton("Save");
-		Main.theme.affect(save);
 		save.addActionListener(new ActionListener() {
 			
 			@Override
@@ -428,6 +421,7 @@ public class Actions {
 			}
 		});
 		saveDialog.add(save);
+		Main.theme.affect(saveDialog);
 		saveDialog.pack();
 		saveDialog.setVisible(true);
 	}
