@@ -23,9 +23,8 @@ import javax.swing.event.ChangeListener;
 
 import drawables.Layer;
 import gui.Theme;
-import tools.ToolListManager;
+import gui.components.Board;
 import gui.components.LayersList;
-import gui.components.board.Board;
 import install.Decoder;
 import install.DefaultSettings;
 import install.Install;
@@ -37,6 +36,7 @@ import le.gui.components.LSlider;
 import le.gui.dialogs.LDialogs;
 import le.log.ExceptionUtils;
 import le.log.Logger;
+import tools.ToolListManager;
 import webServices.Account;
 import webServices.AccountUndefindException;
 import webServices.Website;

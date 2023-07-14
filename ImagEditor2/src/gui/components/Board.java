@@ -1,4 +1,4 @@
-package gui.components.board;
+package gui.components;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,13 +14,13 @@ import javax.swing.JPanel;
 
 import drawables.Layer;
 import drawables.shapes.abstractShapes.Shape;
+import main.Main;
 import tools.ToolListManager;
 import tools.adapters.BoardAdapter;
 import tools.adapters.BrushMouseAdapter;
 import tools.adapters.EraserMouseAdapter;
 import tools.adapters.PickingMouseAdapter;
 import tools.adapters.TextMouseAdapter;
-import main.Main;
 
 public class Board extends JPanel{
 	private static final long serialVersionUID = 1L;

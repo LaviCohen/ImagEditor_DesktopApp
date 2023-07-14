@@ -7,7 +7,7 @@ import drawables.shapes.Picture;
 import drawables.shapes.Text;
 import drawables.shapes.abstractShapes.Shape;
 import drawables.shapes.abstractShapes.StretchableShpae;
-import gui.components.board.Board;
+import gui.components.Board;
 import le.gui.dialogs.LDialogs;
 import main.Main;
 import operatins.ChangesOperation;

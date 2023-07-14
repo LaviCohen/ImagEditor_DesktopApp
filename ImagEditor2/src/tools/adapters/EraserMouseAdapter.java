@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
 import drawables.Layer;
-import gui.components.board.Board;
+import gui.components.Board;
 import le.utils.PictureUtilities;
 import main.Main;
 import operatins.ChangesOperation;

@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import gui.components.board.Board;
+import gui.components.Board;
 import main.Actions;
 
 public abstract class BoardAdapter extends MouseAdapter{

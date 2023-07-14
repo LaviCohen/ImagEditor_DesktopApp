@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.Scanner;
 
 import drawables.Layer;
-import gui.components.board.Board;
+import gui.components.Board;
 import install.DefaultSettings;
 import main.Main;
 

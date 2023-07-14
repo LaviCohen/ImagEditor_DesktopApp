@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent;
 
 import drawables.Layer;
 import drawables.shapes.Text;
-import gui.components.board.Board;
+import gui.components.Board;
 import le.gui.dialogs.LDialogs;
 import operatins.AddLayerOperation;
 import operatins.OperationsManager;
