@@ -25,7 +25,7 @@ import drawables.Layer;
 import drawables.shapes.abstractShapes.StretchableShpae;
 import effects.EffectsManager;
 import gui.components.EditPanel;
-import install.DefaultSettings;
+import install.Preferences;
 import le.gui.components.LSlider;
 import le.gui.dialogs.LDialogs;
 import le.utils.PictureUtilities;
@@ -69,7 +69,7 @@ public class Picture extends StretchableShpae{
 	//Methods
 	@Override
 	public void draw(Graphics2D g) {
-		if (!DefaultSettings.useMoreRAM) {
+		if (!Preferences.useMoreRAM) {
 			//In case the setting has been changed while the program is running, so previous lastDrawn won't stuck in the memory
 			invalidate();
 			g.drawImage(getImageToDisplay(), (int)x, (int)y, null);

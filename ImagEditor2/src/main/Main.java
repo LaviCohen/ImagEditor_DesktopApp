@@ -26,7 +26,7 @@ import gui.Theme;
 import gui.components.Board;
 import gui.components.LayersList;
 import install.Decoder;
-import install.DefaultSettings;
+import install.Preferences;
 import install.Install;
 import install.Resources;
 import install.saveSystem.Project;
@@ -50,7 +50,7 @@ public class Main {
 	/**
 	 * Holds the number of the version with minor version (after the decimal point)
 	 */
-	public static final double version = 4.1;
+	public static final double version = 4.2;
 	/**
 	 * The frame of the program.
 	 */
@@ -215,7 +215,7 @@ public class Main {
 	}
 	private static void websiteChecks() {
 		Main.website.checkUpdate();
-		if (Main.website.checkWebsite() && DefaultSettings.keepMeLoggedIn) {
+		if (Main.website.checkWebsite() && Preferences.keepMeLoggedIn) {
 			tryToLogIn();
 		}
 	}
@@ -250,7 +250,7 @@ public class Main {
 			@Override
 			public void windowClosed(WindowEvent e) {
 				System.out.println("Post-closing work started");
-				if (DefaultSettings.saveLogs) {
+				if (Preferences.saveLogs) {
 					System.out.println("Saving log file");
 					File f = Main.install.getFile("Data\\Logs\\Log saved at " + System.currentTimeMillis() + ".txt");
 					try {
@@ -360,7 +360,7 @@ public class Main {
 	}
 	public static void initControlBar() {
 		zoomSlider = new LSlider(Main.translator.get("Zoom") + ":",
-				10, 200, DefaultSettings.paperZoom);
+				10, 200, Preferences.paperZoom);
 		controlBar = new JPanel(new BorderLayout());
 		sizeLabel = new JLabel("");
 		controlBar.add(getSizeLabel(), Main.translator.getAfterTextBorder());

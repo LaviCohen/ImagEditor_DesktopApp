@@ -8,6 +8,7 @@ import java.util.LinkedList;
 
 import drawables.Layer;
 import gui.components.Board;
+import install.Preferences;
 import le.utils.PictureUtilities;
 import main.Main;
 import operatins.ChangesOperation;
@@ -62,17 +63,21 @@ public class EraserMouseAdapter extends BoardAdapter {
 	public void mousePressed(MouseEvent e) {
 		Layer layer = Main.getLayersList().getSelectedLayer();
 		if (layer != null) {
-			lastTop = PictureUtilities.copy(layer.getTop());
+			if (Preferences.keepTrackOfTopLayers) {
+				lastTop = PictureUtilities.copy(layer.getTop());
+			}
 		}	
 	}
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		LinkedList<Change> list = new LinkedList<Change>();
-		list.add(new ObjectChange(Change.LAYER_TOP_CHANGE, lastTop, 
-				PictureUtilities.copy(Main.getLayersList().getSelectedLayer().getTop())));
-		OperationsManager.addOperation(new ChangesOperation(
-				Main.getLayersList().getSelectedLayer().getShape(), list));
+		if (Preferences.keepTrackOfTopLayers) {
+			LinkedList<Change> list = new LinkedList<Change>();
+			list.add(new ObjectChange(Change.LAYER_TOP_CHANGE, lastTop, 
+					PictureUtilities.copy(Main.getLayersList().getSelectedLayer().getTop())));
+			OperationsManager.addOperation(new ChangesOperation(
+					Main.getLayersList().getSelectedLayer().getShape(), list));
+		}
 	}
 
 	public static int getEraserSize() {

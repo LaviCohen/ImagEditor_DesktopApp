@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 import drawables.Layer;
 import gui.components.Board;
-import install.DefaultSettings;
+import install.Preferences;
 import main.Main;
 
 public class Project {
@@ -20,7 +20,7 @@ public class Project {
 	public Project() {
 		this.folder = null;
 		this.name = null;
-		this.board = new Board(Color.WHITE, DefaultSettings.paperWidth, DefaultSettings.paperHeight);
+		this.board = new Board(Color.WHITE, Preferences.paperWidth, Preferences.paperHeight);
 		Main.theme.affect(board);
 	}
 	private Project(File file){

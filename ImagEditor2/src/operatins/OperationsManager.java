@@ -2,6 +2,8 @@ package operatins;
 
 import java.util.LinkedList;
 
+import install.Preferences;
+
 public class OperationsManager {
 
 	
@@ -21,6 +23,10 @@ public class OperationsManager {
 		}
 		indexFromLastOperation = 0;
 		operations.add(operation);
+		if (Preferences.numOfBackOperations != -1 && 
+				Preferences.numOfBackOperations < operations.size()) {
+			operations.removeFirst();
+		}
 	}
 	
 	public static void undo() {

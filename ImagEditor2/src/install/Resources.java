@@ -76,7 +76,7 @@ public class Resources {
 		System.out.println("All images loaded successfully");
 	}
 	public static ImageIcon getIcon(Image image, int w, int h) {
-		if (!DefaultSettings.darkMode) {
+		if (!Preferences.darkMode) {
 			return new ImageIcon(PictureUtilities.getScaledImage(image, w, h));
 		} else {
 			return new ImageIcon(swapColors(PictureUtilities.getScaledImage(image, w, h)));

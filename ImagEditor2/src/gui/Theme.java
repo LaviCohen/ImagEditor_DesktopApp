@@ -8,7 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.text.JTextComponent;
 
-import install.DefaultSettings;
+import install.Preferences;
 import le.gui.ColorTheme;
 
 public class Theme implements ColorTheme{
@@ -64,10 +64,10 @@ public class Theme implements ColorTheme{
 		return new Color(255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue());
 	}
 	public boolean isLightMode() {
-		return !DefaultSettings.darkMode;
+		return !Preferences.darkMode;
 	}
 	@Override
 	public boolean isAffectingButtons() {
-		return isAffectingButtons || DefaultSettings.darkMode;
+		return isAffectingButtons || Preferences.darkMode;
 	}
 }

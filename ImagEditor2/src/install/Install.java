@@ -36,17 +36,19 @@ public class Install extends AbstractInstall{
 		getFile("Data\\Settings").mkdir();
 		try {
 			getFile("Data\\Settings\\default_setting.txt").createNewFile();
-			DefaultSettings.paperWidth = 1000;
-			DefaultSettings.paperHeight = 600;
-			DefaultSettings.paperZoom = 100;
-			DefaultSettings.language = Main.translator.DEFAULT_LANGUAGE;
-			DefaultSettings.autoSetDefLan = true;
-			DefaultSettings.saveLogs = true;
-			DefaultSettings.keepMeLoggedIn = true;
-			DefaultSettings.useMoreRAM = true;
-			DefaultSettings.darkMode = false;
+			Preferences.paperWidth = 1000;
+			Preferences.paperHeight = 600;
+			Preferences.paperZoom = 100;
+			Preferences.language = Main.translator.DEFAULT_LANGUAGE;
+			Preferences.autoSetDefLan = true;
+			Preferences.saveLogs = true;
+			Preferences.keepMeLoggedIn = true;
+			Preferences.useMoreRAM = true;
+			Preferences.darkMode = false;
+			Preferences.keepTrackOfTopLayers = true;
+			Preferences.numOfBackOperations = -1;
 			
-			DefaultSettings.saveToFile();
+			Preferences.saveToFile();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -65,9 +67,9 @@ public class Install extends AbstractInstall{
 		
 	}
 	public void initNormalSetting() {
-		DefaultSettings.updateFromFile();
+		Preferences.updateFromFile();
 		Main.theme = new Theme();
 		LDialogs.theme = Main.theme;
-		Main.translator.setLanguage(DefaultSettings.language);
+		Main.translator.setLanguage(Preferences.language);
 	}
 }

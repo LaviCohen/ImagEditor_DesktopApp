@@ -15,7 +15,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import install.Decoder;
-import install.DefaultSettings;
+import install.Preferences;
 import install.Resources;
 import le.gui.dialogs.LDialogs;
 import main.Main;
@@ -99,7 +99,7 @@ public class Account {
 		
 		dataPanel.add(passwordPanel);
 		
-		JCheckBox rememberMe = new JCheckBox("Remember Me", DefaultSettings.keepMeLoggedIn);
+		JCheckBox rememberMe = new JCheckBox("Remember Me", Preferences.keepMeLoggedIn);
 		Main.theme.affect(rememberMe);
 		
 		dataPanel.add(rememberMe);

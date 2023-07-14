@@ -9,6 +9,7 @@ import java.util.LinkedList;
 
 import drawables.Layer;
 import gui.components.Board;
+import install.Preferences;
 import le.utils.PictureUtilities;
 import main.Main;
 import operatins.ChangesOperation;
@@ -106,20 +107,24 @@ public class BrushMouseAdapter extends BoardAdapter{
 		if (layer != null) {
 			lastX = boardToPaperCoordinatesX(e.getX()) - (int) layer.getShape().getX();
 			lastY = boardToPaperCoordinatesX(e.getY()) - (int) layer.getShape().getY();
-			lastTop = PictureUtilities.copy(layer.getTop());
+			if (Preferences.keepTrackOfTopLayers) {
+				lastTop = PictureUtilities.copy(layer.getTop());
+			}
 		}	
 	}
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		LinkedList<Change> list = new LinkedList<Change>();
-		BufferedImage newTop = null;
-		if (Main.getLayersList().getSelectedLayer().getTop() != null) {
-			newTop = PictureUtilities.copy(Main.getLayersList().getSelectedLayer().getTop());
+		if (Preferences.keepTrackOfTopLayers) {
+			LinkedList<Change> list = new LinkedList<Change>();
+			BufferedImage newTop = null;
+			if (Main.getLayersList().getSelectedLayer().getTop() != null) {
+				newTop = PictureUtilities.copy(Main.getLayersList().getSelectedLayer().getTop());
+			}
+			list.add(new ObjectChange(Change.LAYER_TOP_CHANGE, lastTop, newTop));
+			OperationsManager.addOperation(new ChangesOperation(
+					Main.getLayersList().getSelectedLayer().getShape(), list));
 		}
-		list.add(new ObjectChange(Change.LAYER_TOP_CHANGE, lastTop, newTop));
-		OperationsManager.addOperation(new ChangesOperation(
-				Main.getLayersList().getSelectedLayer().getShape(), list));
 	}
 	
 	public static Color getBrushColor() {

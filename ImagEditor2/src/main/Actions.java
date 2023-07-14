@@ -15,14 +15,12 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -32,10 +30,9 @@ import drawables.shapes.Code;
 import drawables.shapes.Picture;
 import drawables.shapes.Rectangle;
 import drawables.shapes.Text;
-import install.DefaultSettings;
+import install.Preferences;
 import install.Resources;
 import install.saveSystem.Project;
-import le.gui.components.LSlider;
 import le.gui.components.LTextArea;
 import le.gui.components.LTextField;
 import le.gui.dialogs.LDialogs;
@@ -59,7 +56,7 @@ public class Actions {
 		if (command.equals("Export Image")) {
 			exportImage();
 		}else if (command.equals("Preferences")) {
-			openPreferencesDialog();
+			Preferences.showPreferencesdialog();
 		}else if (command.equals("Set Paper Size")) {
 			setPaperSize();
 		}else if (command.equals("Save Project")) {
@@ -116,152 +113,6 @@ public class Actions {
 				e.printStackTrace();
 			}
 		}
-	}
-	/**
-	 * Opens the preferences dialog.
-	 * */
-	public static void openPreferencesDialog() {
-		JDialog preferencesDialog = new JDialog(Main.f, "User Preferences");
-		preferencesDialog.getContentPane().setBackground(Main.theme.getBackgroundColor());
-		preferencesDialog.setLayout(new BorderLayout());
-		preferencesDialog.add(Main.theme.affect(new JLabel("Change the default settings:")),
-				BorderLayout.NORTH);
-		
-		//Using tabbed pane to sort all preferences by categories
-		JTabbedPane tabbedPane = new JTabbedPane();
-		Main.theme.affect(tabbedPane);
-		
-		//Paper's preferences tab, including width, height and zoom
-		JPanel paperPrefsPanel = new JPanel(new GridLayout(3, 1));
-		//Width GUI
-		JPanel widthPanel = new JPanel(new BorderLayout());
-		widthPanel.add(Main.theme.affect(new JLabel("Width:")), Main.translator.getBeforeTextBorder());
-		JTextField widthField = new JTextField(DefaultSettings.paperWidth + "");
-		Main.theme.affect(widthField);
-		widthPanel.add(widthField);
-		paperPrefsPanel.add(widthPanel);
-		//Height GUI
-		JPanel heightPanel = new JPanel(new BorderLayout());
-		heightPanel.add(Main.theme.affect(new JLabel("Height:")), Main.translator.getBeforeTextBorder());
-		JTextField heightField = new JTextField(DefaultSettings.paperHeight + "");
-		Main.theme.affect(heightField);
-		heightPanel.add(heightField);
-		paperPrefsPanel.add(heightPanel);
-		//Zoom GUI
-		LSlider zoomSlider = new LSlider("Zoom", Main.getZoomSlider().slider.getMinimum(),
-				Main.getZoomSlider().slider.getMaximum(), DefaultSettings.paperZoom);
-		Main.theme.affect(zoomSlider);
-		paperPrefsPanel.add(zoomSlider);
-		
-		tabbedPane.addTab("Paper", paperPrefsPanel);
-
-		//Language's preferences
-		JPanel languagePrefsPanel = new JPanel(new GridLayout(2, 1));
-		//Default language GUI
-		JPanel defLanPanel = new JPanel(new BorderLayout());
-		defLanPanel.add(Main.theme.affect(new JLabel("Defalut Language:")),
-				Main.translator.getBeforeTextBorder());
-		//The language picking JComboBox
-		File f = Main.install.getFile("Languages");
-		String[] allLanguages = f.list();
-		String[] displayLanguages = new String[allLanguages.length + 1];
-		displayLanguages[0] = Main.translator.DEFAULT_LANGUAGE;
-		for (int i = 1; i < displayLanguages.length; i++) {
-			displayLanguages[i] = 
-					allLanguages[i - 1].substring(0, allLanguages[i - 1].indexOf('.'));
-		}
-		JComboBox<String> chooseLanguge = new JComboBox<>(displayLanguages);
-		Main.theme.affect(chooseLanguge);
-		chooseLanguge.setSelectedItem(DefaultSettings.language);
-		defLanPanel.add(chooseLanguge);
-		languagePrefsPanel.add(defLanPanel);
-		//Auto-set default language
-		JCheckBox autoSetDefLan = new JCheckBox("Auto-set Defalut Language When Changing Language", DefaultSettings.autoSetDefLan);
-		Main.theme.affect(autoSetDefLan);
-		languagePrefsPanel.add(autoSetDefLan);
-		
-		tabbedPane.addTab("Language", languagePrefsPanel);
-		
-		preferencesDialog.add(tabbedPane);
-		
-		//Appearance tab
-		JPanel appearancePrefsPanel = new JPanel(new GridLayout(1, 1));
-		
-		//Dark mode
-		JCheckBox darkModeCheckBox = new JCheckBox("Dark Mode", DefaultSettings.darkMode);
-		Main.theme.affect(darkModeCheckBox);
-		appearancePrefsPanel.add(darkModeCheckBox);
-		
-		tabbedPane.addTab("Appearance", appearancePrefsPanel);
-		
-		//Advanced tab (save logs and CPU vs RAM priority)
-		JPanel advancedPrefsPanel = new JPanel(new GridLayout(2, 1));
-		
-		//Save logs
-		JCheckBox saveLogsCheckBox = new JCheckBox("Save the Logs Every time the Program is Being Used", DefaultSettings.saveLogs);
-		Main.theme.affect(saveLogsCheckBox);
-		advancedPrefsPanel.add(saveLogsCheckBox);
-		
-		//CPU vs RAM priority
-		JCheckBox useRAMCheckBox = new JCheckBox("Use More RAM to Reduce CPU & GPU Usage", DefaultSettings.useMoreRAM);
-		Main.theme.affect(useRAMCheckBox);
-		advancedPrefsPanel.add(useRAMCheckBox);
-		
-		tabbedPane.addTab("Advanced", advancedPrefsPanel);
-		
-		//Apply button
-		JButton apply = new JButton("Apply Preferences");
-		Main.theme.affect(apply);
-		//The code inside the listeners update the defaults to the values in the dialog's input components
-		apply.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//Updating paper dimension
-				try {
-					int width = Integer.parseInt(widthField.getText());
-					int height = Integer.parseInt(heightField.getText());
-					DefaultSettings.paperWidth = width;
-					DefaultSettings.paperHeight = height;
-				} catch (Exception e2) {
-					if (e2 instanceof NumberFormatException) {
-						LDialogs.showMessageDialog(Main.f, "Error while parsing paper dimensions",
-								"Parsing Error", LDialogs.ERROR_MESSAGE);
-					}else {
-						e2.printStackTrace();
-					}
-				}
-				
-				//Updating zoom
-				DefaultSettings.paperZoom = zoomSlider.getValue();
-				//Updating Default Language
-				DefaultSettings.language = chooseLanguge.getSelectedItem().toString();
-				//Updating auto-set default language
-				DefaultSettings.autoSetDefLan = autoSetDefLan.isSelected();
-				//Updating dark mode
-				DefaultSettings.darkMode = darkModeCheckBox.isSelected();
-				//Updating save logs
-				DefaultSettings.saveLogs = saveLogsCheckBox.isSelected();
-				//Updating use more RAM
-				DefaultSettings.useMoreRAM = useRAMCheckBox.isSelected();
-				//Saving the settings to the default settings file
-				try {
-					DefaultSettings.saveToFile();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				
-				System.out.println("Preferences Has Been Applied Successfuly");
-				
-				preferencesDialog.dispose();
-			}
-		});
-		preferencesDialog.add(apply, BorderLayout.SOUTH);
-		
-		//Displaying the dialog
-		preferencesDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		preferencesDialog.pack();
-		preferencesDialog.setVisible(true);
 	}
 	/**
 	 * Shows dialog to open project from the web.
@@ -658,11 +509,11 @@ public class Actions {
 			return;
 		}
 		Main.translator.setLanguage(ans.toString());
-		if (DefaultSettings.autoSetDefLan || LDialogs.showConfirmDialog(Main.f,
+		if (Preferences.autoSetDefLan || LDialogs.showConfirmDialog(Main.f,
 					"Do you want to make " + ans + " your default language?") == LDialogs.YES_OPTION) {
-			DefaultSettings.language = ans.toString();
+			Preferences.language = ans.toString();
 			try {
-				DefaultSettings.saveToFile();
+				Preferences.saveToFile();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
