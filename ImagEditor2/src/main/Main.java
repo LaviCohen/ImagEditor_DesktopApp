@@ -11,6 +11,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 
 import javax.swing.JButton;
@@ -206,6 +208,25 @@ public class Main {
 	}
 	private static void initializeLogger() {
 		Main.logger.initializeLogger();
+		Main.logger.setLogListener(new PrintStream(new OutputStream() {
+			
+			private boolean endOfLogLine = false;
+
+			@Override
+			public void write(int b) throws IOException {
+				if (Main.getLogLabel() != null) {
+					if ((char)b == '\n') {
+						endOfLogLine  = true;
+					} else if (!endOfLogLine) {
+						Main.getLogLabel().setText(Main.getLogLabel().getText() + (char)b);
+					} else {
+						endOfLogLine = false;
+						Main.getLogLabel().setText((char)b + "");
+					}
+					Main.getLogLabel().repaint();
+				}
+			}
+		}));
 	}
 	private static void displayFrame() {
 		f.setVisible(true);
