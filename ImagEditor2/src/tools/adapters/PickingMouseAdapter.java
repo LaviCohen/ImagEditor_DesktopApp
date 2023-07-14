@@ -60,7 +60,6 @@ public class PickingMouseAdapter extends BoardAdapter{
 	public void mouseReleased(MouseEvent e) {
 		if (shapeInFocus != null) {
 			LinkedList<Change> changes = new LinkedList<Change>();
-			System.out.println("Total Movment: " + totalMovementX + ", " + totalMovementY);
 			if (totalMovementX != 0) {
 				changes.add(new NumericalChange(Change.X_CHANGE, totalMovementX));
 			}

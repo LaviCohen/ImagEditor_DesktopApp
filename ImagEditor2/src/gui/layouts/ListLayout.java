@@ -11,6 +11,7 @@ public class ListLayout implements LayoutManager2{
 	public LinkedList<Component> components = new LinkedList<Component>();
 	public int hgap;
 	public int vgap;
+	
 	public ListLayout() {
 		this(0, 0);
 	}
@@ -25,7 +26,11 @@ public class ListLayout implements LayoutManager2{
 	
 	@Override
 	public void addLayoutComponent(Component comp, Object constraints) {
-		components.add(comp);
+		if (constraints instanceof Integer) {
+			components.add((Integer) constraints, comp);
+		} else {
+			components.add(comp);
+		}
 	}
 
 	@Override
@@ -59,8 +64,9 @@ public class ListLayout implements LayoutManager2{
 
 	@Override
 	public void removeLayoutComponent(Component comp) {
-		// TODO Auto-generated method stub
-		
+		if (components.contains(comp)) {
+			components.remove(comp);
+		}
 	}
 	
 	@Override
