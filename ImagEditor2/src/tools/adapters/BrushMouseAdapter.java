@@ -23,8 +23,8 @@ public class BrushMouseAdapter extends BoardAdapter{
 	
 	protected static int brushSize = 5;
 	
-	protected int lastX;
-	protected int lastY;
+	protected int lastX = -100;
+	protected int lastY = -100;
 	
 	protected BufferedImage lastTop = null;
 	
@@ -42,9 +42,11 @@ public class BrushMouseAdapter extends BoardAdapter{
 			Graphics2D g = layer.getTop().createGraphics();
 			g.setColor(brushColor);
 			int x = boardToPaperCoordinatesX(e.getX()) - (int) layer.getShape().getX();
-			int y = boardToPaperCoordinatesX(e.getY()) - (int) layer.getShape().getY();
+			int y = boardToPaperCoordinatesY(e.getY()) - (int) layer.getShape().getY();
 			g.fillOval(x - brushSize/2, y - brushSize/2, brushSize, brushSize);
-			drawConnectionLine(lastX, lastY, x, y, g);
+			if (lastX != -100 && lastY != -100) {
+				drawConnectionLine(lastX, lastY, x, y, g);
+			}
 			lastX = x;
 			lastY = y;
 			parent.repaint();
@@ -125,6 +127,8 @@ public class BrushMouseAdapter extends BoardAdapter{
 			OperationsManager.addOperation(new ChangesOperation(
 					Main.getLayersList().getSelectedLayer().getShape(), list));
 		}
+		lastX = -100;
+		lastY = -100;
 	}
 	
 	public static Color getBrushColor() {

@@ -35,9 +35,9 @@ public class EraserMouseAdapter extends BoardAdapter {
 			}
 			Graphics2D g = layer.getTop().createGraphics();
 			g.setBackground(new Color(255, 0, 0, 0));
-			g.clearRect(boardToPaperCoordinatesX(e.getX()) - (int) layer.getShape().getX() - eraserSize/2, 
-					boardToPaperCoordinatesY(e.getY() - (int) layer.getShape().getY()) - eraserSize/2, 
-					eraserSize, eraserSize);
+			int x = boardToPaperCoordinatesX(e.getX()) - (int) layer.getShape().getX();
+			int y = boardToPaperCoordinatesY(e.getY()) - (int) layer.getShape().getY();
+			g.clearRect(x - eraserSize/2, y - eraserSize/2, eraserSize, eraserSize);
 			parent.repaint();
 			Main.getLayersList().updateImage(layer.getShape());
 		}

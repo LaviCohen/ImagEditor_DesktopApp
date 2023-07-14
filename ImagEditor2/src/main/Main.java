@@ -98,7 +98,12 @@ public class Main {
 	/**
 	 * The bottom panel, which holds zoom and paper size.
 	 * */
+	private static JPanel boardDataBar;
+	/**
+	 * The bottom panel, which holds the zoom label.
+	 * */
 	private static JPanel controlBar;
+	private static JLabel logLabel;
 	/**
 	 * The side bar which holds the shapeList and some action buttons.
 	 */
@@ -163,8 +168,9 @@ public class Main {
 	}
 	private static void initGUI() {
 		initProgramFrame();
-		initMenuBar();
 		initControlBar();
+		initMenuBar();
+		initBoardDataBar();
 		initProject();
 		initBoardScrollPane();
 		initLayersSideBarPanel();
@@ -173,6 +179,12 @@ public class Main {
 		updateSizeLabel();
 		updateLayersList();
 		applyThemeColors();
+	}
+	private static void initControlBar() {
+		logLabel = new JLabel("Log Label");
+		controlBar = new JPanel(new BorderLayout());
+		controlBar.add(logLabel, BorderLayout.SOUTH);
+		f.add(controlBar, BorderLayout.SOUTH);
 	}
 	private static void initToolsSettingsPanel() {
 		setToolsSettingsPanel(new JPanel(new BorderLayout()));
@@ -358,12 +370,12 @@ public class Main {
 			}
 		}
 	}
-	public static void initControlBar() {
+	public static void initBoardDataBar() {
 		zoomSlider = new LSlider(Main.translator.get("Zoom") + ":",
 				10, 200, Preferences.paperZoom);
-		controlBar = new JPanel(new BorderLayout());
+		boardDataBar = new JPanel(new BorderLayout());
 		sizeLabel = new JLabel("");
-		controlBar.add(getSizeLabel(), Main.translator.getAfterTextBorder());
+		boardDataBar.add(getSizeLabel(), Main.translator.getAfterTextBorder());
 		zoomSlider.slider.addChangeListener(new ChangeListener() {
 
 			@Override
@@ -371,8 +383,8 @@ public class Main {
 				getBoard().repaint();
 			}
 		});
-		controlBar.add(zoomSlider, Main.translator.getBeforeTextBorder());
-		f.add(controlBar, BorderLayout.SOUTH);
+		boardDataBar.add(zoomSlider, Main.translator.getBeforeTextBorder());
+		controlBar.add(boardDataBar, BorderLayout.CENTER);
 	}
 	public static void initLayersSideBarPanel() {
 		layersSideBarPanel = new JPanel(new BorderLayout());
@@ -524,5 +536,11 @@ public class Main {
 	}
 	public static void setToolsSettingsPanel(JPanel toolsSettingsPanel) {
 		Main.toolsSettingsPanel = toolsSettingsPanel;
+	}
+	public static JLabel getLogLabel() {
+		return logLabel;
+	}
+	public static void setLogLabel(JLabel logLabel) {
+		Main.logLabel = logLabel;
 	}
 }

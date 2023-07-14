@@ -28,7 +28,10 @@ public interface ColoredShape {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				colorLabel.setBackground(JColorChooser.showDialog(null, "Choose Rectangle color", colorLabel.getBackground()));
+				Color c = JColorChooser.showDialog(null, "Choose Rectangle color", colorLabel.getBackground());
+				if (c != null) {
+					colorLabel.setBackground(c);
+				}
 			}
 		});
 		EditPanel colorPanel = new EditPanel(new BorderLayout()) {
