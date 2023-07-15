@@ -17,11 +17,6 @@ import drawables.shapes.abstractShapes.Shape;
 import main.Main;
 import tools.ToolListManager;
 import tools.adapters.BoardAdapter;
-import tools.adapters.BrushMouseAdapter;
-import tools.adapters.EraserMouseAdapter;
-import tools.adapters.PickingMouseAdapter;
-import tools.adapters.TextMouseAdapter;
-
 public class Board extends JPanel{
 	private static final long serialVersionUID = 1L;
 	
@@ -53,15 +48,7 @@ public class Board extends JPanel{
 			this.removeMouseListener(currentBoardAdapter);
 			this.removeMouseMotionListener(currentBoardAdapter);
 		}
-		if (tool == ToolListManager.PICKER_TOOL) {
-			currentBoardAdapter = new PickingMouseAdapter(this);
-		} else if (tool == ToolListManager.BRUSH_TOOL) {
-			currentBoardAdapter = new BrushMouseAdapter(this);
-		}else if (tool == ToolListManager.ERASER_TOOL) {
-			currentBoardAdapter = new EraserMouseAdapter(this);
-		}else if (tool == ToolListManager.TEXT_TOOL) {
-			currentBoardAdapter = new TextMouseAdapter(this);
-		}
+		currentBoardAdapter = ToolListManager.getAdapterForTool(this, tool);
 		this.addMouseListener(currentBoardAdapter);
 		this.addMouseMotionListener(currentBoardAdapter);
 	}

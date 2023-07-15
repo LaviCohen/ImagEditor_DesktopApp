@@ -25,6 +25,8 @@ public class Resources {
 	public static ImageIcon brushIcon;
 	public static ImageIcon eraserIcon;
 	public static ImageIcon textIcon;
+	public static ImageIcon groupIcon;
+	public static ImageIcon ungroupIcon;
 	public static ImageIcon logo;
 	public static ImageIcon maleShadow;
 	public static ImageIcon femaleShadow;
@@ -56,6 +58,10 @@ public class Resources {
 					Resources.class.getResourceAsStream("/images/eraser.png")), 32, 32);
 			textIcon = getIcon(ImageIO.read(
 					Resources.class.getResourceAsStream("/images/text.png")), 32, 32);
+			groupIcon = getIcon(ImageIO.read(
+					Resources.class.getResourceAsStream("/images/group.png")), 32, 32);
+			ungroupIcon = getIcon(ImageIO.read(
+					Resources.class.getResourceAsStream("/images/ungroup.png")), 32, 32);
 			maleShadow = getIcon(ImageIO.read(
 					Resources.class.getResourceAsStream("/images/maleShadow.png")), 150, 150);
 			femaleShadow = getIcon(ImageIO.read(
