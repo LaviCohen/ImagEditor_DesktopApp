@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import drawables.Layer;
 import drawables.shapes.abstractShapes.Shape;
 import main.Main;
-import tools.ToolListManager;
+import tools.ToolsManager;
 import tools.adapters.BoardAdapter;
 public class Board extends JPanel{
 	private static final long serialVersionUID = 1L;
@@ -40,7 +40,7 @@ public class Board extends JPanel{
 		this.add(displayLabel, BorderLayout.CENTER);
 		g = paper.createGraphics();
 		inited = true;
-		setMouseAdapterForTool(ToolListManager.getCurrentTool());
+		setMouseAdapterForTool(ToolsManager.getCurrentTool());
 		repaint();
 	}
 	public void setMouseAdapterForTool(int tool) {
@@ -48,7 +48,7 @@ public class Board extends JPanel{
 			this.removeMouseListener(currentBoardAdapter);
 			this.removeMouseMotionListener(currentBoardAdapter);
 		}
-		currentBoardAdapter = ToolListManager.getAdapterForTool(this, tool);
+		currentBoardAdapter = ToolsManager.getAdapterForTool(this, tool);
 		this.addMouseListener(currentBoardAdapter);
 		this.addMouseMotionListener(currentBoardAdapter);
 	}

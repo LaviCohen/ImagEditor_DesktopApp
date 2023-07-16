@@ -34,7 +34,7 @@ import tools.adapters.PickingMouseAdapter;
 import tools.adapters.TextMouseAdapter;
 import tools.adapters.UngroupMouseAdapter;
 
-public class ToolListManager {
+public class ToolsManager {
 
 	public static final int PICKER_TOOL = 0;
 	public static final int BRUSH_TOOL = 1;
@@ -57,60 +57,70 @@ public class ToolListManager {
 	public static JPanel createToolsPanel() {
 		JPanel toolsSideBarPanel = new JPanel();
 		toolsSideBarPanel.setLayout(new ListLayout(5, 5));
+		//Picker
 		pickerToolLabel = new JLabel(Resources.pickerIcon);
+		pickerToolLabel.setToolTipText("Mouse Picking Abilities (Moving, Resizing etc.)");
 		pickerToolLabel.setOpaque(true);
 		pickerToolLabel.setBackground(Color.CYAN);
 		pickerToolLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ToolListManager.setCurrentTool(ToolListManager.PICKER_TOOL);
+				ToolsManager.setCurrentTool(ToolsManager.PICKER_TOOL);
 			}
 		});
 		toolsSideBarPanel.add(pickerToolLabel);
+		//Brush
 		brushToolLabel = new JLabel(Resources.brushIcon);
+		brushToolLabel.setToolTipText("Use the Brush to Paint on Your Layers");
 		brushToolLabel.setOpaque(true);
 		brushToolLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ToolListManager.setCurrentTool(ToolListManager.BRUSH_TOOL);
+				ToolsManager.setCurrentTool(ToolsManager.BRUSH_TOOL);
 			}
 		});
 		toolsSideBarPanel.add(brushToolLabel);
+		//Eraser
 		eraserToolLabel = new JLabel(Resources.eraserIcon);
+		eraserToolLabel.setToolTipText("Use the Eraser to Erase Brushing");
 		eraserToolLabel.setOpaque(true);
 		eraserToolLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ToolListManager.setCurrentTool(ToolListManager.ERASER_TOOL);
+				ToolsManager.setCurrentTool(ToolsManager.ERASER_TOOL);
 			}
 		});
 		toolsSideBarPanel.add(eraserToolLabel);
+		//Text
 		textToolLabel = new JLabel(Resources.textIcon);
+		textToolLabel.setToolTipText("Use This Tool to Add Text Easily");
 		textToolLabel.setOpaque(true);
 		textToolLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ToolListManager.setCurrentTool(ToolListManager.TEXT_TOOL);
+				ToolsManager.setCurrentTool(ToolsManager.TEXT_TOOL);
 			}
 		});
 		toolsSideBarPanel.add(textToolLabel);
-
+		//Group
 		groupToolLabel = new JLabel(Resources.groupIcon);
+		groupToolLabel.setToolTipText("Use This Tool to Group Layers");
 		groupToolLabel.setOpaque(true);
 		groupToolLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ToolListManager.setCurrentTool(ToolListManager.GROUP_TOOL);
+				ToolsManager.setCurrentTool(ToolsManager.GROUP_TOOL);
 			}
 		});
 		toolsSideBarPanel.add(groupToolLabel);
-
+		//Ungroup
 		ungroupToolLabel = new JLabel(Resources.ungroupIcon);
+		ungroupToolLabel.setToolTipText("Use This Tool to Ungroup Layers");
 		ungroupToolLabel.setOpaque(true);
 		ungroupToolLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ToolListManager.setCurrentTool(ToolListManager.UNGROUP_TOOL);
+				ToolsManager.setCurrentTool(ToolsManager.UNGROUP_TOOL);
 			}
 		});
 		toolsSideBarPanel.add(ungroupToolLabel);
@@ -281,17 +291,17 @@ public class ToolListManager {
 	}
 
 	public static BoardAdapter getAdapterForTool(Board board, int tool) {
-		if (tool == ToolListManager.PICKER_TOOL) {
+		if (tool == ToolsManager.PICKER_TOOL) {
 			return new PickingMouseAdapter(board);
-		} else if (tool == ToolListManager.BRUSH_TOOL) {
+		} else if (tool == ToolsManager.BRUSH_TOOL) {
 			return new BrushMouseAdapter(board);
-		}else if (tool == ToolListManager.ERASER_TOOL) {
+		}else if (tool == ToolsManager.ERASER_TOOL) {
 			return new EraserMouseAdapter(board);
-		}else if (tool == ToolListManager.TEXT_TOOL) {
+		}else if (tool == ToolsManager.TEXT_TOOL) {
 			return new TextMouseAdapter(board);
-		}else if (tool == ToolListManager.GROUP_TOOL) {
+		}else if (tool == ToolsManager.GROUP_TOOL) {
 			return new GroupMouseAdapter(board);
-		}else if (tool == ToolListManager.UNGROUP_TOOL) {
+		}else if (tool == ToolsManager.UNGROUP_TOOL) {
 			return new UngroupMouseAdapter(board);
 		}
 		
@@ -304,6 +314,6 @@ public class ToolListManager {
 
 	public static void setCurrentTool(int currentTool) {
 		update(currentTool);
-		ToolListManager.currentTool = currentTool;
+		ToolsManager.currentTool = currentTool;
 	}
 }

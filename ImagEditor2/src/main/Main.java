@@ -38,7 +38,7 @@ import le.gui.components.LSlider;
 import le.gui.dialogs.LDialogs;
 import le.log.ExceptionUtils;
 import le.log.Logger;
-import tools.ToolListManager;
+import tools.ToolsManager;
 import webServices.Account;
 import webServices.AccountUndefindException;
 import webServices.Website;
@@ -195,7 +195,7 @@ public class Main {
 		f.add(getToolsSettingsPanel(), BorderLayout.NORTH);
 	}
 	private static void initToolsSideBarPanel() {
-		toolsSideBarPanel = ToolListManager.createToolsPanel();
+		toolsSideBarPanel = ToolsManager.createToolsPanel();
 	}
 	private static void initProject() {
 		Main.currentProject = new Project();
