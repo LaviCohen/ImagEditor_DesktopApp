@@ -7,7 +7,4 @@ public class UngroupMouseAdapter extends BoardAdapter {
 	public UngroupMouseAdapter(Board parent) {
 		super(parent);
 	}
-	
-	
-
 }

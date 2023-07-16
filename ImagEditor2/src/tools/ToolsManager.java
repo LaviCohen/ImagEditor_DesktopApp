@@ -237,28 +237,8 @@ public class ToolsManager {
 						LDialogs.showMessageDialog(Main.f, "No Group Shape is Selected", "Warning", LDialogs.WARNING_MESSAGE);
 						return;
 					}
-					GroupShape groupShape = (GroupShape) selected.getShape();
-					Layer[] layers = groupShape.getLayers();
+					((GroupShape) selected.getShape()).ungroup();
 					
-					if (selected.getTop() != null) {
-						for (Layer layer : layers) {
-							layer.setTop(selected.getTop().getSubimage(
-									(int) layer.getShape().getX(), (int) layer.getShape().getY(),
-									layer.getShape().getWidthOnBoard(), layer.getShape().getHeightOnBoard()));
-						}
-					}
-					
-					for (Layer layer : layers) {
-						layer.getShape().setX(layer.getShape().getX() + groupShape.getX());
-						layer.getShape().setY(layer.getShape().getY() + groupShape.getY());
-						Main.getBoard().addLayer(layer);
-					}
-					
-					Main.getBoard().getLayersList().remove(Main.getLayersList().getLayerForShape(groupShape));
-					
-					Main.updateLayersList();
-					
-					Main.getBoard().repaint();
 				}
 			});
 			optionsBar.add(ungroupButton);
