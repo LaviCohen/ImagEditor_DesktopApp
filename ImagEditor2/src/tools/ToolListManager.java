@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.LinkedList;
 
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -15,17 +16,23 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import drawables.Layer;
+import drawables.shapes.GroupShape;
+import drawables.shapes.abstractShapes.Shape;
 import gui.components.Board;
 import gui.layouts.ListLayout;
 import install.Resources;
 import le.gui.ColorTheme;
 import le.gui.components.LSlider;
+import le.gui.dialogs.LDialogs;
 import main.Main;
 import tools.adapters.BoardAdapter;
 import tools.adapters.BrushMouseAdapter;
 import tools.adapters.EraserMouseAdapter;
+import tools.adapters.GroupMouseAdapter;
 import tools.adapters.PickingMouseAdapter;
 import tools.adapters.TextMouseAdapter;
+import tools.adapters.UngroupMouseAdapter;
 
 public class ToolListManager {
 
@@ -184,6 +191,68 @@ public class ToolListManager {
 			});
 			optionsBar.add(brushSizeSlider);
 			p.add(optionsBar);
+		} else if (tool == GROUP_TOOL) {
+			JPanel optionsBar = new JPanel(new GridLayout(1, 1, 3, 3));
+			JButton groupButton = new JButton("Group Selected Items");
+			groupButton.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					LinkedList<Shape> selected = 
+							((GroupMouseAdapter)Main.getBoard().getCurrentMouseAdapter())
+							.getSelected();
+					if (selected.size() < 2) {
+						return;
+					}
+					for (Shape shape : selected) {
+						Main.getBoard().getLayersList().remove(Main.getLayersList().getLayerForShape(shape));
+						
+					}
+					GroupShape groupShape = new GroupShape(true, "Group", selected.toArray(new Shape[0]));
+					Main.getBoard().addLayer(new Layer(groupShape));
+					Main.updateLayersList();
+				}
+			});
+			optionsBar.add(groupButton);
+			p.add(optionsBar);
+		}else if (tool == UNGROUP_TOOL) {
+			JPanel optionsBar = new JPanel(new GridLayout(1, 1, 3, 3));
+			JButton ungroupButton = new JButton("Ungroup Selected Shape");
+			ungroupButton.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					Layer selected = Main.getLayersList().getSelectedLayer();
+					if (selected == null || !(selected.getShape() instanceof GroupShape)) {
+						LDialogs.showMessageDialog(Main.f, "No Group Shape is Selected", "Warning", LDialogs.WARNING_MESSAGE);
+						return;
+					}
+					GroupShape groupShape = (GroupShape) selected.getShape();
+					Layer[] layers = groupShape.getLayers();
+					
+					if (selected.getTop() != null) {
+						for (Layer layer : layers) {
+							layer.setTop(selected.getTop().getSubimage(
+									(int) layer.getShape().getX(), (int) layer.getShape().getY(),
+									layer.getShape().getWidthOnBoard(), layer.getShape().getHeightOnBoard()));
+						}
+					}
+					
+					for (Layer layer : layers) {
+						layer.getShape().setX(layer.getShape().getX() + groupShape.getX());
+						layer.getShape().setY(layer.getShape().getY() + groupShape.getY());
+						Main.getBoard().addLayer(layer);
+					}
+					
+					Main.getBoard().getLayersList().remove(Main.getLayersList().getLayerForShape(groupShape));
+					
+					Main.updateLayersList();
+					
+					Main.getBoard().repaint();
+				}
+			});
+			optionsBar.add(ungroupButton);
+			p.add(optionsBar);
 		}
 		Main.theme.affect(p);
 		return p;
@@ -220,6 +289,10 @@ public class ToolListManager {
 			return new EraserMouseAdapter(board);
 		}else if (tool == ToolListManager.TEXT_TOOL) {
 			return new TextMouseAdapter(board);
+		}else if (tool == ToolListManager.GROUP_TOOL) {
+			return new GroupMouseAdapter(board);
+		}else if (tool == ToolListManager.UNGROUP_TOOL) {
+			return new UngroupMouseAdapter(board);
 		}
 		
 		return null;

@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
+import drawables.Layer;
 import drawables.shapes.abstractShapes.Shape;
 import gui.components.EditPanel;
 import main.Main;
@@ -18,21 +19,67 @@ import operatins.changes.NumericalChange;
 
 public class GroupShape extends Shape{
 
-	private Shape[] shapes;
+	private Layer[] layers;
 	
 	private int widthOnBoard;
 	private int heightOnBoard;
 	
 	
-	public GroupShape(double x, double y, boolean visible, String name, Shape[] shapes) {
-		super(x, y, visible, name);
-		this.shapes = shapes;
+	public GroupShape(boolean visible, String name, Shape[] shapes) {
+		super(0, 0, visible, name);
+		this.layers = new Layer[shapes.length];
+		for (int i = 0; i < shapes.length; i++) {
+			layers[i] = Main.getLayersList().getLayerForShape(shapes[i]);
+		}
+		calculateXnYonBoard();
+		calculateWnHonBoard();
+	}
+
+	private void calculateXnYonBoard() {
+		double minX = layers[0].getShape().getX();
+		double minY = layers[0].getShape().getY();
+		for (Layer layer : layers) {
+			Shape shape = layer.getShape();
+			if (shape.getX() < minX) {
+				minX = shape.getX();
+			}
+			if (shape.getY() < minY) {
+				minY = shape.getY();
+			}
+		}
+		for (Layer layer : layers) {
+			Shape shape = layer.getShape();
+			shape.setX(shape.getX() - minX);
+			shape.setY(shape.getY() - minY);
+		}
+		this.setX(minX);
+		this.setY(minY);
+	}
+
+	private void calculateWnHonBoard() {
+		double maxWidthOnBoard = 0;
+		double maxHeightOnBoard = 0;
+		for (Layer layer : layers) {
+			Shape shape = layer.getShape();
+			if (shape.getX() + shape.getWidthOnBoard() > maxWidthOnBoard) {
+				maxWidthOnBoard = shape.getX() + shape.getWidthOnBoard();
+			}
+			if (shape.getY() + shape.getHeightOnBoard() > maxHeightOnBoard) {
+				maxHeightOnBoard = shape.getY() + shape.getHeightOnBoard();
+			}
+		}
+		this.widthOnBoard = (int) maxWidthOnBoard;
+		this.heightOnBoard = (int) maxHeightOnBoard;
 	}
 
 	@Override
 	public void draw(Graphics2D graphics) {
-		for (Shape shape : shapes) {
-			shape.draw(graphics);
+		for (Layer layer : layers) {
+			layer.getShape().setX(layer.getShape().getX() + this.x);
+			layer.getShape().setY(layer.getShape().getY() + this.y);
+			layer.draw(graphics);
+			layer.getShape().setX(layer.getShape().getX() - this.x);
+			layer.getShape().setY(layer.getShape().getY() - this.y);
 		}
 	}
 
@@ -91,7 +138,7 @@ public class GroupShape extends Shape{
 		return heightOnBoard;
 	}
 
-	public Shape[] getShapes() {
-		return shapes;
+	public Layer[] getLayers() {
+		return layers;
 	}
 }

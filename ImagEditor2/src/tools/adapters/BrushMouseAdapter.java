@@ -45,6 +45,7 @@ public class BrushMouseAdapter extends BoardAdapter{
 			int y = boardToPaperCoordinatesY(e.getY()) - (int) layer.getShape().getY();
 			g.fillOval(x - brushSize/2, y - brushSize/2, brushSize, brushSize);
 			if (lastX != -100 && lastY != -100) {
+				System.out.println("Drawing Connector from " + lastX + ", " + lastY);
 				drawConnectionLine(lastX, lastY, x, y, g);
 			}
 			lastX = x;
@@ -58,6 +59,7 @@ public class BrushMouseAdapter extends BoardAdapter{
 	private void drawConnectionLine(int lastX, int lastY, int x, int y, Graphics2D g) {
 		if (lastX == x) {
 			//Orientation lock, no incline, private case
+			System.out.println("Filling Rect");
 			g.fillRect(lastX - brushSize/2, lastY, brushSize, y - lastY);
 			return;
 		}
