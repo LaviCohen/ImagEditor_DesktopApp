@@ -60,17 +60,11 @@ public abstract class BoardAdapter extends MouseAdapter{
 		addPopupMenu.show(parent, e.getX(), e.getY());
 	}
 	
-	protected double getTopGap() {
-		return ((parent.getHeight() - (parent.getPaper().getHeight() * parent.getZoomRate()))/2);
-	}
-	protected double getLeftGap() {
-		return ((parent.getWidth()  - (parent.getPaper().getWidth()  * parent.getZoomRate()))/2);
-	}
 	protected int boardToPaperCoordinatesX(int boardX) {
-		return (int)((boardX - getLeftGap()) / parent.getZoomRate());
+		return parent.boardToPaperCoordinatesX(boardX);
 	}
 	protected int boardToPaperCoordinatesY(int boardY) {
-		return (int)((boardY - getTopGap()) / parent.getZoomRate());
+		return parent.boardToPaperCoordinatesY(boardY);
 	}
 	
 	/**

@@ -7,8 +7,6 @@ import java.io.IOException;
 import drawables.shapes.Picture;
 import drawables.shapes.abstractShapes.Shape;
 import le.utils.PictureUtilities;
-import main.Main;
-import tools.adapters.PickingMouseAdapter;
 
 public class Layer implements Drawable{
 	
@@ -35,11 +33,6 @@ public class Layer implements Drawable{
 			shape.draw(graphics);
 			if (top != null) {
 				graphics.drawImage(top, (int)shape.getX(), (int)shape.getY(), null);
-			}
-			if (Main.getLayersList().getSelectedLayer() != null &&
-					Main.getLayersList().getSelectedLayer().getShape() == shape
-					&& Main.getBoard().getCurrentMouseAdapter() instanceof PickingMouseAdapter) {
-				Main.getBoard().paintCornerWrappers(shape);
 			}
 		}
 	}

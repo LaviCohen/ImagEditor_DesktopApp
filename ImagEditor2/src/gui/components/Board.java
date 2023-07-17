@@ -2,14 +2,14 @@ package gui.components;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import drawables.Layer;
@@ -17,13 +17,14 @@ import drawables.shapes.abstractShapes.Shape;
 import main.Main;
 import tools.ToolsManager;
 import tools.adapters.BoardAdapter;
+import tools.adapters.PickingMouseAdapter;
+
 public class Board extends JPanel{
+	
 	private static final long serialVersionUID = 1L;
 	
-	private JLabel displayLabel;
-	private Graphics2D g;
 	private Color backgroundColor;
-	private BufferedImage paper;
+	private int paperWidth, paperHeight;
 	private LinkedList<Layer> layers = new LinkedList<Layer>();
 	
 	private BoardAdapter currentBoardAdapter = null;
@@ -33,12 +34,10 @@ public class Board extends JPanel{
 	public Board(Color color, int width, int height) {
 		this.setLayout(new BorderLayout());
 		this.setFocusable(true);
+		this.setOpaque(true);
+		this.paperWidth = width;
+		this.paperHeight = height;
 		this.backgroundColor = color;
-		paper = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		displayLabel = new JLabel(new ImageIcon(paper));
-		displayLabel.setFocusable(true);
-		this.add(displayLabel, BorderLayout.CENTER);
-		g = paper.createGraphics();
 		inited = true;
 		setMouseAdapterForTool(ToolsManager.getCurrentTool());
 		repaint();
@@ -62,49 +61,62 @@ public class Board extends JPanel{
 	}
 	@Override
 	public void repaint() {
-		if (inited) {
-			paintShapes();
-			displayLabel.setIcon(new ImageIcon(
-					getScaledImage(paper, 
-							(int)(paper.getWidth() * getZoomRate()),
-							(int)(paper.getHeight() * getZoomRate()))));
-		}
 		super.repaint();
 		System.gc();
 	}
-	public void paintCornerWrappers(Shape selectedShape) {
+	public void paintCornerWrappers(Shape selectedShape, Graphics2D g) {
 		if (selectedShape == null) {
 			return;
 		}
 		g.setColor(Color.GRAY);
 		//Top-Left wrapper
-		g.fillRect((int)selectedShape.getX(), 
-				(int)selectedShape.getY(), 9, 9);
+		g.fillRect((int)(selectedShape.getX() * getZoomRate() + getLeftGap()), 
+				(int)(selectedShape.getY() * getZoomRate() + getTopGap()), 9, 9);
 		//Top-Right wrapper
-		g.fillRect((int)selectedShape.getX(), 
-				(int)selectedShape.getY() + selectedShape.getHeightOnBoard() - 9, 9, 9);
+		g.fillRect((int)(selectedShape.getX() * getZoomRate() + getLeftGap()), 
+				(int)(selectedShape.getY() * getZoomRate() + getTopGap() + selectedShape.getHeightOnBoard() * getZoomRate() - 9), 9, 9);
 		//Bottom-Left wrapper
-		g.fillRect((int)selectedShape.getX() + selectedShape.getWidthOnBoard() - 9,
-				(int)selectedShape.getY(), 9, 9);
+		g.fillRect((int)(selectedShape.getX() * getZoomRate() + getLeftGap() + selectedShape.getWidthOnBoard() * getZoomRate() - 9),
+				(int)(selectedShape.getY() * getZoomRate() + getTopGap()), 9, 9);
 		//Bottom-Right wrapper
-		g.fillRect((int)selectedShape.getX() + selectedShape.getWidthOnBoard() - 9,
-				(int)selectedShape.getY() + selectedShape.getHeightOnBoard() - 9, 9, 9);
+		g.fillRect((int)(selectedShape.getX() * getZoomRate() + getLeftGap() + selectedShape.getWidthOnBoard() * getZoomRate() - 9),
+				(int)(selectedShape.getY() * getZoomRate() + getTopGap() + selectedShape.getHeightOnBoard() * getZoomRate() - 9), 9, 9);
 	}
-	private void paintShapes() {
-		paintShapes(g);
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		setSize(getPreferredSize());
+		paintShapes((Graphics2D)g);
+		if (Main.getLayersList() != null &&
+				Main.getLayersList().getSelectedLayer() != null &&
+				 Main.getBoard().getCurrentMouseAdapter() instanceof PickingMouseAdapter) {
+			Main.getBoard().paintCornerWrappers(Main.getLayersList().getSelectedLayer().getShape(), (Graphics2D) g);
+		}
 	}
 	public void paintShapes(Graphics2D g) {
 		g.setColor(backgroundColor);
-		g.fillRect(0, 0, paper.getWidth(), paper.getHeight());
+		g.fillRect((int)getLeftGap(), (int)getTopGap(), (int)(paperWidth * getZoomRate()),
+				(int)(paperHeight * getZoomRate()));
 		for (Layer layer:layers) {
-			layer.draw(g);
+			Shape s = layer.getShape();
+			double x = s.getX(), y = s.getY();
+			s.setX(0);
+			s.setY(0);
+			BufferedImage preview = new BufferedImage(s.getWidthOnBoard(), s.getHeightOnBoard(), 
+					BufferedImage.TYPE_INT_ARGB_PRE);
+			layer.draw(preview.createGraphics());
+			g.drawImage(preview, 
+					(int)(x * getZoomRate() + getLeftGap()), 
+					(int)(y * getZoomRate() + getTopGap()),
+					(int)(preview.getWidth() * getZoomRate()), 
+					(int)(preview.getHeight() * getZoomRate()), null);
+			s.setX(x);
+			s.setY(y);
 		}
 	}
 	public void setPaperSize(int width, int height) {
-		paper = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		System.gc();
-		g = paper.createGraphics();
-		this.displayLabel.setIcon(new ImageIcon(paper));
+		paperWidth = width;
+		paperHeight = height;
 		Main.updateSizeLabel();
 		Main.f.revalidate();
 		repaint();
@@ -132,35 +144,31 @@ public class Board extends JPanel{
 		}
 		return null;
 	}
+	
+	public double getTopGap() {
+		return ((getHeight() - (paperHeight * getZoomRate()))/2);
+	}
+	public double getLeftGap() {
+		return ((getWidth()  - (paperWidth  * getZoomRate()))/2);
+	}
+	public int boardToPaperCoordinatesX(int boardX) {
+		return (int)((boardX - getLeftGap()) / getZoomRate());
+	}
+	public int boardToPaperCoordinatesY(int boardY) {
+		return (int)((boardY - getTopGap()) / getZoomRate());
+	}
+
 	public int getPaperWidth() {
-		return this.paper.getWidth();
+		return paperWidth;
 	}
 	public int getPaperHeight() {
-		return this.paper.getHeight();
-	}
-	public JLabel getDisplayLabel() {
-		return displayLabel;
-	}
-	public void setDisplayLabel(JLabel displayLabel) {
-		this.displayLabel = displayLabel;
-	}
-	public Graphics2D getG() {
-		return g;
-	}
-	public void setG(Graphics2D g) {
-		this.g = g;
+		return paperHeight;
 	}
 	public Color getBackgroundColor() {
 		return backgroundColor;
 	}
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-	}
-	public BufferedImage getPaper() {
-		return paper;
-	}
-	public void setPaper(BufferedImage paper) {
-		this.paper = paper;
 	}
 	public LinkedList<Layer> getLayers() {
 		return layers;
@@ -170,6 +178,17 @@ public class Board extends JPanel{
 	}
 	public BoardAdapter getCurrentMouseAdapter() {
 		return currentBoardAdapter;
+	}
+	@Override
+	public Dimension getPreferredSize() {
+		Dimension d = super.getPreferredSize();
+		if (d.width < paperWidth * getZoomRate()) {
+			d.width = (int) (paperWidth * getZoomRate());
+		}
+		if (d.height < paperHeight * getZoomRate()) {
+			d.height = (int) (paperHeight * getZoomRate());
+		}
+		return d;
 	}
 	public void setCurrentMouseAdapter(BoardAdapter currentMouseAdapter) {
 		this.currentBoardAdapter = currentMouseAdapter;
