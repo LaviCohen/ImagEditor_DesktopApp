@@ -198,7 +198,7 @@ public class GroupShape extends Shape{
 			Main.getBoard().addLayer(layer);
 		}
 		
-		Main.getBoard().getLayersList().remove(Main.getLayersList().getLayerForShape(this));
+		Main.getBoard().getLayers().remove(Main.getLayersList().getLayerForShape(this));
 		
 		Main.updateLayersList();
 		

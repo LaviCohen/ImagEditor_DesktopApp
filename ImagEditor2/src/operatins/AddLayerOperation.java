@@ -14,7 +14,7 @@ public class AddLayerOperation implements Operation{
 
 	@Override
 	public void undo() {
-		Main.getBoard().getLayersList().remove(layer);
+		Main.getBoard().getLayers().remove(layer);
 		Main.getBoard().repaint();
 		Main.updateLayersList();
 	}

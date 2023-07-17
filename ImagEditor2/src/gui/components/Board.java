@@ -119,9 +119,6 @@ public class Board extends JPanel{
 
 	    return resizedImg;
 	}
-	public LinkedList<Layer> getLayersList() {
-		return layers;
-	}
 	public double getZoomRate() {
 		return Main.getZoomSlider().getValue() / 100.0;
 	}

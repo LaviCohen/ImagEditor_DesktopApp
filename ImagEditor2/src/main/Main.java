@@ -451,16 +451,16 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				if (getLayersList().getSelectedLayer() != null) {
 					Layer layer = getLayersList().getSelectedLayer();
-					if (getBoard().getLayersList().getLast() == layer) {
+					if (getBoard().getLayers().getLast() == layer) {
 						LDialogs.showMessageDialog(Main.f, Main.translator.get("This is the top layer!"),
 								Main.translator.get("Warning"), LDialogs.WARNING_MESSAGE);
 						return;
 					}
-					int sIndex = getBoard().getLayersList().indexOf(layer);
-					int upIndex = getBoard().getLayersList().indexOf(layer) + 1;
-					Layer up = getBoard().getLayersList().get(upIndex);
-					getBoard().getLayersList().set(upIndex, layer);
-					getBoard().getLayersList().set(sIndex, up);
+					int sIndex = getBoard().getLayers().indexOf(layer);
+					int upIndex = getBoard().getLayers().indexOf(layer) + 1;
+					Layer up = getBoard().getLayers().get(upIndex);
+					getBoard().getLayers().set(upIndex, layer);
+					getBoard().getLayers().set(sIndex, up);
 					getBoard().repaint();
 					updateLayersList();
 				}
@@ -478,16 +478,16 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				if (getLayersList().getSelectedLayer() != null) {
 					Layer layer = getLayersList().getSelectedLayer();
-					if (getBoard().getLayersList().getFirst() == layer) {
+					if (getBoard().getLayers().getFirst() == layer) {
 						LDialogs.showMessageDialog(Main.f, Main.translator.get("This is the bottom layer!"),
 								Main.translator.get("Warning"), LDialogs.WARNING_MESSAGE);
 						return;
 					}
-					int sIndex = getBoard().getLayersList().indexOf(layer);
-					int downIndex = getBoard().getLayersList().indexOf(layer) - 1;
-					Layer down = getBoard().getLayersList().get(downIndex);
-					getBoard().getLayersList().set(downIndex, layer);
-					getBoard().getLayersList().set(sIndex, down);
+					int sIndex = getBoard().getLayers().indexOf(layer);
+					int downIndex = getBoard().getLayers().indexOf(layer) - 1;
+					Layer down = getBoard().getLayers().get(downIndex);
+					getBoard().getLayers().set(downIndex, layer);
+					getBoard().getLayers().set(sIndex, down);
 					getBoard().repaint();
 					updateLayersList();
 				}
@@ -503,7 +503,7 @@ public class Main {
 			layer = getLayersList().getSelectedLayer();
 			layersSideBarPanel.remove(getLayersList());
 		}
-		layersList = new LayersList(getBoard().getLayersList().toArray(new Layer[0]));
+		layersList = new LayersList(getBoard().getLayers().toArray(new Layer[0]));
 		layersList.setBackground(Main.theme.getBackgroundColor());
 		layersSideBarPanel.add(getLayersList(), BorderLayout.CENTER);
 		if (layer != null) {

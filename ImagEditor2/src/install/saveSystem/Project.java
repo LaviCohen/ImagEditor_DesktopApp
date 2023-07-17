@@ -74,7 +74,7 @@ public class Project {
 		
 		sb.append(getSettings());
 		
-		LinkedList<Layer> layers = board.getLayersList();
+		LinkedList<Layer> layers = board.getLayers();
 		for (Layer layer : layers) {
 			sb.append('\n');
 			sb.append(layer.encodeLayer());

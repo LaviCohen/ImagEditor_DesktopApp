@@ -14,14 +14,14 @@ public class RemoveLayerOperation implements Operation{
 
 	@Override
 	public void undo() {
-		Main.getBoard().getLayersList().add(layer);
+		Main.getBoard().getLayers().add(layer);
 		Main.getBoard().repaint();
 		Main.updateLayersList();
 	}
 
 	@Override
 	public void redo() {
-		Main.getBoard().getLayersList().remove(layer);
+		Main.getBoard().getLayers().remove(layer);
 		Main.getBoard().repaint();
 		Main.updateLayersList();
 	}

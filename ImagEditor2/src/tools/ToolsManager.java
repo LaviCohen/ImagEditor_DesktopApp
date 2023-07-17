@@ -215,7 +215,7 @@ public class ToolsManager {
 						return;
 					}
 					for (Shape shape : selected) {
-						Main.getBoard().getLayersList().remove(Main.getLayersList().getLayerForShape(shape));
+						Main.getBoard().getLayers().remove(Main.getLayersList().getLayerForShape(shape));
 						
 					}
 					GroupShape groupShape = new GroupShape(true, "Group", selected.toArray(new Shape[0]));

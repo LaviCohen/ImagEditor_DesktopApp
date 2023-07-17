@@ -196,8 +196,8 @@ public class LayersList extends JPanel{
 				public void mouseDragged(MouseEvent e) {
 					Main.getLayersList().setSelection(LayerPanel.this);
 					int y = e.getY();
-					int curIndex = Main.getBoard().getLayersList().size() - 1 -
-							Main.getBoard().getLayersList().indexOf(LayerPanel.this.layer);
+					int curIndex = Main.getBoard().getLayers().size() - 1 -
+							Main.getBoard().getLayers().indexOf(LayerPanel.this.layer);
 					int futureIndex = curIndex + (y / 53);
 					
 					if (futureIndex < 0) {
@@ -215,12 +215,12 @@ public class LayersList extends JPanel{
 						int indexInList = Main.getLayersList().layerPanels.size() -
 								Main.getLayersList().seperatorPosition;
 						Layer cur = LayerPanel.this.layer;
-						if (Main.getBoard().getLayersList().indexOf(cur) < indexInList) {
+						if (Main.getBoard().getLayers().indexOf(cur) < indexInList) {
 							indexInList--;
 						}
 						//Swap
-						Main.getBoard().getLayersList().remove(cur);
-						Main.getBoard().getLayersList().add(indexInList, cur);
+						Main.getBoard().getLayers().remove(cur);
+						Main.getBoard().getLayers().add(indexInList, cur);
 						//Update
 						Main.updateLayersList();
 						Main.getBoard().repaint();
