@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.font.FontRenderContext;
 import java.util.LinkedList;
 
 import javax.swing.JButton;
@@ -44,7 +45,7 @@ public class Text extends Shape implements ColoredShape{
 	public void draw(Graphics2D g) {
 		g.setColor(color);
 		g.setFont(font);
-		g.drawString(text, (int)x, (int)y + getHeightOnBoard());
+		g.drawString(text, (int)x, (int) (y + getHeightOnBoard() * 0.75));
 	}
 	@Override
 	public void edit() {
@@ -126,10 +127,9 @@ public class Text extends Shape implements ColoredShape{
 	public int getWidthOnBoard() {
 		return Toolkit.getDefaultToolkit().getFontMetrics(font).stringWidth(text);
 	}
-	@SuppressWarnings("deprecation")
 	@Override
 	public int getHeightOnBoard() {
-		return Toolkit.getDefaultToolkit().getFontMetrics(font).getHeight();
+		return (int) font.getLineMetrics(text, new FontRenderContext(null, false, true)).getHeight();
 	}
 
 	public Color getColor() {
