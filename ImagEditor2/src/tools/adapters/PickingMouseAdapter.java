@@ -221,8 +221,8 @@ public class PickingMouseAdapter extends BoardAdapter{
 		int x = boardToPaperCoordinatesX(e.getX());
 		int y = boardToPaperCoordinatesY(e.getY());
 		
-		int wrapperWidth = 9;
-		int wrapperHeight = 9;
+		int wrapperWidth = (int) (9 / parent.getZoomRate());
+		int wrapperHeight = (int) (9 / parent.getZoomRate());
 		
 		if (isBetween(shapeInFocus.getX(), x, wrapperHeight) && 
 				isBetween(shapeInFocus.getY(), y, wrapperHeight)) {

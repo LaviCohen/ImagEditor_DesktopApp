@@ -99,19 +99,27 @@ public class Board extends JPanel{
 				(int)(paperHeight * getZoomRate()));
 		for (Layer layer:layers) {
 			Shape s = layer.getShape();
-			double x = s.getX(), y = s.getY();
-			s.setX(0);
-			s.setY(0);
-			BufferedImage preview = new BufferedImage(s.getWidthOnBoard(), s.getHeightOnBoard(), 
-					BufferedImage.TYPE_INT_ARGB_PRE);
-			layer.draw(preview.createGraphics());
-			g.drawImage(preview, 
-					(int)(x * getZoomRate() + getLeftGap()), 
-					(int)(y * getZoomRate() + getTopGap()),
-					(int)(preview.getWidth() * getZoomRate()), 
-					(int)(preview.getHeight() * getZoomRate()), null);
-			s.setX(x);
-			s.setY(y);
+			if (getZoomRate() != 1) {
+				double x = s.getX(), y = s.getY();
+				s.setX(0);
+				s.setY(0);
+				BufferedImage preview = new BufferedImage(s.getWidthOnBoard(), s.getHeightOnBoard(), 
+						BufferedImage.TYPE_INT_ARGB_PRE);
+				layer.draw(preview.createGraphics());
+				g.drawImage(preview, 
+						(int)(x * getZoomRate() + getLeftGap()), 
+						(int)(y * getZoomRate() + getTopGap()),
+						(int)(preview.getWidth() * getZoomRate()), 
+						(int)(preview.getHeight() * getZoomRate()), null);
+				s.setX(x);
+				s.setY(y);
+			} else {
+				s.setX(s.getX() + getLeftGap());
+				s.setY(s.getY() + getTopGap());
+				layer.draw(g);
+				s.setX(s.getX() - getLeftGap());
+				s.setY(s.getY() - getTopGap());
+			}
 		}
 	}
 	public void setPaperSize(int width, int height) {
@@ -181,7 +189,7 @@ public class Board extends JPanel{
 	}
 	@Override
 	public Dimension getPreferredSize() {
-		Dimension d = super.getPreferredSize();
+		Dimension d = getParent().getSize();
 		if (d.width < paperWidth * getZoomRate()) {
 			d.width = (int) (paperWidth * getZoomRate());
 		}
