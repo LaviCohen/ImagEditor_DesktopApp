@@ -44,6 +44,7 @@ public class Install extends AbstractInstall{
 			Preferences.saveLogs = true;
 			Preferences.keepMeLoggedIn = true;
 			Preferences.useMoreRAM = true;
+			Preferences.manualRefreshOnly = false;
 			Preferences.darkMode = false;
 			Preferences.keepTrackOfTopLayers = true;
 			Preferences.numOfBackOperations = -1;

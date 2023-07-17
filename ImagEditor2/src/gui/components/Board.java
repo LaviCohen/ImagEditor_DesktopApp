@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 import drawables.Layer;
 import drawables.shapes.abstractShapes.Shape;
+import install.Preferences;
 import main.Main;
 import tools.ToolsManager;
 import tools.adapters.BoardAdapter;
@@ -30,6 +31,8 @@ public class Board extends JPanel{
 	private BoardAdapter currentBoardAdapter = null;
 	
 	public boolean inited = false;
+	
+	private boolean activeManualRefreshing = false;
 	
 	public Board(Color color, int width, int height) {
 		this.setLayout(new BorderLayout());
@@ -61,6 +64,9 @@ public class Board extends JPanel{
 	}
 	@Override
 	public void repaint() {
+		if (Preferences.manualRefreshOnly && !activeManualRefreshing) {
+			return;
+		}
 		super.repaint();
 		System.gc();
 	}
@@ -85,6 +91,9 @@ public class Board extends JPanel{
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		if (Preferences.manualRefreshOnly && !activeManualRefreshing) {
+			return;
+		}
 		setSize(getPreferredSize());
 		paintShapes((Graphics2D)g);
 		if (Main.getLayersList() != null &&
@@ -92,8 +101,10 @@ public class Board extends JPanel{
 				 Main.getBoard().getCurrentMouseAdapter() instanceof PickingMouseAdapter) {
 			Main.getBoard().paintCornerWrappers(Main.getLayersList().getSelectedLayer().getShape(), (Graphics2D) g);
 		}
+		activeManualRefreshing = false;
 	}
 	public void paintShapes(Graphics2D g) {
+		System.out.println("Painting");
 		g.setColor(backgroundColor);
 		g.fillRect((int)getLeftGap(), (int)getTopGap(), (int)(paperWidth * getZoomRate()),
 				(int)(paperHeight * getZoomRate()));
@@ -206,5 +217,11 @@ public class Board extends JPanel{
 	}
 	public void setInited(boolean inited) {
 		this.inited = inited;
+	}
+	public boolean isActiveManualRefreshing() {
+		return activeManualRefreshing;
+	}
+	public void setActiveManualRefreshing(boolean isHoldingManualRefresh) {
+		this.activeManualRefreshing = isHoldingManualRefresh;
 	}
 }

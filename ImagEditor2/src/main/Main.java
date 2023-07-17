@@ -28,8 +28,8 @@ import gui.Theme;
 import gui.components.Board;
 import gui.components.LayersList;
 import install.Decoder;
-import install.Preferences;
 import install.Install;
+import install.Preferences;
 import install.Resources;
 import install.saveSystem.Project;
 import languages.Translator;
@@ -181,6 +181,12 @@ public class Main {
 		updateSizeLabel();
 		updateLayersList();
 		applyThemeColors();
+		paintBoardNList();
+	}
+	private static void paintBoardNList() {
+		getBoard().setActiveManualRefreshing(true);
+		updateLayersList();
+		getBoard().repaint();
 	}
 	private static void initControlBar() {
 		logLabel = new JLabel("Log Label");
@@ -497,7 +503,10 @@ public class Main {
 		f.add(layersSideBarPanel, Main.translator.getBeforeTextBorder());
 	}
 	public static void updateLayersList() {
-		System.out.println("Update shapeList");
+		if (Preferences.manualRefreshOnly && !getBoard().isActiveManualRefreshing()) {
+			return;
+		}
+		System.out.println("Update Layers List");
 		Layer layer = null;
 		if (getLayersList() != null) {
 			layer = getLayersList().getSelectedLayer();

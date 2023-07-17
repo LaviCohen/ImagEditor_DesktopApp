@@ -82,8 +82,11 @@ public class Actions {
 		}else if (command.equals("Edit")) {
 			edit();
 		}else if (command.equals("Refresh")) {
-			Main.getBoard().repaint();
+			System.out.println("Manual Refreshing");
+			Main.getBoard().setActiveManualRefreshing(true);
 			Main.updateLayersList();
+			System.out.println(Main.getBoard().isActiveManualRefreshing());
+			Main.getBoard().repaint();
 		}else if (command.equals("Undo")) {
 			OperationsManager.undo();
 			Main.getBoard().repaint();

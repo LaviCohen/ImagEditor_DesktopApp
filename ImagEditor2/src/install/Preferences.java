@@ -42,6 +42,8 @@ public class Preferences {
 	public static boolean keepMeLoggedIn;
 
 	public static boolean useMoreRAM;
+
+	public static boolean manualRefreshOnly;
 	
 	public static boolean keepTrackOfTopLayers;
 	
@@ -63,6 +65,7 @@ public class Preferences {
 		saveLogs = Boolean.parseBoolean(default_setting.get("save_log_files"));
 		keepMeLoggedIn = Boolean.parseBoolean(default_setting.get("keep_me_logged_in"));
 		useMoreRAM = Boolean.parseBoolean(default_setting.get("use_more_ram"));
+		manualRefreshOnly = Boolean.parseBoolean(default_setting.get("manual_refresh_only"));
 		darkMode = Boolean.parseBoolean(default_setting.get("dark_mode"));
 		keepTrackOfTopLayers = Boolean.parseBoolean(default_setting.get("keep_track_of_layer"));
 		numOfBackOperations = Integer.parseInt(default_setting.get("num_of_back_op"));
@@ -76,6 +79,7 @@ public class Preferences {
 		default_setting.putWithoutSave("save_log_files", saveLogs);
 		default_setting.putWithoutSave("keep_me_logged_in", keepMeLoggedIn);
 		default_setting.putWithoutSave("use_more_ram", useMoreRAM);
+		default_setting.putWithoutSave("manual_refresh_only", manualRefreshOnly);
 		default_setting.putWithoutSave("dark_mode", darkMode);
 		default_setting.putWithoutSave("keep_track_of_layer", keepTrackOfTopLayers);
 		default_setting.putWithoutSave("num_of_back_op", numOfBackOperations);
@@ -149,7 +153,7 @@ public class Preferences {
 		tabbedPane.addTab("Appearance", appearancePrefsPanel);
 		
 		//Advanced tab (save logs and CPU vs RAM priority)
-		JPanel advancedPrefsPanel = new JPanel(new GridLayout(4, 1));
+		JPanel advancedPrefsPanel = new JPanel(new GridLayout(5, 1));
 		
 		//Save logs
 		JCheckBox saveLogsCheckBox = new JCheckBox("Save the Logs Every time the Program is Being Used", Preferences.saveLogs);
@@ -196,6 +200,11 @@ public class Preferences {
 		JCheckBox useRAMCheckBox = new JCheckBox("Use More RAM to Reduce CPU & GPU Usage", Preferences.useMoreRAM);
 		advancedPrefsPanel.add(useRAMCheckBox);
 		
+		//Manual Refresh
+		JCheckBox manualRefreshOnlyCheckBox = new JCheckBox("Don't Auto-Refresh My Screen", Preferences.manualRefreshOnly);
+		advancedPrefsPanel.add(manualRefreshOnlyCheckBox);
+		
+		
 		tabbedPane.addTab("Advanced", advancedPrefsPanel);
 		
 		//Apply button
@@ -232,6 +241,8 @@ public class Preferences {
 				Preferences.saveLogs = saveLogsCheckBox.isSelected();
 				//Updating use more RAM
 				Preferences.useMoreRAM = useRAMCheckBox.isSelected();
+				//Updating manual refresh
+				Preferences.manualRefreshOnly = manualRefreshOnlyCheckBox.isSelected();
 				//Updating keep track of layers
 				Preferences.keepTrackOfTopLayers = keepTrackCheckBox.isSelected();
 				//Updating number of back operations
