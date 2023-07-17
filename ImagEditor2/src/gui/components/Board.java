@@ -78,10 +78,10 @@ public class Board extends JPanel{
 		//Top-Left wrapper
 		g.fillRect((int)(selectedShape.getX() * getZoomRate() + getLeftGap()), 
 				(int)(selectedShape.getY() * getZoomRate() + getTopGap()), 9, 9);
-		//Top-Right wrapper
+		//Bottom-Left wrapper
 		g.fillRect((int)(selectedShape.getX() * getZoomRate() + getLeftGap()), 
 				(int)(selectedShape.getY() * getZoomRate() + getTopGap() + selectedShape.getHeightOnBoard() * getZoomRate() - 9), 9, 9);
-		//Bottom-Left wrapper
+		//Top-Right wrapper
 		g.fillRect((int)(selectedShape.getX() * getZoomRate() + getLeftGap() + selectedShape.getWidthOnBoard() * getZoomRate() - 9),
 				(int)(selectedShape.getY() * getZoomRate() + getTopGap()), 9, 9);
 		//Bottom-Right wrapper
@@ -104,9 +104,10 @@ public class Board extends JPanel{
 		activeManualRefreshing = false;
 	}
 	public void paintShapes(Graphics2D g) {
-		System.out.println("Painting");
 		g.setColor(backgroundColor);
 		g.fillRect((int)getLeftGap(), (int)getTopGap(), (int)(paperWidth * getZoomRate()),
+				(int)(paperHeight * getZoomRate()));
+		g.setClip((int)getLeftGap(), (int)getTopGap(), (int)(paperWidth * getZoomRate()),
 				(int)(paperHeight * getZoomRate()));
 		for (Layer layer:layers) {
 			Shape s = layer.getShape();
