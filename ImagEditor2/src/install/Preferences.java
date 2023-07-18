@@ -43,6 +43,8 @@ public class Preferences {
 
 	public static boolean useMoreRAM;
 
+	public static boolean usePreviewPictures;
+
 	public static boolean manualRefreshOnly;
 	
 	public static boolean keepTrackOfTopLayers;
@@ -65,6 +67,7 @@ public class Preferences {
 		saveLogs = Boolean.parseBoolean(default_setting.get("save_log_files"));
 		keepMeLoggedIn = Boolean.parseBoolean(default_setting.get("keep_me_logged_in"));
 		useMoreRAM = Boolean.parseBoolean(default_setting.get("use_more_ram"));
+		usePreviewPictures = Boolean.parseBoolean(default_setting.get("use_preview_pictures"));
 		manualRefreshOnly = Boolean.parseBoolean(default_setting.get("manual_refresh_only"));
 		darkMode = Boolean.parseBoolean(default_setting.get("dark_mode"));
 		keepTrackOfTopLayers = Boolean.parseBoolean(default_setting.get("keep_track_of_layer"));
@@ -79,6 +82,7 @@ public class Preferences {
 		default_setting.putWithoutSave("save_log_files", saveLogs);
 		default_setting.putWithoutSave("keep_me_logged_in", keepMeLoggedIn);
 		default_setting.putWithoutSave("use_more_ram", useMoreRAM);
+		default_setting.putWithoutSave("use_preview_pictures", usePreviewPictures);
 		default_setting.putWithoutSave("manual_refresh_only", manualRefreshOnly);
 		default_setting.putWithoutSave("dark_mode", darkMode);
 		default_setting.putWithoutSave("keep_track_of_layer", keepTrackOfTopLayers);
@@ -153,7 +157,7 @@ public class Preferences {
 		tabbedPane.addTab("Appearance", appearancePrefsPanel);
 		
 		//Advanced tab (save logs and CPU vs RAM priority)
-		JPanel advancedPrefsPanel = new JPanel(new GridLayout(5, 1));
+		JPanel advancedPrefsPanel = new JPanel(new GridLayout(7, 1));
 		
 		//Save logs
 		JCheckBox saveLogsCheckBox = new JCheckBox("Save the Logs Every time the Program is Being Used", Preferences.saveLogs);
@@ -164,9 +168,8 @@ public class Preferences {
 		advancedPrefsPanel.add(keepTrackCheckBox);
 		
 		//Limit number of operations
-		JPanel opNumPanel = new JPanel(new GridLayout(2, 1));
 		JCheckBox limitOpNumCheckBox = new JCheckBox("Limit Number of Remembered Operations", Preferences.numOfBackOperations != -1);
-		opNumPanel.add(limitOpNumCheckBox);
+		advancedPrefsPanel.add(limitOpNumCheckBox);
 		JTextField numOfOpField = new JTextField();
 		if (Preferences.numOfBackOperations != -1) {
 			numOfOpField.setEditable(true);
@@ -177,7 +180,7 @@ public class Preferences {
 			numOfOpField.setEnabled(false);
 			numOfOpField.setText("0");
 		}
-		opNumPanel.add(numOfOpField);
+		advancedPrefsPanel.add(numOfOpField);
 		limitOpNumCheckBox.addActionListener(new ActionListener() {
 			
 			@Override
@@ -193,12 +196,15 @@ public class Preferences {
 				}
 			}
 		});
-		advancedPrefsPanel.add(opNumPanel);
 		
 		
 		//CPU vs RAM priority
 		JCheckBox useRAMCheckBox = new JCheckBox("Use More RAM to Reduce CPU & GPU Usage", Preferences.useMoreRAM);
 		advancedPrefsPanel.add(useRAMCheckBox);
+		
+		//CPU vs RAM priority
+		JCheckBox usePreviewCheckBox = new JCheckBox("Use Preview Pictures to Improve Preformence", Preferences.usePreviewPictures);
+		advancedPrefsPanel.add(usePreviewCheckBox);
 		
 		//Manual Refresh
 		JCheckBox manualRefreshOnlyCheckBox = new JCheckBox("Don't Auto-Refresh My Screen", Preferences.manualRefreshOnly);
@@ -241,6 +247,8 @@ public class Preferences {
 				Preferences.saveLogs = saveLogsCheckBox.isSelected();
 				//Updating use more RAM
 				Preferences.useMoreRAM = useRAMCheckBox.isSelected();
+				//Updating use more preview
+				Preferences.usePreviewPictures = usePreviewCheckBox.isSelected();
 				//Updating manual refresh
 				Preferences.manualRefreshOnly = manualRefreshOnlyCheckBox.isSelected();
 				//Updating keep track of layers

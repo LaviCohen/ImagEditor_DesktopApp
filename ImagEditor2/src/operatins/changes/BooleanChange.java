@@ -1,5 +1,6 @@
 package operatins.changes;
 
+import drawables.shapes.Picture;
 import drawables.shapes.Rectangle;
 import drawables.shapes.abstractShapes.Shape;
 
@@ -21,6 +22,9 @@ public class BooleanChange extends Change{
 		case IS_FILLED_CHANGE:
 			((Rectangle)s).setFilled(newValue);
 			break;
+		case PREVIEW_CHANGE:
+			((Picture)s).setPreview(newValue);
+			break;
 		default:
 			throw new IllegalArgumentException("ID " + fieldID + " is not valid for boolean change");
 		}
@@ -34,6 +38,9 @@ public class BooleanChange extends Change{
 			break;
 		case IS_FILLED_CHANGE:
 			((Rectangle)s).setFilled(!newValue);
+		case PREVIEW_CHANGE:
+			((Picture)s).setPreview(!newValue);
+			break;
 		default:
 			throw new IllegalArgumentException("ID " + fieldID + " is not valid for boolean change");
 		}

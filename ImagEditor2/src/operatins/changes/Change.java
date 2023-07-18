@@ -21,6 +21,8 @@ public abstract class Change {
 	public static final int CUT_FROM_TOP_CHANGE = 9;
 	public static final int SRC_IMAGE_CHANGE = 10;
 	public static final int ROTATION_CHANGE = 20;
+	public static final int PREVIEW_CHANGE = 21;
+	public static final int SRC_PREVIEW_CHANGE = 22;
 	
 	//Code Changes
 	public static final int CODE_CHANGE = 11;

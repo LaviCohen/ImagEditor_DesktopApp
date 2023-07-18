@@ -33,6 +33,8 @@ public class Board extends JPanel{
 	public boolean inited = false;
 	
 	private boolean activeManualRefreshing = false;
+
+	private boolean isExportPaintMode = false;
 	
 	public Board(Color color, int width, int height) {
 		this.setLayout(new BorderLayout());
@@ -166,9 +168,15 @@ public class Board extends JPanel{
 	}
 	
 	public double getTopGap() {
+		if (isExportPaintMode) {
+			return 0;
+		}
 		return ((getHeight() - (paperHeight * getZoomRate()))/2);
 	}
 	public double getLeftGap() {
+		if (isExportPaintMode) {
+			return 0;
+		}
 		return ((getWidth()  - (paperWidth  * getZoomRate()))/2);
 	}
 	public int boardToPaperCoordinatesX(int boardX) {
@@ -224,5 +232,11 @@ public class Board extends JPanel{
 	}
 	public void setActiveManualRefreshing(boolean isHoldingManualRefresh) {
 		this.activeManualRefreshing = isHoldingManualRefresh;
+	}
+	public void setExportPaintMode(boolean b) {
+		this.isExportPaintMode  = b;
+	}
+	public boolean isExportPaintMode() {
+		return isExportPaintMode;
 	}
 }

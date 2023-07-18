@@ -3,6 +3,7 @@ package operatins.changes;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 import drawables.shapes.Code;
 import drawables.shapes.Picture;
@@ -47,6 +48,9 @@ public class ObjectChange extends Change{
 			break;
 		case LAYER_TOP_CHANGE:
 			Main.getLayersList().getLayerForShape(s).setTop((BufferedImage)to);
+			break;
+		case SRC_PREVIEW_CHANGE:
+			((Picture)s).setSource((File)to);
 			break;
 		default:
 			throw new IllegalArgumentException("ID " + fieldID + " is not valid for String change");

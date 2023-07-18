@@ -32,75 +32,147 @@ import le.utils.PictureUtilities;
 import main.Main;
 import operatins.ChangesOperation;
 import operatins.OperationsManager;
+import operatins.changes.BooleanChange;
 import operatins.changes.Change;
 import operatins.changes.NumericalChange;
 import operatins.changes.ObjectChange;
 
-public class Picture extends StretchableShpae{
-	
+public class Picture extends StretchableShpae {
+
 	public static final int MINIMUM = 5;
-	
-	//Source Image
+
+	// Preview
+	private boolean isPreview = false;
+	private File source = null;
+
+	// Source Image
 	BufferedImage image;
-	
-	//Last Drawn Image, For CPU Saving
+
+	// Last Drawn Image, For CPU Saving
 	private BufferedImage lastDrawn = null;
-	
-	//Cut Variables
+
+	// Cut Variables
 	double cutFromLeft = 0;
 	double cutFromTop = 0;
 	double cutFromRight = 0;
 	double cutFromBottom = 0;
-	
+
 	int rotation;
-	
-	//Is the Picture currently cut
+
+	// Is the Picture currently cut
 	private boolean isCutting;
-	
-	//Effects
+
+	// Effects
 	EffectsManager effectsManger = new EffectsManager(this);
-	
-	//Constructor
-	public Picture(double x, double y, boolean visible, String name, double width, double height, int rotation, BufferedImage img) {
+
+	// Constructor
+	public Picture(double x, double y, boolean visible, String name, double width, double height, int rotation,
+			File src) {
+		super(x, y, visible, name, width, height);
+		this.rotation = rotation;
+		if (Preferences.usePreviewPictures) {
+			BufferedImage bf = null;
+			try {
+				bf = ImageIO.read(src);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if (bf.getWidth() * bf.getHeight() < 2_000_000) {
+				this.image = bf;
+			} else {
+				int imageWidth = 1000;
+				int imageHeight = (int) (((double) bf.getHeight()) / bf.getWidth() * 1000);
+				this.image = PictureUtilities.getScaledImage(bf, imageWidth, imageHeight);
+				this.source = src;
+				this.isPreview = true;
+			}
+		} else {
+			try {
+				this.image = ImageIO.read(src);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	// Constructor
+	public Picture(double x, double y, boolean visible, String name, double width, double height, int rotation,
+			BufferedImage img) {
 		super(x, y, visible, name, width, height);
 		this.rotation = rotation;
 		this.image = img;
 	}
-	//Methods
+
+	// Methods
 	@Override
 	public void draw(Graphics2D g) {
+		if (Main.getBoard().isExportPaintMode() && isPreview) {
+			BufferedImage displayImage = new BufferedImage((int) getCutWidth(), (int) getCutHeight(),
+					BufferedImage.TYPE_INT_ARGB_PRE);
+			try {
+				BufferedImage real = ImageIO.read(source);
+				double previewProportion = real.getWidth() / 1000.0;
+				displayImage.createGraphics()
+						.drawImage(real.getSubimage((int) (cutFromLeft * previewProportion),
+								(int) (cutFromTop * previewProportion), (int) (getCutWidth() * previewProportion),
+								(int) (getCutHeight() * previewProportion)), 0, 0, null);
+				if (super.getWidthOnBoard() * super.getHeightOnBoard() > image.getHeight() * image.getWidth()) {
+					effectsManger.affectImage(displayImage);
+					displayImage = PictureUtilities.getScaledImage(displayImage, super.getWidthOnBoard(),
+							super.getHeightOnBoard());
+				} else {
+					displayImage = PictureUtilities.getScaledImage(displayImage, super.getWidthOnBoard(),
+							super.getHeightOnBoard());
+					effectsManger.affectImage(displayImage);
+				}
+				displayImage = PictureUtilities.rotateImageByDegrees(displayImage, rotation);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		if (!Preferences.useMoreRAM) {
-			//In case the setting has been changed while the program is running, so previous lastDrawn won't stuck in the memory
+			// In case the setting has been changed while the program is running, so
+			// previous lastDrawn won't stuck in the memory
 			invalidate();
-			g.drawImage(getImageToDisplay(), (int)x, (int)y, null);
+			g.drawImage(getImageToDisplay(), (int) x, (int) y, null);
 			return;
 		}
 		if (lastDrawn == null) {
 			lastDrawn = getImageToDisplay();
 		}
-		g.drawImage(lastDrawn, (int)x, (int)y, null);
+		g.drawImage(lastDrawn, (int) x, (int) y, null);
 	}
+
 	public BufferedImage getImageToDisplay() {
-		BufferedImage displayImage =  new BufferedImage((int)getCutWidth(), (int)getCutHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
-		displayImage.createGraphics().drawImage(image.getSubimage(
-				(int)cutFromLeft, (int)cutFromTop, (int)getCutWidth(), (int)getCutHeight()),
-				0, 0, null);
+		BufferedImage displayImage = new BufferedImage((int) getCutWidth(), (int) getCutHeight(),
+				BufferedImage.TYPE_INT_ARGB_PRE);
+		displayImage.createGraphics().drawImage(
+				image.getSubimage((int) cutFromLeft, (int) cutFromTop, (int) getCutWidth(), (int) getCutHeight()), 0, 0,
+				null);
 		if (super.getWidthOnBoard() * super.getHeightOnBoard() > image.getHeight() * image.getWidth()) {
 			effectsManger.affectImage(displayImage);
-			displayImage = PictureUtilities.getScaledImage(displayImage, super.getWidthOnBoard(), super.getHeightOnBoard());
+			displayImage = PictureUtilities.getScaledImage(displayImage, super.getWidthOnBoard(),
+					super.getHeightOnBoard());
 		} else {
-			displayImage = PictureUtilities.getScaledImage(displayImage, super.getWidthOnBoard(), super.getHeightOnBoard());
+			displayImage = PictureUtilities.getScaledImage(displayImage, super.getWidthOnBoard(),
+					super.getHeightOnBoard());
 			effectsManger.affectImage(displayImage);
 		}
 		displayImage = PictureUtilities.rotateImageByDegrees(displayImage, rotation);
 		return displayImage;
 	}
+
 	public double getCutHeight() {
 		return image.getHeight() - cutFromTop - cutFromBottom;
 	}
+
 	public double getCutWidth() {
 		return image.getWidth() - cutFromLeft - cutFromRight;
 	}
+
 	@Override
 	public void edit() {
 		JDialog editDialog = new JDialog(Main.f);
@@ -189,9 +261,29 @@ public class Picture extends StretchableShpae{
 						changes.add(new NumericalChange(Change.ROTATION_CHANGE, rotation - Picture.this.rotation));
 					}
 					if (image != null) {
-						changes.add(new ObjectChange(Change.SRC_IMAGE_CHANGE, Picture.this.image, image));
+						if (Preferences.usePreviewPictures) {
+							File src = new File(sourceField.getText());
+							BufferedImage bf = null;
+							try {
+								bf = ImageIO.read(src);
+							} catch (IOException e4) {
+								// TODO Auto-generated catch block
+								e4.printStackTrace();
+							}
+							if (bf.getWidth() * bf.getHeight() < 2_000_000) {
+								Picture.this.image = bf;
+							} else {
+								int imageWidth = 1000;
+								int imageHeight = (int) (((double)bf.getHeight())/bf.getWidth() * 1000);
+								image = PictureUtilities.getScaledImage(bf, imageWidth, imageHeight);
+								changes.add(new ObjectChange(Change.SRC_PREVIEW_CHANGE, Picture.this.source, src));
+								if (!Picture.this.isPreview) {
+									changes.add(new BooleanChange(Change.PREVIEW_CHANGE, true));
+								}
+							}	
+							changes.add(new ObjectChange(Change.SRC_IMAGE_CHANGE, Picture.this.image, image));
+						}
 					}
-					
 					if (!changes.isEmpty()) {
 						OperationsManager.operate(new ChangesOperation(Picture.this, changes));
 						invalidate();
@@ -213,22 +305,27 @@ public class Picture extends StretchableShpae{
 		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		editDialog.setVisible(true);
 	}
+
 	public void editEffects() {
 		effectsManger.edit(this);
 	}
+
 	public void invalidate() {
 		lastDrawn = null;
 	}
+
 	@Override
 	public int getHeightOnBoard() {
 		return (int) Math.floor(super.getHeightOnBoard() * Math.cos(Math.toRadians(rotation))
 				+ super.getWidthOnBoard() * Math.sin(Math.toRadians(rotation)));
 	}
+
 	@Override
 	public int getWidthOnBoard() {
 		return (int) Math.floor(super.getHeightOnBoard() * Math.sin(Math.toRadians(rotation))
 				+ super.getWidthOnBoard() * Math.cos(Math.toRadians(rotation)));
 	}
+
 	public static BufferedImage readImage(File source) {
 		try {
 			return ImageIO.read(source);
@@ -237,28 +334,36 @@ public class Picture extends StretchableShpae{
 		}
 		return null;
 	}
+
 	public BufferedImage getImage() {
 		return this.image;
 	}
+
 	public void setImage(BufferedImage img) {
 		invalidate();
 		this.image = img;
 	}
+
 	public BufferedImage getLastDrawn() {
 		return lastDrawn;
 	}
+
 	public void setLastDrawn(BufferedImage lastDrawn) {
 		this.lastDrawn = lastDrawn;
 	}
+
 	public EffectsManager getEffectsManger() {
 		return effectsManger;
 	}
+
 	public void setEffectsManger(EffectsManager effectsManger) {
 		this.effectsManger = effectsManger;
 	}
+
 	public double getCutFromLeft() {
 		return cutFromLeft;
 	}
+
 	public void setCutFromLeft(double cutFromLeft) {
 		if (cutFromLeft < 0 || cutFromLeft + this.cutFromRight > image.getWidth() - MINIMUM) {
 			return;
@@ -268,9 +373,11 @@ public class Picture extends StretchableShpae{
 		this.width -= diff;
 		this.cutFromLeft = cutFromLeft;
 	}
+
 	public double getCutFromTop() {
 		return cutFromTop;
 	}
+
 	public void setCutFromTop(double cutFromTop) {
 		if (cutFromTop < 0 || cutFromTop + this.cutFromBottom > image.getHeight() - MINIMUM) {
 			return;
@@ -280,9 +387,11 @@ public class Picture extends StretchableShpae{
 		this.height -= diff;
 		this.cutFromTop = cutFromTop;
 	}
+
 	public double getCutFromRight() {
 		return cutFromRight;
 	}
+
 	public void setCutFromRight(double cutFromRight) {
 		if (cutFromRight < 0 || this.cutFromLeft + cutFromRight > image.getWidth() - MINIMUM) {
 			return;
@@ -291,9 +400,11 @@ public class Picture extends StretchableShpae{
 		this.width -= diff;
 		this.cutFromRight = cutFromRight;
 	}
+
 	public double getCutFromBottom() {
 		return cutFromBottom;
 	}
+
 	public void setCutFromBottom(double cutFromBottom) {
 		if (cutFromBottom < 0 || this.cutFromTop + cutFromBottom > image.getHeight() - MINIMUM) {
 			return;
@@ -302,34 +413,41 @@ public class Picture extends StretchableShpae{
 		this.height -= diff;
 		this.cutFromBottom = cutFromBottom;
 	}
+
 	public Picture copy() {
 		if (lastDrawn == null) {
 			lastDrawn = getImageToDisplay();
 		}
-		return new Picture(0, 0, true, "Copy of " + this.getName(), getWidthOnBoard(), getHeightOnBoard(), 0, lastDrawn);		
+		return new Picture(0, 0, true, "Copy of " + this.getName(), getWidthOnBoard(), getHeightOnBoard(), 0,
+				lastDrawn);
 	}
+
 	public Picture(String[] data) throws NumberFormatException, IOException {
-		this(Double.parseDouble(data[0]), Double.parseDouble(data[1]), Boolean.parseBoolean(data[2]),
-				data[3], Double.parseDouble(data[4]), Double.parseDouble(data[5]),
-				Integer.parseInt(data[6]), decodeSourceImage(data[11]));
+		this(Double.parseDouble(data[0]), Double.parseDouble(data[1]), Boolean.parseBoolean(data[2]), data[3],
+				Double.parseDouble(data[4]), Double.parseDouble(data[5]), Integer.parseInt(data[6]),
+				decodeSourceImage(data[11]));
 		this.cutFromLeft = Double.parseDouble(data[7]);
 		this.cutFromTop = Double.parseDouble(data[8]);
 		this.cutFromRight = Double.parseDouble(data[9]);
 		this.cutFromBottom = Double.parseDouble(data[10]);
 		this.effectsManger = new EffectsManager(data[12], this);
 	}
+
 	public Picture(String line) throws NumberFormatException, IOException {
 		this(line.split(","));
 	}
+
 	@Override
 	public String encodeShape() {
-		return super.encodeShape() + "," + rotation + "," + cutFromLeft + "," + cutFromTop
-				+ "," + cutFromRight + "," + cutFromBottom + "," + encodeSourceImge(image) + 
-				"," + effectsManger.encodeEffect();
+		return super.encodeShape() + "," + rotation + "," + cutFromLeft + "," + cutFromTop + "," + cutFromRight + ","
+				+ cutFromBottom + "," + encodeSourceImge(image) + "," + effectsManger.encodeEffect();
 	}
+
 	public static String encodeSourceImge(BufferedImage bf) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(bf.getWidth());sb.append('!');sb.append(bf.getHeight());
+		sb.append(bf.getWidth());
+		sb.append('!');
+		sb.append(bf.getHeight());
 		for (int i = 0; i < bf.getWidth(); i++) {
 			for (int j = 0; j < bf.getHeight(); j++) {
 				sb.append('!');
@@ -338,9 +456,10 @@ public class Picture extends StretchableShpae{
 		}
 		return sb.toString();
 	}
+
 	public static BufferedImage decodeSourceImage(String s) {
 		String[] data = s.split("!");
-		BufferedImage bf = new BufferedImage((int)Double.parseDouble(data[0]), (int)Double.parseDouble(data[1]),
+		BufferedImage bf = new BufferedImage((int) Double.parseDouble(data[0]), (int) Double.parseDouble(data[1]),
 				BufferedImage.TYPE_INT_ARGB);
 		for (int i = 0; i < bf.getWidth(); i++) {
 			for (int j = 0; j < bf.getHeight(); j++) {
@@ -349,6 +468,7 @@ public class Picture extends StretchableShpae{
 		}
 		return bf;
 	}
+
 	@Override
 	public JPopupMenu getPopupMenuForShape() {
 		JPopupMenu popup = super.getPopupMenuForShape();
@@ -356,17 +476,17 @@ public class Picture extends StretchableShpae{
 		JMenuItem editEffects = new JMenuItem("Edit Effects");
 		Main.theme.affect(editEffects);
 		editEffects.addActionListener(new ActionListener() {
-	
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Picture.this.editEffects();
 			}
 		});
 		popup.add(editEffects);
-		JMenuItem cut = new JMenuItem(isCutting?"Stop Cut":"Cut");
+		JMenuItem cut = new JMenuItem(isCutting ? "Stop Cut" : "Cut");
 		Main.theme.affect(cut);
 		cut.addActionListener(new ActionListener() {
-	
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Picture.this.setCutting(!Picture.this.isCutting);
@@ -376,7 +496,7 @@ public class Picture extends StretchableShpae{
 		JMenuItem cancelCut = new JMenuItem("Cancel Cut");
 		Main.theme.affect(cancelCut);
 		cancelCut.addActionListener(new ActionListener() {
-	
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Picture.this.setCutFromLeft(0);
@@ -391,7 +511,7 @@ public class Picture extends StretchableShpae{
 		JMenuItem copy = new JMenuItem("Copy as Image");
 		Main.theme.affect(copy);
 		copy.addActionListener(new ActionListener() {
-	
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Main.getBoard().addLayer(new Layer(Picture.this.copy()));
@@ -400,34 +520,60 @@ public class Picture extends StretchableShpae{
 		popup.add(copy);
 		return popup;
 	}
+
 	public double getWidthStretchRatio() {
 		return width / getCutWidth();
 	}
+
 	public double getHeightStretchRatio() {
 		return height / getCutHeight();
 	}
+
 	public int getRotation() {
 		return rotation;
 	}
+
 	public void setRotation(int rotation) {
 		this.rotation = rotation;
 	}
+
 	public boolean isCutting() {
 		return isCutting;
 	}
+
 	public void setCutting(boolean isCutting) {
 		this.isCutting = isCutting;
 	}
+
 	public void addToCutFromLeft(int diff) {
-		setCutFromLeft(getCutFromLeft() + 1/getWidthStretchRatio() * diff);
+		setCutFromLeft(getCutFromLeft() + 1 / getWidthStretchRatio() * diff);
 	}
+
 	public void addToCutFromTop(int diff) {
-		setCutFromTop(getCutFromTop() + 1/getHeightStretchRatio() * diff);
+		setCutFromTop(getCutFromTop() + 1 / getHeightStretchRatio() * diff);
 	}
+
 	public void addToCutFromRight(int diff) {
-		setCutFromRight(getCutFromRight() + 1/getWidthStretchRatio() * diff);
+		setCutFromRight(getCutFromRight() + 1 / getWidthStretchRatio() * diff);
 	}
+
 	public void addToCutFromBottom(int diff) {
-		setCutFromBottom(getCutFromBottom() + 1/getHeightStretchRatio() * diff);
+		setCutFromBottom(getCutFromBottom() + 1 / getHeightStretchRatio() * diff);
+	}
+
+	public boolean isPreview() {
+		return isPreview;
+	}
+
+	public void setPreview(boolean isPreview) {
+		this.isPreview = isPreview;
+	}
+
+	public File getSource() {
+		return source;
+	}
+
+	public void setSource(File source) {
+		this.source = source;
 	}
 }

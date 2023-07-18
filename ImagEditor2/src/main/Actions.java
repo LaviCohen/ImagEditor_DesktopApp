@@ -567,7 +567,9 @@ public class Actions {
 					BufferedImage bf = new BufferedImage(Main.getBoard().getPaperWidth(), Main.getBoard().getPaperHeight(), 
 							typeBox.getSelectedItem().equals(".png")?
 									BufferedImage.TYPE_INT_ARGB:BufferedImage.TYPE_INT_RGB);
+					Main.getBoard().setExportPaintMode(true);
 					Main.getBoard().paintShapes(bf.createGraphics());
+					Main.getBoard().setExportPaintMode(false);
 					JDialog d = new JDialog();
 					d.getContentPane().setBackground(Main.theme.getBackgroundColor());
 					d.setTitle("Preview");
