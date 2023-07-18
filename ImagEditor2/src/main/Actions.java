@@ -8,6 +8,8 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +39,7 @@ import le.gui.components.LTextArea;
 import le.gui.components.LTextField;
 import le.gui.dialogs.LDialogs;
 import le.log.Logger;
+import multipicture.MultipictureCreator;
 import operatins.AddLayerOperation;
 import operatins.OperationsManager;
 import operatins.RemoveLayerOperation;
@@ -46,8 +49,6 @@ import webServices.WebProjectsUtils;
  * The actions which handled inside this class are shortcuts and menu actions. 
  * **/
 public class Actions {
-	
-	
 	
 	/** This method take the action command as a string and call the right method in this class.
 	 * @param command - The action string command.
@@ -103,7 +104,157 @@ public class Actions {
 			sendReport();
 		}else if (command.equals("Log")) {
 			openLog();
+		}else if (command.equals("Multi-Picture")) {
+			openMultiPictureDialog();
 		}
+	}
+	private static void openMultiPictureDialog() {
+		JDialog multiPictureDialog = new JDialog(Main.f, "Create Multi-Picture");
+		multiPictureDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		multiPictureDialog.setLayout(new GridLayout(5, 1));
+		
+		JPanel dirPanel = new JPanel(new BorderLayout());
+		dirPanel.add(new JLabel("Directory:"), Main.translator.getBeforeTextBorder());
+		JTextField dirField = new JTextField(Main.install.getPath("Gallery"));
+		dirField.setEditable(false);
+		if (Main.currentProject.folder != null) {
+			dirField.setText(Main.currentProject.folder);
+		}
+		dirPanel.add(dirField);
+		multiPictureDialog.add(dirPanel);
+		JButton browse = new JButton("Browse");
+		browse.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fc = dirField.getText().equals("")?
+						new JFileChooser(Main.install.getPath("Gallery")):new JFileChooser(new File(dirField.getText()));
+				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				fc.showOpenDialog(multiPictureDialog);
+				File f = fc.getSelectedFile();
+				dirField.setText(f.getAbsolutePath());
+			}
+		});
+		dirPanel.add(browse, Main.translator.getAfterTextBorder());
+		JButton load = new JButton("Load Pictures from Directory");
+		load.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						MultipictureCreator.loadFromDir(new File(dirField.getText()));
+					}
+				}).start();
+			}
+		});
+		multiPictureDialog.add(load);
+		JPanel sourcePanel = new JPanel(new BorderLayout());
+		sourcePanel.add(new JLabel("Source:"), Main.translator.getBeforeTextBorder());
+		JTextField sourceField = new JTextField();
+		sourceField.setEditable(false);
+		if (Main.currentProject.folder != null) {
+			sourceField.setText(Main.currentProject.folder);
+		}
+		sourcePanel.add(sourceField);
+		multiPictureDialog.add(sourcePanel);
+		JButton browseSource = new JButton("Browse");
+		browseSource.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fc = sourceField.getText().equals("")?
+						new JFileChooser(Main.install.getPath("Gallery")):new JFileChooser(new File(sourceField.getText()));
+				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fc.showOpenDialog(multiPictureDialog);
+				File f = fc.getSelectedFile();
+				if (f != null) {
+					sourceField.setText(f.getAbsolutePath());
+				}
+			}
+		});
+		sourcePanel.add(browseSource, Main.translator.getAfterTextBorder());
+		JPanel namePanel = new JPanel(new BorderLayout());
+		namePanel.add(new JLabel("Name:"), Main.translator.getBeforeTextBorder());
+		JTextField nameField = new JTextField("multipicture");
+		if (Main.currentProject.name != null) {
+			nameField.setText(Main.currentProject.name);
+		}
+		namePanel.add(nameField);
+		JLabel suffixLabel = new JLabel("<html><t/>.png</html>");
+		namePanel.add(suffixLabel, Main.translator.getAfterTextBorder());
+		multiPictureDialog.add(namePanel);
+		
+		JButton create = new JButton("Create");
+		create.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!MultipictureCreator.isLoading()) {
+					try {
+						ImageIO.write(MultipictureCreator.create(
+								ImageIO.read(new File(sourceField.getText()))), "png", 
+								new File(Main.install.getPath("Gallery") + "\\" + nameField.getText() + ".png"));
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					LDialogs.showMessageDialog(multiPictureDialog, "Picture has been created successfuly!");
+				
+				} else {
+					LDialogs.showMessageDialog(multiPictureDialog, "Pictures are still loading...", "Can't Preform Actiom", LDialogs.WARNING_MESSAGE);
+				}
+
+			}
+		});
+		multiPictureDialog.add(create);
+		
+		multiPictureDialog.addWindowListener(new WindowListener() {
+			
+			@Override
+			public void windowOpened(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowIconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e) {
+				MultipictureCreator.getLoadeds().clear();
+			}
+			
+			@Override
+			public void windowActivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		multiPictureDialog.pack();
+		multiPictureDialog.setVisible(true);
 	}
 	public static void setPaperSize() {
 		try {

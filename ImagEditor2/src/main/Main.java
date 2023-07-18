@@ -536,7 +536,8 @@ public class Main {
 				{ Main.translator.get("Add"), Main.translator.get("Rectangle") + "@r",
 						Main.translator.get("Text") + "@t", Main.translator.get("Picture") + "@p"
 						, Main.translator.get("Code") + "@c"},
-				{ Main.translator.get("Account"), Main.translator.get("Profile") } }, menuListener);
+				{ Main.translator.get("Account"), Main.translator.get("Profile") },
+				{ Main.translator.get("Create"), Main.translator.get("Multi-Picture") }}, menuListener);
 		f.setJMenuBar(lMenu);
 	}
 	public static LayersList getLayersList() {
