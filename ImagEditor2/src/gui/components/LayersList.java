@@ -20,8 +20,8 @@ import javax.swing.JPopupMenu;
 
 import drawables.Layer;
 import drawables.shapes.abstractShapes.Shape;
-import gui.layouts.ListLayout;
 import install.Resources;
+import le.gui.layouts.ListLayout;
 import le.utils.PictureUtilities;
 import main.Main;
 

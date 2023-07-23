@@ -1,7 +1,6 @@
 package install;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +20,7 @@ import javax.swing.SwingUtilities;
 
 import le.gui.components.LSlider;
 import le.gui.dialogs.LDialogs;
+import le.gui.layouts.ListLayout;
 import le.install.DataFile;
 import main.Main;
 
@@ -29,36 +29,34 @@ public class Preferences {
 
 	public static DataFile default_setting;
 	
+	//Paper
 	public static int paperWidth;
 	public static int paperHeight;
 	public static int paperZoom;
-	
+	//Language
 	public static String language;
-	
 	public static boolean autoSetDefLan;
-	
+	//Advanced
 	public static boolean saveLogs;
-	
 	public static boolean keepMeLoggedIn;
-
 	public static boolean useMoreRAM;
-
 	public static boolean usePreviewPictures;
-
 	public static boolean manualRefreshOnly;
-	
 	public static boolean keepTrackOfTopLayers;
-	
 	public static int numOfBackOperations;
-	
+	//Appearance
 	public static boolean darkMode;
+	//Multi-Picture
+	public static int mpPixelSize;
+	public static int mpSourceWidth;
+	public static double mpDivFactor;
 	
 	static {
-		System.out.println("Reading Preferences");
 		default_setting = new DataFile(Main.install.getFile("Data\\Settings\\default_setting.txt"));
 	}
 	
 	public static void updateFromFile() {
+		System.out.println("Reading Preferences");
 		paperWidth = Integer.parseInt(default_setting.get("paper_width"));
 		paperHeight = Integer.parseInt(default_setting.get("paper_height"));
 		paperZoom = Integer.parseInt(default_setting.get("zoom"));
@@ -72,6 +70,9 @@ public class Preferences {
 		darkMode = Boolean.parseBoolean(default_setting.get("dark_mode"));
 		keepTrackOfTopLayers = Boolean.parseBoolean(default_setting.get("keep_track_of_layer"));
 		numOfBackOperations = Integer.parseInt(default_setting.get("num_of_back_op"));
+		mpPixelSize = Integer.parseInt(default_setting.get("multi_picture_pixel_size"));
+		mpSourceWidth = Integer.parseInt(default_setting.get("multi_picture_src_width"));
+		mpDivFactor = Double.parseDouble(default_setting.get("multi_picture_div_factor"));
 	}
 	public static void saveToFile() throws FileNotFoundException, IOException {
 		default_setting.putWithoutSave("paper_width", paperWidth);
@@ -87,6 +88,9 @@ public class Preferences {
 		default_setting.putWithoutSave("dark_mode", darkMode);
 		default_setting.putWithoutSave("keep_track_of_layer", keepTrackOfTopLayers);
 		default_setting.putWithoutSave("num_of_back_op", numOfBackOperations);
+		default_setting.putWithoutSave("multi_picture_pixel_size", mpPixelSize);
+		default_setting.putWithoutSave("multi_picture_src_width", mpSourceWidth);
+		default_setting.putWithoutSave("multi_picture_div_factor", mpDivFactor);
 		default_setting.save("Original Default Settings");
 	}
 	
@@ -100,7 +104,7 @@ public class Preferences {
 		JTabbedPane tabbedPane = new JTabbedPane();
 		
 		//Paper's preferences tab, including width, height and zoom
-		JPanel paperPrefsPanel = new JPanel(new GridLayout(3, 1));
+		JPanel paperPrefsPanel = new JPanel(new ListLayout(0, 3));
 		//Width GUI
 		JPanel widthPanel = new JPanel(new BorderLayout());
 		widthPanel.add(new JLabel("Width:"), Main.translator.getBeforeTextBorder());
@@ -121,7 +125,7 @@ public class Preferences {
 		tabbedPane.addTab("Paper", paperPrefsPanel);
 
 		//Language's preferences
-		JPanel languagePrefsPanel = new JPanel(new GridLayout(2, 1));
+		JPanel languagePrefsPanel = new JPanel(new ListLayout(0, 3));
 		//Default language GUI
 		JPanel defLanPanel = new JPanel(new BorderLayout());
 		defLanPanel.add(new JLabel("Defalut Language:"),
@@ -148,7 +152,7 @@ public class Preferences {
 		preferencesDialog.add(tabbedPane);
 		
 		//Appearance tab
-		JPanel appearancePrefsPanel = new JPanel(new GridLayout(1, 1));
+		JPanel appearancePrefsPanel = new JPanel(new ListLayout(0, 3));
 		
 		//Dark mode
 		JCheckBox darkModeCheckBox = new JCheckBox("Dark Mode", Preferences.darkMode);
@@ -156,8 +160,32 @@ public class Preferences {
 		
 		tabbedPane.addTab("Appearance", appearancePrefsPanel);
 		
+		
+		//Multi-Picture Tab
+		JPanel mpPanel = new JPanel(new ListLayout(0, 3));
+		//Pixel Size
+		JPanel mpPixelSizePanel = new JPanel(new BorderLayout());
+		mpPixelSizePanel.add(new JLabel("Pixel Image Size:"), Main.translator.getBeforeTextBorder());
+		JTextField mpPixelSizeField = new JTextField(mpPixelSize + "");
+		mpPixelSizePanel.add(mpPixelSizeField);
+		mpPanel.add(mpPixelSizePanel);
+		
+		//Source Width
+		JPanel mpSourceWidthPanel = new JPanel(new BorderLayout());
+		mpSourceWidthPanel.add(new JLabel("Pixel Image Size:"), Main.translator.getBeforeTextBorder());
+		JTextField mpSourceWidthField = new JTextField(mpSourceWidth + "");
+		mpSourceWidthPanel.add(mpSourceWidthField);
+		mpPanel.add(mpSourceWidthPanel);
+		
+		//Diversity Factor
+		LSlider divSlider = new LSlider("Diversity", 0, 10, 0.3, 0.05);
+		mpPanel.add(divSlider);
+		
+		tabbedPane.addTab("Multi-Picture", mpPanel);
+		
+		
 		//Advanced tab (save logs and CPU vs RAM priority)
-		JPanel advancedPrefsPanel = new JPanel(new GridLayout(7, 1));
+		JPanel advancedPrefsPanel = new JPanel(new ListLayout(0, 3));
 		
 		//Save logs
 		JCheckBox saveLogsCheckBox = new JCheckBox("Save the Logs Every time the Program is Being Used", Preferences.saveLogs);
@@ -213,6 +241,7 @@ public class Preferences {
 		
 		tabbedPane.addTab("Advanced", advancedPrefsPanel);
 		
+		
 		//Apply button
 		JButton apply = new JButton("Apply Preferences");
 		//The code inside the listeners update the defaults to the values in the dialog's input components
@@ -259,6 +288,14 @@ public class Preferences {
 				} else {
 					Preferences.numOfBackOperations = -1;
 				}
+				//Updating Pixel Size
+				Preferences.mpPixelSize = Integer.parseInt(mpPixelSizeField.getText());
+				//Updating Source Width
+				Preferences.mpSourceWidth = Integer.parseInt(mpSourceWidthField.getText());
+				//Updating Pixel Size
+				Preferences.mpDivFactor = divSlider.getValue();
+				
+				
 				//Saving the settings to the default settings file
 				try {
 					Preferences.saveToFile();

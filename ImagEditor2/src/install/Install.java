@@ -50,6 +50,9 @@ public class Install extends AbstractInstall{
 			Preferences.darkMode = false;
 			Preferences.keepTrackOfTopLayers = true;
 			Preferences.numOfBackOperations = -1;
+			Preferences.mpPixelSize = 50;
+			Preferences.mpSourceWidth = 300;
+			Preferences.mpDivFactor = 0.3;
 			
 			Preferences.saveToFile();
 		} catch (IOException e) {

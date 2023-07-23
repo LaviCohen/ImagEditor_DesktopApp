@@ -21,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import install.Preferences;
 import le.gui.dialogs.LDialogs;
 import le.utils.PictureUtilities;
 import main.Main;
@@ -40,13 +41,6 @@ public class MultipictureCreator {
 		}
 	}
 	private static LinkedList<Loaded> loadeds = new LinkedList<>();
-	
-	private static int width = 50;
-	private static int height = 50;
-	
-	private static int sourceWidth = 150;
-
-	private static double divFactor = 0.3;
 
 	private static boolean loading = false;
 	
@@ -94,7 +88,8 @@ public class MultipictureCreator {
 						int count = 0;
 						for(File imageFile:dir.listFiles()) {
 							try {
-								ImageIO.write(PictureUtilities.getScaledImage(ImageIO.read(imageFile), width, height)
+								ImageIO.write(PictureUtilities.getScaledImage(ImageIO.read(imageFile), 
+										Preferences.mpPixelSize, Preferences.mpPixelSize)
 							, "png", new File(path + (count + prev + 1) + ".png"));
 								count++;
 								System.out.println("Load " + count + " of " + total);
@@ -250,16 +245,16 @@ public class MultipictureCreator {
 	}
 
 	public static BufferedImage create(BufferedImage source) {
-		double ratio = (double)source.getWidth() / sourceWidth;
-		source = PictureUtilities.getScaledImage(source, sourceWidth, (int) (source.getHeight() / ratio));
+		double ratio = (double)source.getWidth() / Preferences.mpSourceWidth;
+		source = PictureUtilities.getScaledImage(source, Preferences.mpSourceWidth, (int) (source.getHeight() / ratio));
 		System.out.println(source.getWidth() + ", " + source.getHeight());
-		BufferedImage ret = new BufferedImage(width * source.getWidth(), height * source.getHeight(),
+		BufferedImage ret = new BufferedImage(Preferences.mpPixelSize * source.getWidth(), Preferences.mpPixelSize * source.getHeight(),
 				BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = ret.createGraphics();
 		for (int i = 0; i < source.getWidth(); i++) {
 			for (int j = 0; j < source.getHeight(); j++) {
 				Color c = new Color(source.getRGB(i, j));
-				g.drawImage(findClosest(c), i * width, j * height, null);
+				g.drawImage(findClosest(c), i * Preferences.mpPixelSize, j * Preferences.mpPixelSize, null);
 			}
 		}
 		return ret;
@@ -269,7 +264,7 @@ public class MultipictureCreator {
 		double minDistance = 10000;
 		Loaded closest = null;
 		for (Loaded loaded : loadeds) {
-			double distance = getDistance(c, loaded.avg) + loaded.times * divFactor ;
+			double distance = getDistance(c, loaded.avg) + loaded.times * Preferences.mpDivFactor;
 			if (distance < minDistance) {
 				minDistance = distance;
 				closest = loaded;
@@ -308,30 +303,6 @@ public class MultipictureCreator {
 
 	public static void setLoadeds(LinkedList<Loaded> loadeds) {
 		MultipictureCreator.loadeds = loadeds;
-	}
-
-	public static int getWidth() {
-		return width;
-	}
-
-	public static void setWidth(int width) {
-		MultipictureCreator.width = width;
-	}
-
-	public static int getHeight() {
-		return height;
-	}
-
-	public static void setHeight(int height) {
-		MultipictureCreator.height = height;
-	}
-
-	public static double getDivFactor() {
-		return divFactor;
-	}
-
-	public static void setDivFactor(double divFactor) {
-		MultipictureCreator.divFactor = divFactor;
 	}
 
 	public static boolean isLoading() {
