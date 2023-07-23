@@ -34,6 +34,7 @@ public class Install extends AbstractInstall{
 		getFile("Languages").mkdir();
 		getFile("Data").mkdir();
 		getFile("Data\\Settings").mkdir();
+		getFile("Data\\MultiPictures").mkdir();
 		try {
 			getFile("Data\\Settings\\default_setting.txt").createNewFile();
 			Preferences.paperWidth = 1000;
