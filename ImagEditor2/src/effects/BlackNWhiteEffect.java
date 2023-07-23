@@ -60,9 +60,9 @@ public class BlackNWhiteEffect extends Effect{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				redStrength = red.getValue();
-				greenStrength = green.getValue();
-				blueStrength = blue.getValue();
+				redStrength = (int) red.getValue();
+				greenStrength = (int) green.getValue();
+				blueStrength = (int) blue.getValue();
 				editBlackNwhiteDialog.dispose();
 				parent.invalidate();
 				Main.getBoard().repaint();

@@ -403,7 +403,7 @@ public class Main {
 		boardDataBar = new JPanel(new BorderLayout());
 		sizeLabel = new JLabel("");
 		boardDataBar.add(getSizeLabel(), Main.translator.getAfterTextBorder());
-		zoomSlider.slider.addChangeListener(new ChangeListener() {
+		zoomSlider.getSlider().addChangeListener(new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent arg0) {

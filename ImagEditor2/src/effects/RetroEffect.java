@@ -58,7 +58,7 @@ public class RetroEffect extends Effect{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				variety = varietySlider.getValue();
+				variety = (int) varietySlider.getValue();
 				editDialog.dispose();
 				parent.invalidate();;
 				Main.getBoard().repaint();

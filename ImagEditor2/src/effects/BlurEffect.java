@@ -39,7 +39,7 @@ public class BlurEffect extends Effect{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				radius = radiusSlider.getValue();
+				radius = (int) radiusSlider.getValue();
 				parent.invalidate();
 				Main.getBoard().repaint();
 				editDialog.dispose();

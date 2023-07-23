@@ -57,7 +57,7 @@ public class Picture extends StretchableShpae {
 	double cutFromRight = 0;
 	double cutFromBottom = 0;
 
-	int rotation;
+	double rotation;
 
 	// Is the Picture currently cut
 	private boolean isCutting;
@@ -196,7 +196,7 @@ public class Picture extends StretchableShpae {
 		});
 		sizePanel.add(toNaturalImageSizeButton, Main.translator.getAfterTextBorder());
 		editDialog.add(sizePanel);
-		LSlider rotationSlider = new LSlider("Rotation", 0, 360, rotation);
+		LSlider rotationSlider = new LSlider("Rotation", 0, 360, rotation, 0.1);
 		editDialog.add(rotationSlider);
 		JPanel sourcePanel = new JPanel(new BorderLayout());
 		sourcePanel.add(new JLabel("Source:"),
@@ -233,7 +233,7 @@ public class Picture extends StretchableShpae {
 					Object[] sizeData = heightNwidthPanel.getData();
 					double width = (Double) sizeData[0];
 					double height = (Double) sizeData[1];
-					int rotation = rotationSlider.getValue();
+					double rotation = rotationSlider.getValue();
 					BufferedImage image = null;
 					if (!sourceField.getText().equals("don\'t change")) {
 						File f = new File(sourceField.getText());
@@ -529,7 +529,7 @@ public class Picture extends StretchableShpae {
 		return height / getCutHeight();
 	}
 
-	public int getRotation() {
+	public double getRotation() {
 		return rotation;
 	}
 

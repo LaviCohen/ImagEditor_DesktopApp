@@ -132,8 +132,8 @@ public class PickingMouseAdapter extends BoardAdapter{
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		if (shapeInFocus != null) {
-			movementInX = (int)(e.getXOnScreen() - previousX) * 100 / Main.getZoomSlider().getValue();
-			movementInY = (int)(e.getYOnScreen() - previousY) * 100 / Main.getZoomSlider().getValue();
+			movementInX = (int)((e.getXOnScreen() - previousX) * 100 / Main.getZoomSlider().getValue());
+			movementInY = (int)((e.getYOnScreen() - previousY) * 100 / Main.getZoomSlider().getValue());
 			if(shapeInFocus instanceof Picture && ((Picture)shapeInFocus).isCutting() && touchedWrapper != 0) {
 				Picture p = ((Picture)shapeInFocus);
 				switch(touchedWrapper){

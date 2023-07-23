@@ -114,8 +114,8 @@ public class Preferences {
 		heightPanel.add(heightField);
 		paperPrefsPanel.add(heightPanel);
 		//Zoom GUI
-		LSlider zoomSlider = new LSlider("Zoom", Main.getZoomSlider().slider.getMinimum(),
-				Main.getZoomSlider().slider.getMaximum(), Preferences.paperZoom);
+		LSlider zoomSlider = new LSlider("Zoom", Main.getZoomSlider().getSlider().getMinimum(),
+				Main.getZoomSlider().getSlider().getMaximum(), Preferences.paperZoom);
 		paperPrefsPanel.add(zoomSlider);
 		
 		tabbedPane.addTab("Paper", paperPrefsPanel);
@@ -236,7 +236,7 @@ public class Preferences {
 				}
 				
 				//Updating zoom
-				Preferences.paperZoom = zoomSlider.getValue();
+				Preferences.paperZoom = (int) zoomSlider.getValue();
 				//Updating Default Language
 				Preferences.language = chooseLanguge.getSelectedItem().toString();
 				//Updating auto-set default language
