@@ -172,7 +172,7 @@ public class Preferences {
 		
 		//Source Width
 		JPanel mpSourceWidthPanel = new JPanel(new BorderLayout());
-		mpSourceWidthPanel.add(new JLabel("Pixel Image Size:"), Main.translator.getBeforeTextBorder());
+		mpSourceWidthPanel.add(new JLabel("Output  Picture Width:"), Main.translator.getBeforeTextBorder());
 		JTextField mpSourceWidthField = new JTextField(mpSourceWidth + "");
 		mpSourceWidthPanel.add(mpSourceWidthField);
 		mpPanel.add(mpSourceWidthPanel);

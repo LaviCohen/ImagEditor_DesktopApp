@@ -134,7 +134,7 @@ public class MultipictureCreator {
 			nameField.setText(Main.currentProject.name);
 		}
 		namePanel.add(nameField);
-		JLabel suffixLabel = new JLabel("<html><t/>.png</html>");
+		JLabel suffixLabel = new JLabel("<html><t/>.jpg</html>");
 		namePanel.add(suffixLabel, Main.translator.getAfterTextBorder());
 		multiPictureDialog.add(namePanel);
 		
@@ -151,8 +151,8 @@ public class MultipictureCreator {
 							try {
 								MultipictureCreator.loadFromDir(Main.install.getFile("Data\\MultiPictures"));
 								ImageIO.write(MultipictureCreator.create(
-										ImageIO.read(new File(sourceField.getText()))), "png", 
-										new File(Main.install.getPath("Gallery") + "\\" + nameField.getText() + ".png"));
+										ImageIO.read(new File(sourceField.getText()))), "jpg", 
+										new File(Main.install.getPath("Gallery") + "\\" + nameField.getText() + ".jpg"));
 							} catch (IOException e1) {
 								e1.printStackTrace();
 							}

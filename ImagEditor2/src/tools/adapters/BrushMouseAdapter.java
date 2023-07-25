@@ -27,6 +27,8 @@ public class BrushMouseAdapter extends BoardAdapter{
 	protected int lastY = -100;
 	
 	protected BufferedImage lastTop = null;
+
+	private boolean start = false;
 	
 	public BrushMouseAdapter(Board parent) {
 		super(parent);
@@ -36,6 +38,14 @@ public class BrushMouseAdapter extends BoardAdapter{
 		Layer layer = Main.getLayersList().getSelectedLayer();
 		
 		if (layer != null) {
+			if (start) {
+				lastX = boardToPaperCoordinatesX(e.getX()) - (int) layer.getShape().getX();
+				lastY = boardToPaperCoordinatesX(e.getY()) - (int) layer.getShape().getY();
+				if (Preferences.keepTrackOfTopLayers) {
+					lastTop = PictureUtilities.copy(layer.getTop());
+				}
+				start = false;
+			}
 			if (layer.getTop() == null) {
 				layer.initTop();
 			}
@@ -109,12 +119,8 @@ public class BrushMouseAdapter extends BoardAdapter{
 	public void mousePressed(MouseEvent e) {
 		Layer layer = Main.getLayersList().getSelectedLayer();
 		if (layer != null) {
-			lastX = boardToPaperCoordinatesX(e.getX()) - (int) layer.getShape().getX();
-			lastY = boardToPaperCoordinatesX(e.getY()) - (int) layer.getShape().getY();
-			if (Preferences.keepTrackOfTopLayers) {
-				lastTop = PictureUtilities.copy(layer.getTop());
-			}
-		}	
+			start  = true;
+		}
 	}
 	
 	@Override
