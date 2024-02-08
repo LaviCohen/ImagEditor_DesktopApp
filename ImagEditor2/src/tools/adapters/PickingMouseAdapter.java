@@ -121,7 +121,7 @@ public class PickingMouseAdapter extends BoardAdapter{
 		if(e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1 
 				&& shapeInFocus instanceof Text){
 			String text = LDialogs.
-					showInputDialog(parent, "Enter Text:", ((Text)shapeInFocus).getText());
+					showInputDialog(parent, "Enter Text:", "Set Text", ((Text)shapeInFocus).getText());
 			if (text != null && !text.equals(((Text)shapeInFocus).getText())) {
 				((Text)shapeInFocus).setText(text);
 				Main.getLayersList().updateImage(shapeInFocus);
