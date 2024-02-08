@@ -10,7 +10,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
+import java.io.IOException;  
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
@@ -245,11 +245,24 @@ public class MultipictureCreator {
 	}
 
 	public static BufferedImage create(BufferedImage source) {
-		double ratio = (double)source.getWidth() / Preferences.mpSourceWidth;
-		source = PictureUtilities.getScaledImage(source, Preferences.mpSourceWidth, (int) (source.getHeight() / ratio));
+		source = PictureUtilities.getScaledImage(source, Preferences.mpSourceWidth, (int) (source.getHeight() / ((double)source.getWidth() / Preferences.mpSourceWidth)));
 		System.out.println(source.getWidth() + ", " + source.getHeight());
-		BufferedImage ret = new BufferedImage(Preferences.mpPixelSize * source.getWidth(), Preferences.mpPixelSize * source.getHeight(),
-				BufferedImage.TYPE_INT_RGB);
+		BufferedImage ret = null;
+		try {
+			ret = new BufferedImage(Preferences.mpPixelSize * source.getWidth(), Preferences.mpPixelSize * source.getHeight(),
+					BufferedImage.TYPE_INT_RGB);
+		} catch (OutOfMemoryError e) {
+			if (LDialogs.YES_OPTION == LDialogs.showConfirmDialog(Main.f, 
+					"<html>The output picture is too big.<br/>"
+					+ "Do you want to try to crate it in special preformence mode?</html>")) {
+				ret = null;
+				System.gc();
+				System.out.println("Running");
+				createLowRAM(source);
+			} else {
+				throw e;
+			}
+		}
 		Graphics2D g = ret.createGraphics();
 		for (int i = 0; i < source.getWidth(); i++) {
 			for (int j = 0; j < source.getHeight(); j++) {
@@ -260,12 +273,66 @@ public class MultipictureCreator {
 		return ret;
 	}
 	
+	public static BufferedImage createLowRAM(BufferedImage source) {
+		//Creating  temporary folder
+		String path = Main.install.getPath("Data//MultiPictures//temp");
+		new File(path).mkdir();
+		int subdivide = 10;
+		int width = Preferences.mpSourceWidth - (Preferences.mpSourceWidth % subdivide);
+		int height = (int) (source.getHeight() / ((double)source.getWidth() / width));
+		height -= (height % subdivide);
+		System.out.println("Creating source");
+		source = PictureUtilities.getScaledImage(source, width,
+				height);
+		System.out.println("Source created");
+		for (int i = 0; i < subdivide; i++) {
+			for (int j = 0; j < subdivide; j++) {
+				System.out.println("Creating temp");
+				BufferedImage temp = new BufferedImage(
+						width / subdivide * Preferences.mpPixelSize, height / subdivide * Preferences.mpPixelSize, BufferedImage.TYPE_INT_RGB);
+				System.out.println("Temp created");
+				Graphics2D g = temp.createGraphics();
+				for (int x = 0; x < source.getWidth() / subdivide; x++) {
+					for (int y = 0; y < source.getHeight() / subdivide; y++) {	
+						Color c = new Color(source.getRGB(x + i * (width / subdivide), y + j * (height / subdivide)));
+						g.drawImage(findClosest(c), x * Preferences.mpPixelSize, y * Preferences.mpPixelSize, null);
+					}
+				}
+				try {
+					ImageIO.write(temp, "jpg", new File(path + "\\" + i + j + ".jpg"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		loadeds.clear();
+		System.gc();
+		System.out.println("Cleared");
+		LDialogs.showMessageDialog(null, path);
+		System.out.println("Creating");
+		BufferedImage ret = new BufferedImage(Preferences.mpPixelSize * width, Preferences.mpPixelSize * height,
+				BufferedImage.TYPE_INT_RGB);
+		System.out.println("Created");
+		Graphics2D g = ret.createGraphics();
+		for (int i = 0; i < subdivide; i++) {
+			for (int j = 0; j < subdivide; j++) {
+				try {
+					g.drawImage(ImageIO.read(new File(path + "\\" + i + j + ".jpg")),
+							i * (width / subdivide), j * (width / subdivide), null);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return ret;
+	}
+	
 	public static BufferedImage findClosest(Color c) {
-		double minDistance = 10000;
+		double minDistance = 0;
 		Loaded closest = null;
 		for (Loaded loaded : loadeds) {
 			double distance = getDistance(c, loaded.avg) + loaded.times * Preferences.mpDivFactor;
-			if (distance < minDistance) {
+			if (distance < minDistance || closest == null) {
 				minDistance = distance;
 				closest = loaded;
 			}
