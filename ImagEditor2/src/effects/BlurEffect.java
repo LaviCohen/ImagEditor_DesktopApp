@@ -64,7 +64,7 @@ public class BlurEffect extends Effect{
 		if (x < 0 || y < 0 || x >= bf.getWidth() || y >= bf.getHeight()) {
 			return null;
 		}
-		return new Color(bf.getRGB(x, y));
+		return new Color(bf.getRGB(x, y), true);
 	}
 	public static Color getAverageColor(Color[] colors) {
 		int count = 0;
