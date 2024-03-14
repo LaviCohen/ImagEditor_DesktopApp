@@ -328,22 +328,23 @@ public class MultipictureCreator {
 	}
 	
 	public static BufferedImage findClosest(Color c) {
-		double minDistance = 0;
-		Loaded closest = null;
+		Loaded closest = loadeds.getFirst();
+		double minDistanceSquared = getDistanceSquared(c, closest.avg) + closest.times * Preferences.mpDivFactor;
 		for (Loaded loaded : loadeds) {
-			double distance = getDistance(c, loaded.avg) + loaded.times * Preferences.mpDivFactor;
-			if (distance < minDistance || closest == null) {
-				minDistance = distance;
+			double distance = getDistanceSquared(c, loaded.avg) + loaded.times * Preferences.mpDivFactor;
+			if (distance < minDistanceSquared) {
+				minDistanceSquared = distance;
 				closest = loaded;
 			}
 		}
+		System.out.println(closest);
 		closest.times++;
 		return closest.image;
 	}
 	
-	public static double getDistance(Color c1, Color c2) {
-		return Math.sqrt(Math.pow(c1.getRed() - c2.getRed(), 2) + Math.pow(c1.getGreen() - c2.getGreen(), 2) + 
-				Math.pow(c1.getBlue() - c2.getBlue(), 2));
+	public static double getDistanceSquared(Color c1, Color c2) {
+		return Math.pow(c1.getRed() - c2.getRed(), 2) + Math.pow(c1.getGreen() - c2.getGreen(), 2) + 
+				Math.pow(c1.getBlue() - c2.getBlue(), 2);
 	}
 	
 	public static void load(File imageFile) throws IOException {
