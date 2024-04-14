@@ -157,9 +157,8 @@ public class GroupShape extends Shape{
 		};
 		
 		JPanel actionPanel = createActionPanel(actionListener);
-		
 		editDialog.add(actionPanel);
-		
+		moveDialogToCorrectPos(editDialog);
 		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		editDialog.pack();
 		editDialog.setVisible(true);

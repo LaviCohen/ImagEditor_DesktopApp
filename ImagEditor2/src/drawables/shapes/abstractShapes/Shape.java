@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -88,6 +89,16 @@ public abstract class Shape implements Drawable{
 	public String encodeShape() {
 		return this.getClass().getName() + ":" + x + "," + y + "," + visible + "," + name;
 	}
+	public double getScreenYCoordinates() {
+		return Shape.this.getY() * Main.getBoard().getZoomRate() + 
+				Main.getBoard().getTopGap() + 
+				Main.getBoard().getLocationOnScreen().y;
+	}
+	public double getScreenXCoordinates() {
+		return Shape.this.getX() * Main.getBoard().getZoomRate() + 
+				Main.getBoard().getLeftGap() + 
+				Main.getBoard().getLocationOnScreen().x;
+	}
 	public int getId() {
 		return id;
 	}
@@ -165,5 +176,21 @@ public abstract class Shape implements Drawable{
 		actionPanel.add(applyNclose);
 		actionPanel.add(apply, BorderLayout.EAST);
 		return actionPanel;
+	}
+	protected void moveDialogToCorrectPos(JDialog dialog){
+		double xOnScreen, yOnScreen;
+		xOnScreen = Shape.this.getScreenXCoordinates();
+		System.out.println(Shape.this.getScreenYCoordinates() - 20  + ", " + dialog.getHeight());
+		if (Shape.this.getScreenYCoordinates() - 20 > dialog.getHeight()) {
+			yOnScreen = Shape.this.getScreenYCoordinates() - 10 - dialog.getHeight();
+		} else {
+			yOnScreen = Shape.this.getScreenYCoordinates() + Shape.this.getHeightOnBoard() + 10;
+		}
+		System.out.println("Frame Location: " + Main.f.getLocationOnScreen());
+		int x = (int) (xOnScreen - Main.f.getLocationOnScreen().x - 16);
+
+		int y = (int) (yOnScreen - Main.f.getLocationOnScreen().y - 16);
+		System.out.println("Locate at " + x + ", " + y + " (" + xOnScreen + ", " + yOnScreen + ")");
+		dialog.setLocation(x, y);
 	}
 }

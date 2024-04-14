@@ -30,6 +30,7 @@ import drawables.shapes.Code;
 import drawables.shapes.Picture;
 import drawables.shapes.Rectangle;
 import drawables.shapes.Text;
+import drawables.shapes.abstractShapes.Shape;
 import install.Preferences;
 import install.Resources;
 import install.saveSystem.Project;
@@ -445,8 +446,7 @@ public class Actions {
 	 * */
 	public static void addRectangle() {
 		Rectangle r = new Rectangle(0, 0, true, null, 100, 100, Color.BLUE);
-		OperationsManager.operate(new AddLayerOperation(new Layer(r)));
-		r.edit();
+		addShape(r);
 	}
 	/**
 	 * Adds Text to the current project.
@@ -454,24 +454,37 @@ public class Actions {
 	public static void addText() {
 		Text t = new Text(
 				0, 0, true, null, Color.BLACK, new Font("Arial", Font.PLAIN, 20), "Text");
-		OperationsManager.operate(new AddLayerOperation(new Layer(t)));
-		t.edit();
+		addShape(t);
 	}
 	/**
 	 * Adds Picture to the current project.
 	 * */
 	public static void addPicture() {
 		Picture p = new Picture(0, 0, true, null, 150, 50, 0, Resources.defaultImage);
-		OperationsManager.operate(new AddLayerOperation(new Layer(p)));
-		p.edit();
+		addShape(p);
 	}
 	/**
 	 * Adds Code to the current project.
 	 * */
 	public static void addCode() {
 		Code c = new Code("<html><i>Your Code</i></html>", true);
-		OperationsManager.operate(new AddLayerOperation(new Layer(c)));
-		c.edit();
+		addShape(c);
+	}
+	/**
+	 * Adds given shape to the current project.
+	 * For GUI purposes (placing the edit window correctly) uses SwingUtilities.invokeLater
+	 * method.
+	 * */
+	public static void addShape(Shape s) {
+		OperationsManager.operate(new AddLayerOperation(new Layer(s)));
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				Main.f.revalidate();
+				s.edit();		
+			}
+		});
 	}
 	/**
 	 * Edits the current selected shape.

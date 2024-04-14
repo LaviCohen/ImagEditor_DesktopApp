@@ -107,6 +107,7 @@ public class Code extends Shape{
 		Main.theme.affect(editDialog);
 		editDialog.pack();
 		editDialog.setSize(editDialog.getWidth() + 50, editDialog.getHeight());
+		moveDialogToCorrectPos(editDialog);
 		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		editDialog.setVisible(true);
 	}

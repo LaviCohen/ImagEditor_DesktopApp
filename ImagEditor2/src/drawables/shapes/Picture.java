@@ -302,6 +302,7 @@ public class Picture extends StretchableShpae {
 		editDialog.add(createActionPanel(actionListener));
 		Main.theme.affect(editDialog);
 		editDialog.pack();
+		moveDialogToCorrectPos(editDialog);
 		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		editDialog.setVisible(true);
 	}

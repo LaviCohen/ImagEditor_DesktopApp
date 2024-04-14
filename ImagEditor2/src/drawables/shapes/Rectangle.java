@@ -124,6 +124,7 @@ public class Rectangle extends StretchableShpae implements ColoredShape{
 		editDialog.add(createActionPanel(actionListener));
 		Main.theme.affect(editDialog);
 		editDialog.pack();
+		moveDialogToCorrectPos(editDialog);
 		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		editDialog.setVisible(true);
 	}
