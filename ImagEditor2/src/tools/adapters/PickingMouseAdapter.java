@@ -107,16 +107,9 @@ public class PickingMouseAdapter extends BoardAdapter{
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		shapeInFocus = parent.getShapeAt(boardToPaperCoordinatesX(e.getX()), boardToPaperCoordinatesY(e.getY()));
-		if (shapeInFocus != null && !shapeInFocus.isVisible()) {
-			shapeInFocus = null;
-		}
+		shapeInFocus = getShapeAt(e);
 		if (e.getButton() == MouseEvent.BUTTON3) {
-			if (shapeInFocus != null) {
-				shapeInFocus.getPopupMenuForShape().show(parent, e.getX(), e.getY());
-			} else {
-				openAddShapePopupMenu(e);
-			}
+			super.rightClick(shapeInFocus, e);
 		}
 		if(e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1 
 				&& shapeInFocus instanceof Text){

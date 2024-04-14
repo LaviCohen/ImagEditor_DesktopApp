@@ -16,6 +16,10 @@ public class GroupMouseAdapter extends BoardAdapter {
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		if (e.getButton() == MouseEvent.BUTTON3) {
+			rightClick(e);
+			return;
+		}
 		Shape s = parent.getShapeAt(boardToPaperCoordinatesX(e.getX()), boardToPaperCoordinatesY(e.getY()));
 		if (s != null) {
 			if (!selected.contains(s)) {

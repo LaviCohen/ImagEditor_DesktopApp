@@ -102,16 +102,14 @@ public class BrushMouseAdapter extends BoardAdapter{
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		if (e.getButton() == 0) {	
-			paintWithBrush(e);
-		}
+		paintWithBrush(e);
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if (e.getButton() == 0) {	
+		if (e.getButton() == MouseEvent.BUTTON1) {	
 			paintWithBrush(e);
 		} else if (e.getButton() == MouseEvent.BUTTON3) {
-			openAddShapePopupMenu(e);
+			super.rightClick(e);
 		}
 	}
 

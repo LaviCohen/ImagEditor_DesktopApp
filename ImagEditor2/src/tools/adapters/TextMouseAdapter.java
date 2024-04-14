@@ -19,6 +19,10 @@ public class TextMouseAdapter extends BoardAdapter{
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		if (e.getButton() == MouseEvent.BUTTON3) {
+			rightClick(e);
+			return;
+		}
 		int x = boardToPaperCoordinatesX(e.getX());
 		int y = boardToPaperCoordinatesY(e.getY());
 		

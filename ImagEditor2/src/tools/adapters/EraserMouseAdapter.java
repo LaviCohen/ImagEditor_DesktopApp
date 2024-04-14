@@ -56,7 +56,7 @@ public class EraserMouseAdapter extends BoardAdapter {
 			System.out.println("Painting");
 			paintWithEraser(e);
 		} else if (e.getButton() == MouseEvent.BUTTON3) {
-			openAddShapePopupMenu(e);
+			rightClick(e);
 		}
 	}
 	

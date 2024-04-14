@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import drawables.shapes.abstractShapes.Shape;
 import gui.components.Board;
 import main.Actions;
 
@@ -17,6 +18,26 @@ public abstract class BoardAdapter extends MouseAdapter{
 	
 	public BoardAdapter(Board parent) {
 		this.parent = parent;
+	}
+	
+	public void rightClick(MouseEvent e) {
+		rightClick(getShapeAt(e), e);
+	}
+	
+	public void rightClick(Shape shapeInFocus, MouseEvent e) {
+		if (shapeInFocus != null) {
+			shapeInFocus.getPopupMenuForShape().show(parent, e.getX(), e.getY());
+		} else {
+			openAddShapePopupMenu(e);
+		}
+	}
+	
+	public Shape getShapeAt(MouseEvent e){
+		Shape shapeInFocus = parent.getShapeAt(boardToPaperCoordinatesX(e.getX()), boardToPaperCoordinatesY(e.getY()));
+		if (shapeInFocus != null && !shapeInFocus.isVisible()) {
+			shapeInFocus = null;
+		}
+		return shapeInFocus;
 	}
 	
 	public void openAddShapePopupMenu(MouseEvent e) {
