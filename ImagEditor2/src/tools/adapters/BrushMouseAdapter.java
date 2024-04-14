@@ -125,13 +125,10 @@ public class BrushMouseAdapter extends BoardAdapter{
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (Preferences.keepTrackOfTopLayers) {
+		if (Preferences.keepTrackOfTopLayers && Main.getLayersList().getSelectedLayer() != null) {
 			LinkedList<Change> list = new LinkedList<Change>();
-			BufferedImage newTop = null;
-			if (Main.getLayersList().getSelectedLayer().getTop() != null) {
-				newTop = PictureUtilities.copy(Main.getLayersList().getSelectedLayer().getTop());
-			}
-			list.add(new ObjectChange(Change.LAYER_TOP_CHANGE, lastTop, newTop));
+			list.add(new ObjectChange(Change.LAYER_TOP_CHANGE, lastTop, 
+					PictureUtilities.copy(Main.getLayersList().getSelectedLayer().getTop())));
 			OperationsManager.addOperation(new ChangesOperation(
 					Main.getLayersList().getSelectedLayer().getShape(), list));
 		}

@@ -72,7 +72,7 @@ public class EraserMouseAdapter extends BoardAdapter {
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (Preferences.keepTrackOfTopLayers) {
+		if (Preferences.keepTrackOfTopLayers && Main.getLayersList().getSelectedLayer() != null) {
 			LinkedList<Change> list = new LinkedList<Change>();
 			list.add(new ObjectChange(Change.LAYER_TOP_CHANGE, lastTop, 
 					PictureUtilities.copy(Main.getLayersList().getSelectedLayer().getTop())));
