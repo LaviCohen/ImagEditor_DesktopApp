@@ -59,11 +59,10 @@ public class Layer implements Drawable{
 	
 	public static Layer parseLayer(String encodedLayer) throws NumberFormatException, IOException {
 		String[] data = encodedLayer.split("%");
-		if (data[0].equals("null")) {
-			return new Layer(Shape.parseShape(data[1]));
-		}
 		Layer l = new Layer(Shape.parseShape(data[1]));
-		l.setTop(Picture.decodeSourceImage(data[0]));
+		if (!data[0].equals("null")) {
+			l.setTop(Picture.decodeSourceImage(data[0]));
+		}
 		return l;
 	}
 	

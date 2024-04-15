@@ -66,7 +66,7 @@ public class Picture extends StretchableShpae {
 	EffectsManager effectsManger = new EffectsManager(this);
 
 	// Constructor
-	public Picture(double x, double y, boolean visible, String name, double width, double height, int rotation,
+	public Picture(double x, double y, boolean visible, String name, double width, double height, double rotation,
 			File src) {
 		super(x, y, visible, name, width, height);
 		this.rotation = rotation;
@@ -98,7 +98,7 @@ public class Picture extends StretchableShpae {
 	}
 
 	// Constructor
-	public Picture(double x, double y, boolean visible, String name, double width, double height, int rotation,
+	public Picture(double x, double y, boolean visible, String name, double width, double height, double rotation,
 			BufferedImage img) {
 		super(x, y, visible, name, width, height);
 		this.rotation = rotation;
@@ -425,7 +425,7 @@ public class Picture extends StretchableShpae {
 
 	public Picture(String[] data) throws NumberFormatException, IOException {
 		this(Double.parseDouble(data[0]), Double.parseDouble(data[1]), Boolean.parseBoolean(data[2]), data[3],
-				Double.parseDouble(data[4]), Double.parseDouble(data[5]), Integer.parseInt(data[6]),
+				Double.parseDouble(data[4]), Double.parseDouble(data[5]), Double.parseDouble(data[6]),
 				decodeSourceImage(data[11]));
 		this.cutFromLeft = Double.parseDouble(data[7]);
 		this.cutFromTop = Double.parseDouble(data[8]);
@@ -534,7 +534,7 @@ public class Picture extends StretchableShpae {
 		return rotation;
 	}
 
-	public void setRotation(int rotation) {
+	public void setRotation(double rotation) {
 		this.rotation = rotation;
 	}
 
