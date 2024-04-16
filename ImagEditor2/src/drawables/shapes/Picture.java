@@ -547,19 +547,19 @@ public class Picture extends StretchableShpae {
 	}
 
 	public void addToCutFromLeft(int diff) {
-		setCutFromLeft(getCutFromLeft() + 1 / getWidthStretchRatio() * diff);
+		setCutFromLeft(getCutFromLeft() + (1 / getWidthStretchRatio()) * diff);
 	}
 
 	public void addToCutFromTop(int diff) {
-		setCutFromTop(getCutFromTop() + 1 / getHeightStretchRatio() * diff);
+		setCutFromTop(getCutFromTop() + (1 / getHeightStretchRatio()) * diff);
 	}
 
 	public void addToCutFromRight(int diff) {
-		setCutFromRight(getCutFromRight() + 1 / getWidthStretchRatio() * diff);
+		setCutFromRight(getCutFromRight() + (1 / getWidthStretchRatio()) * diff);
 	}
 
 	public void addToCutFromBottom(int diff) {
-		setCutFromBottom(getCutFromBottom() + 1 / getHeightStretchRatio() * diff);
+		setCutFromBottom(getCutFromBottom() + (1 / getHeightStretchRatio()) * diff);
 	}
 
 	public boolean isPreview() {

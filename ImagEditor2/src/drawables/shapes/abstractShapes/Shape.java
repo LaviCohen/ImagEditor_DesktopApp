@@ -191,6 +191,18 @@ public abstract class Shape implements Drawable{
 
 		int y = (int) (yOnScreen - Main.f.getLocationOnScreen().y - 16);
 		System.out.println("Locate at " + x + ", " + y + " (" + xOnScreen + ", " + yOnScreen + ")");
+		if (x > Main.f.getWidth() + Main.f.getLocationOnScreen().x - dialog.getWidth()) {
+			x = Main.f.getWidth() + Main.f.getLocationOnScreen().x - dialog.getWidth();
+		}
+		if (y > Main.f.getHeight() + Main.f.getLocationOnScreen().y - dialog.getHeight()) {
+			y = Main.f.getHeight() + Main.f.getLocationOnScreen().y - dialog.getHeight();
+		}
+		if (x < 0) {
+			x = 0;
+		}
+		if (y < 0) {
+			y = 0;
+		}
 		dialog.setLocation(x, y);
 	}
 }
