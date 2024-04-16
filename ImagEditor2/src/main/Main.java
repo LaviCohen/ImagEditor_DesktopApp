@@ -176,8 +176,8 @@ public class Main {
 		initProject();
 		initBoardScrollPane();
 		initLayersSideBarPanel();
-		initToolsSideBarPanel();
 		initToolsSettingsPanel();
+		initToolsSideBarPanel();
 		updateSizeLabel();
 		updateLayersList();
 		applyThemeColors();
@@ -197,11 +197,14 @@ public class Main {
 	private static void initToolsSettingsPanel() {
 		setToolsSettingsPanel(new JPanel(new BorderLayout()));
 		getToolsSettingsPanel().add(new JPanel());
-		toolsSideBarPanel.setPreferredSize(new Dimension(100, 50));
 		f.add(getToolsSettingsPanel(), BorderLayout.NORTH);
 	}
 	private static void initToolsSideBarPanel() {
 		toolsSideBarPanel = ToolsManager.createToolsPanel();
+		
+		Main.f.add(toolsSideBarPanel, Main.translator.getAfterTextBorder());
+		
+		toolsSideBarPanel.setPreferredSize(new Dimension(100, 50));
 	}
 	private static void initProject() {
 		Main.currentProject = new Project();

@@ -44,7 +44,7 @@ public class ToolsManager {
 	public static final int UNGROUP_TOOL = 6;
 	
 
-	private static int currentTool = 0;
+	private static int currentTool;
 	
 	
 	private static JLabel pickerToolLabel;
@@ -125,7 +125,8 @@ public class ToolsManager {
 		});
 		toolsSideBarPanel.add(ungroupToolLabel);
 		
-		Main.f.add(toolsSideBarPanel, Main.translator.getAfterTextBorder());
+		update(PICKER_TOOL);
+		
 		return toolsSideBarPanel;
 	}
 	
