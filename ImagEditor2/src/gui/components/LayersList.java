@@ -99,6 +99,12 @@ public class LayersList extends JPanel{
 		}
 		return selected.layer;
 	}
+	public Shape getSelectedShape() {
+		if (selected == null) {
+			return null;
+		}
+		return selected.layer.getShape();
+	}
 	public void updateImage(Shape shape) {
 		Layer layer = getLayerForShape(shape);
 		for (int i = 0; i < layerPanels.size(); i++) {

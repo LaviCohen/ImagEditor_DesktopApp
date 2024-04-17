@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -78,7 +79,7 @@ public class Picture extends StretchableShpae {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if (bf.getWidth() * bf.getHeight() < 2_000_000) {
+			if (bf.getWidth() * bf.getHeight() < 200_000) {
 				this.image = bf;
 			} else {
 				int imageWidth = 1000;
@@ -89,7 +90,7 @@ public class Picture extends StretchableShpae {
 			}
 		} else {
 			try {
-				this.image = ImageIO.read(src);
+				this.image = convertToARGB(ImageIO.read(src));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -102,13 +103,15 @@ public class Picture extends StretchableShpae {
 			BufferedImage img) {
 		super(x, y, visible, name, width, height);
 		this.rotation = rotation;
-		this.image = img;
+		this.image = convertToARGB(img);
 	}
 
 	// Methods
 	@Override
 	public void draw(Graphics2D g) {
 		if (Main.getBoard().isExportPaintMode() && isPreview) {
+			//In case the program uses only preview while editing, here the code give the full
+			//picture in maximum resolution.
 			BufferedImage displayImage = new BufferedImage((int) getCutWidth(), (int) getCutHeight(),
 					BufferedImage.TYPE_INT_ARGB_PRE);
 			try {
@@ -133,6 +136,21 @@ public class Picture extends StretchableShpae {
 				e.printStackTrace();
 			}
 		}
+		if (isCutting && Main.getLayersList().getSelectedShape() == this) {
+			//Displaying the whole picture behind the current one
+			float[] scales = { 1f, 1f, 1f, 0.3f };
+			float[] offsets = new float[4];
+			RescaleOp rop = new RescaleOp(scales, offsets, null);
+			double horzCut = (cutFromLeft + cutFromRight);
+			double vertCut = (cutFromTop + cutFromBottom);
+			double horzRatio = width / (image.getWidth() - horzCut);
+			double vertRatio = height /  (image.getHeight() - vertCut);
+			int nonCutOnBoardWidth = (int)(getWidthOnBoard() + horzCut * horzRatio);
+			int nonCutOnBoardHeight = (int)(getHeightOnBoard() + vertCut * vertRatio);
+			g.drawImage(PictureUtilities.getScaledImage(
+						image, nonCutOnBoardWidth, nonCutOnBoardHeight),
+					rop,(int) (x - cutFromLeft * horzRatio), (int) (y - cutFromTop * vertRatio));
+		}
 		if (!Preferences.useMoreRAM) {
 			// In case the setting has been changed while the program is running, so
 			// previous lastDrawn won't stuck in the memory
@@ -148,7 +166,7 @@ public class Picture extends StretchableShpae {
 
 	public BufferedImage getImageToDisplay() {
 		BufferedImage displayImage = new BufferedImage((int) getCutWidth(), (int) getCutHeight(),
-				BufferedImage.TYPE_INT_ARGB_PRE);
+				BufferedImage.TYPE_INT_ARGB);
 		displayImage.createGraphics().drawImage(
 				image.getSubimage((int) cutFromLeft, (int) cutFromTop, (int) getCutWidth(), (int) getCutHeight()), 0, 0,
 				null);
@@ -163,6 +181,13 @@ public class Picture extends StretchableShpae {
 		}
 		displayImage = PictureUtilities.rotateImageByDegrees(displayImage, rotation);
 		return displayImage;
+	}
+	
+	public static BufferedImage convertToARGB(BufferedImage tmp) {
+		BufferedImage ret = new BufferedImage(tmp.getWidth(), tmp.getHeight(), 
+				BufferedImage.TYPE_INT_ARGB);
+		ret.createGraphics().drawImage(tmp, 0, 0, null);
+		return ret;
 	}
 
 	public double getCutHeight() {
