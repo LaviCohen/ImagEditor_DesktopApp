@@ -136,7 +136,7 @@ public class Picture extends StretchableShpae {
 				e.printStackTrace();
 			}
 		}
-		if (isCutting && Main.getLayersList().getSelectedShape() == this) {
+		if (isCutting && Preferences.showCutPartsOfPicture && Main.getLayersList().getSelectedShape() == this) {
 			//Displaying the whole picture behind the current one
 			float[] scales = { 1f, 1f, 1f, 0.3f };
 			float[] offsets = new float[4];

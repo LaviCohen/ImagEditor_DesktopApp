@@ -42,6 +42,7 @@ public class Preferences {
 	public static boolean useMoreRAM;
 	public static boolean usePreviewPictures;
 	public static boolean manualRefreshOnly;
+	public static boolean showCutPartsOfPicture;
 	public static boolean keepTrackOfTopLayers;
 	public static int numOfBackOperations;
 	//Appearance
@@ -68,6 +69,7 @@ public class Preferences {
 		usePreviewPictures = Boolean.parseBoolean(default_setting.get("use_preview_pictures"));
 		manualRefreshOnly = Boolean.parseBoolean(default_setting.get("manual_refresh_only"));
 		darkMode = Boolean.parseBoolean(default_setting.get("dark_mode"));
+		showCutPartsOfPicture = Boolean.parseBoolean(default_setting.get("show_cut_parts_of_picture"));
 		keepTrackOfTopLayers = Boolean.parseBoolean(default_setting.get("keep_track_of_layer"));
 		numOfBackOperations = Integer.parseInt(default_setting.get("num_of_back_op"));
 		mpPixelSize = Integer.parseInt(default_setting.get("multi_picture_pixel_size"));
@@ -86,6 +88,7 @@ public class Preferences {
 		default_setting.putWithoutSave("use_preview_pictures", usePreviewPictures);
 		default_setting.putWithoutSave("manual_refresh_only", manualRefreshOnly);
 		default_setting.putWithoutSave("dark_mode", darkMode);
+		default_setting.putWithoutSave("show_cut_parts_of_picture", showCutPartsOfPicture);
 		default_setting.putWithoutSave("keep_track_of_layer", keepTrackOfTopLayers);
 		default_setting.putWithoutSave("num_of_back_op", numOfBackOperations);
 		default_setting.putWithoutSave("multi_picture_pixel_size", mpPixelSize);
@@ -185,11 +188,16 @@ public class Preferences {
 		
 		
 		//Advanced tab (save logs and CPU vs RAM priority)
-		JPanel advancedPrefsPanel = new JPanel(new ListLayout(0, 3));
+		JPanel advancedPrefsPanel = new JPanel(new ListLayout(0, 4));
 		
 		//Save logs
 		JCheckBox saveLogsCheckBox = new JCheckBox("Save the Logs Every time the Program is Being Used", Preferences.saveLogs);
 		advancedPrefsPanel.add(saveLogsCheckBox);
+		
+		//Show cut parts of picture
+		JCheckBox showCutPartsOfPictureCheckBox = new JCheckBox("Show cut parts of picture (transparent, while editing)", Preferences.showCutPartsOfPicture);
+		advancedPrefsPanel.add(showCutPartsOfPictureCheckBox);
+				
 		
 		//Keep track of top layer changes
 		JCheckBox keepTrackCheckBox = new JCheckBox("Keep Track of Brushing (Enable Undoing Brushing & Erasing Operations)", Preferences.keepTrackOfTopLayers);
@@ -280,6 +288,8 @@ public class Preferences {
 				Preferences.usePreviewPictures = usePreviewCheckBox.isSelected();
 				//Updating manual refresh
 				Preferences.manualRefreshOnly = manualRefreshOnlyCheckBox.isSelected();
+				//Show cut parts of picture
+				Preferences.showCutPartsOfPicture = showCutPartsOfPictureCheckBox.isSelected();
 				//Updating keep track of layers
 				Preferences.keepTrackOfTopLayers = keepTrackCheckBox.isSelected();
 				//Updating number of back operations
