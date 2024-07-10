@@ -610,4 +610,28 @@ public class Actions {
 		d.setVisible(true);
 		
 	}
+	public static void moveOneLayerUp(Layer layer) {
+		if (Main.getBoard().getLayers().getLast() == layer) {
+			LDialogs.showMessageDialog(Main.f, Main.translator.get("This is the top layer!"),
+					Main.translator.get("Warning"), LDialogs.WARNING_MESSAGE);
+			return;
+		}
+		int sIndex = Main.getBoard().getLayers().indexOf(layer);
+		int upIndex = Main.getBoard().getLayers().indexOf(layer) + 1;
+		Layer up = Main.getBoard().getLayers().get(upIndex);
+		Main.getBoard().getLayers().set(upIndex, layer);
+		Main.getBoard().getLayers().set(sIndex, up);
+	}
+	public static void moveOneLayerDown(Layer layer) {
+		if (Main.getBoard().getLayers().getFirst() == layer) {
+			LDialogs.showMessageDialog(Main.f, Main.translator.get("This is the bottom layer!"),
+					Main.translator.get("Warning"), LDialogs.WARNING_MESSAGE);
+			return;
+		}
+		int sIndex = Main.getBoard().getLayers().indexOf(layer);
+		int downIndex = Main.getBoard().getLayers().indexOf(layer) - 1;
+		Layer down = Main.getBoard().getLayers().get(downIndex);
+		Main.getBoard().getLayers().set(downIndex, layer);
+		Main.getBoard().getLayers().set(sIndex, down);
+	}
 }

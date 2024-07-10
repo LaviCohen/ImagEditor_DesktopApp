@@ -460,18 +460,9 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				if (getLayersList().getSelectedLayer() != null) {
 					Layer layer = getLayersList().getSelectedLayer();
-					if (getBoard().getLayers().getLast() == layer) {
-						LDialogs.showMessageDialog(Main.f, Main.translator.get("This is the top layer!"),
-								Main.translator.get("Warning"), LDialogs.WARNING_MESSAGE);
-						return;
-					}
-					int sIndex = getBoard().getLayers().indexOf(layer);
-					int upIndex = getBoard().getLayers().indexOf(layer) + 1;
-					Layer up = getBoard().getLayers().get(upIndex);
-					getBoard().getLayers().set(upIndex, layer);
-					getBoard().getLayers().set(sIndex, up);
-					getBoard().repaint();
-					updateLayersList();
+					Actions.moveOneLayerUp(layer);
+					Main.getBoard().repaint();
+					Main.updateLayersList();
 				}
 			}
 		});
@@ -487,16 +478,7 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				if (getLayersList().getSelectedLayer() != null) {
 					Layer layer = getLayersList().getSelectedLayer();
-					if (getBoard().getLayers().getFirst() == layer) {
-						LDialogs.showMessageDialog(Main.f, Main.translator.get("This is the bottom layer!"),
-								Main.translator.get("Warning"), LDialogs.WARNING_MESSAGE);
-						return;
-					}
-					int sIndex = getBoard().getLayers().indexOf(layer);
-					int downIndex = getBoard().getLayers().indexOf(layer) - 1;
-					Layer down = getBoard().getLayers().get(downIndex);
-					getBoard().getLayers().set(downIndex, layer);
-					getBoard().getLayers().set(sIndex, down);
+					Actions.moveOneLayerDown(layer);
 					getBoard().repaint();
 					updateLayersList();
 				}

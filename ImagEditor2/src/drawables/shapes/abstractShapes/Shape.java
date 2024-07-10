@@ -22,6 +22,7 @@ import drawables.shapes.Rectangle;
 import drawables.shapes.Text;
 import gui.components.EditPanel;
 import le.gui.dialogs.LDialogs;
+import main.Actions;
 import main.Main;
 
 public abstract class Shape implements Drawable{
@@ -135,6 +136,31 @@ public abstract class Shape implements Drawable{
 			}
 		});
 		popup.add(edit);
+		popup.addSeparator();
+		JMenuItem oneLayerUp = new JMenuItem(Main.translator.get("One Layer Up"));
+		Main.theme.affect(oneLayerUp);
+		oneLayerUp.addActionListener(new ActionListener() {
+	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Actions.moveOneLayerUp(Main.getLayersList().getLayerForShape(Shape.this));
+				Main.getBoard().repaint();
+				Main.updateLayersList();
+			}
+		});
+		popup.add(oneLayerUp);
+		JMenuItem oneLayerDown = new JMenuItem(Main.translator.get("One Layer Down"));
+		Main.theme.affect(oneLayerDown);
+		oneLayerDown.addActionListener(new ActionListener() {
+	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Actions.moveOneLayerDown(Main.getLayersList().getLayerForShape(Shape.this));
+				Main.getBoard().repaint();
+				Main.updateLayersList();
+			}
+		});
+		popup.add(oneLayerDown);
 		return popup;
 	}
 	public static Shape parseShape(String line) throws NumberFormatException, IOException {
