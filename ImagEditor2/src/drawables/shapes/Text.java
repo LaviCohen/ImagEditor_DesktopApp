@@ -123,6 +123,9 @@ public class Text extends Shape implements ColoredShape{
 		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		editDialog.setVisible(true);
 	}
+	public static Text createNewDefaultText() {
+		return new Text(0, 0, true, null, Color.BLACK, new Font("Arial", Font.PLAIN, 20), "Text");
+	}
 	@SuppressWarnings("deprecation")
 	@Override
 	public int getWidthOnBoard() {

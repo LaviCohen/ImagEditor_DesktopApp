@@ -126,6 +126,10 @@ public class Code extends Shape{
 		d.repaint();
 		d.dispose();
 	}
+	
+	public static Code createNewDefaultCode() {
+		return new Code("<html><i>Your Code</i></html>", true);
+	}
 
 	@Override
 	public int getWidthOnBoard() {

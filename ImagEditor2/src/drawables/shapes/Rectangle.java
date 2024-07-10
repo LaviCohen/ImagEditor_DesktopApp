@@ -177,5 +177,9 @@ public class Rectangle extends StretchableShpae implements ColoredShape{
 	public void setFilled(boolean isFilled) {
 		this.isFilled = isFilled;
 	}
+	
+	public static Rectangle createNewDefaultRectangle() {
+		return new Rectangle(0, 0, true, null, 100, 100, Color.BLUE);
+	}
 
 }

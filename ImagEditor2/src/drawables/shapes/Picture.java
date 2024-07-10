@@ -27,6 +27,7 @@ import drawables.shapes.abstractShapes.StretchableShpae;
 import effects.EffectsManager;
 import gui.components.EditPanel;
 import install.Preferences;
+import install.Resources;
 import le.gui.components.LSlider;
 import le.gui.dialogs.LDialogs;
 import le.utils.PictureUtilities;
@@ -601,5 +602,9 @@ public class Picture extends StretchableShpae {
 
 	public void setSource(File source) {
 		this.source = source;
+	}
+
+	public static Picture createNewDefaultPicture() {
+		return new Picture(0, 0, true, null, 150, 50, 0, Resources.defaultImage);
 	}
 }

@@ -445,30 +445,25 @@ public class Actions {
 	 * Adds Rectangle to the current project.
 	 * */
 	public static void addRectangle() {
-		Rectangle r = new Rectangle(0, 0, true, null, 100, 100, Color.BLUE);
-		addShape(r);
+		addShape(Rectangle.createNewDefaultRectangle());
 	}
 	/**
 	 * Adds Text to the current project.
 	 * */
 	public static void addText() {
-		Text t = new Text(
-				0, 0, true, null, Color.BLACK, new Font("Arial", Font.PLAIN, 20), "Text");
-		addShape(t);
+		addShape(Text.createNewDefaultText());
 	}
 	/**
 	 * Adds Picture to the current project.
 	 * */
 	public static void addPicture() {
-		Picture p = new Picture(0, 0, true, null, 150, 50, 0, Resources.defaultImage);
-		addShape(p);
+		addShape(Picture.createNewDefaultPicture());
 	}
 	/**
 	 * Adds Code to the current project.
 	 * */
 	public static void addCode() {
-		Code c = new Code("<html><i>Your Code</i></html>", true);
-		addShape(c);
+		addShape(Code.createNewDefaultCode());
 	}
 	/**
 	 * Adds given shape to the current project.

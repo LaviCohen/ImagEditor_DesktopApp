@@ -2,6 +2,7 @@ package drawables.shapes.abstractShapes;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -72,6 +73,10 @@ public abstract class Shape implements Drawable{
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public void setLocation(Point p) {
+		setX(p.getX());
+		setY(p.getY());
 	}
 	public abstract void edit();
 	public abstract int getWidthOnBoard();

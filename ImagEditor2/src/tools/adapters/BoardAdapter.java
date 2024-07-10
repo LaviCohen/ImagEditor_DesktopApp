@@ -1,5 +1,6 @@
 package tools.adapters;
 
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -8,6 +9,10 @@ import java.awt.event.MouseEvent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import drawables.shapes.Code;
+import drawables.shapes.Picture;
+import drawables.shapes.Rectangle;
+import drawables.shapes.Text;
 import drawables.shapes.abstractShapes.Shape;
 import gui.components.Board;
 import main.Actions;
@@ -40,14 +45,16 @@ public abstract class BoardAdapter extends MouseAdapter{
 		return shapeInFocus;
 	}
 	
-	public void openAddShapePopupMenu(MouseEvent e) {
+	public void openAddShapePopupMenu(MouseEvent mouseEvent) {
 		JPopupMenu addPopupMenu = new JPopupMenu("Add Shape");
 		JMenuItem addText = new JMenuItem("Text");
 		addText.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Actions.addText();
+				Text t = Text.createNewDefaultText();
+				t.setLocation(boardToPaperCoordinatesPoint(mouseEvent.getPoint()));
+				Actions.addShape(t);
 			}
 		});
 		addPopupMenu.add(addText);
@@ -56,7 +63,9 @@ public abstract class BoardAdapter extends MouseAdapter{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Actions.addRectangle();
+				Rectangle r = Rectangle.createNewDefaultRectangle();
+				r.setLocation(boardToPaperCoordinatesPoint(mouseEvent.getPoint()));
+				Actions.addShape(r);
 			}
 		});
 		addPopupMenu.add(addRectengle);
@@ -65,7 +74,9 @@ public abstract class BoardAdapter extends MouseAdapter{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Actions.addPicture();
+				Picture p = Picture.createNewDefaultPicture();
+				p.setLocation(boardToPaperCoordinatesPoint(mouseEvent.getPoint()));
+				Actions.addShape(p);
 			}
 		});
 		addPopupMenu.add(addPicture);
@@ -74,11 +85,17 @@ public abstract class BoardAdapter extends MouseAdapter{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Actions.addCode();
+				Code c = Code.createNewDefaultCode();
+				c.setLocation(boardToPaperCoordinatesPoint(mouseEvent.getPoint()));
+				Actions.addShape(c);
 			}
 		});
 		addPopupMenu.add(addCode);
-		addPopupMenu.show(parent, e.getX(), e.getY());
+		addPopupMenu.show(parent, mouseEvent.getX(), mouseEvent.getY());
+	}
+	
+	protected Point boardToPaperCoordinatesPoint(Point p) {
+		return new Point(boardToPaperCoordinatesX(p.x), boardToPaperCoordinatesY(p.y));
 	}
 	
 	protected int boardToPaperCoordinatesX(int boardX) {
