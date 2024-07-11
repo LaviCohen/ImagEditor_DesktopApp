@@ -37,8 +37,9 @@ public interface TextualShape {
 				return changes;
 			}
 		};
-		textPanel.add(Main.theme.affect(new JLabel("Text:")), 
+		textPanel.add(Main.theme.affect(new JLabel(title)), 
 				Main.translator.getBeforeTextBorder());
+		textPanel.add(textArea);
 		return textPanel;
 	}
 }
