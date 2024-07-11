@@ -21,7 +21,6 @@ import operatins.OperationsManager;
 import operatins.changes.BooleanChange;
 import operatins.changes.Change;
 import operatins.changes.NumericalChange;
-import operatins.changes.ObjectChange;
 
 public class Rectangle extends StretchableShpae implements ColoredShape{
 
@@ -73,29 +72,12 @@ public class Rectangle extends StretchableShpae implements ColoredShape{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					Object[] positionData = positionPanel.getData();
-					double x = (Double) positionData[0];
-					double y = (Double) positionData[1];
-					Object[] sizeData = sizePanel.getData();
-					double width = (Double) sizeData[0];
-					double height = (Double) sizeData[1];
-					Color color = (Color) colorPanel.getData()[0];
 					LinkedList<Change> changes = new LinkedList<>();
-					if (Rectangle.this.x != x) {
-						changes.add(new NumericalChange(Change.X_CHANGE, x - Rectangle.this.x));
-					}
-					if (Rectangle.this.y != y) {
-						changes.add(new NumericalChange(Change.Y_CHANGE, y - Rectangle.this.y));
-					}
-					if (Rectangle.this.width != width) {
-						changes.add(new NumericalChange(Change.WIDTH_CHANGE, width - Rectangle.this.width));
-					}
-					if (Rectangle.this.height != height) {
-						changes.add(new NumericalChange(Change.HEIGHT_CHANGE, height - Rectangle.this.height));
-					}
-					if (!Rectangle.this.color.equals(color)) {
-						changes.add(new ObjectChange(Change.RECTANGLE_COLOR_CHANGE, Rectangle.this.color, color));
-					}
+					changes.addAll(positionPanel.getChanges());
+					changes.addAll(sizePanel.getChanges());
+					changes.addAll(colorPanel.getChanges());
+					
+					
 					if (Rectangle.this.roundWidth != roundWidthSlider.getValue()) {
 						changes.add(new NumericalChange(Change.ROUND_WIDTH_CHANGE, roundWidthSlider.getValue() - Rectangle.this.roundWidth));
 					}

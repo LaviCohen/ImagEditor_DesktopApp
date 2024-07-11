@@ -1,12 +1,15 @@
 package drawables.shapes.abstractShapes;
 
 import java.awt.GridLayout;
+import java.util.LinkedList;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import gui.components.EditPanel;
 import main.Main;
+import operatins.changes.Change;
+import operatins.changes.NumericalChange;
 
 public abstract class StretchableShpae extends Shape{
 	
@@ -64,6 +67,22 @@ public abstract class StretchableShpae extends Shape{
 			public Object[] getData() {
 				return new Double[] {Double.parseDouble(widthField.getText()), 
 						Double.parseDouble(heightField.getText())};
+			}
+
+			@Override
+			public LinkedList<Change> getChanges() {
+				Object[] sizeData = getData();
+				double width = (Double) sizeData[0];
+				double height = (Double) sizeData[1];
+				LinkedList<Change> changes = new LinkedList<>();
+				if (StretchableShpae.this.width != width) {
+					changes.add(new NumericalChange(Change.WIDTH_CHANGE, width - StretchableShpae.this.width));
+				}
+				if (StretchableShpae.this.height != height) {
+					changes.add(new NumericalChange(Change.HEIGHT_CHANGE, height - StretchableShpae.this.height));
+				}
+				
+				return changes;
 			}
 		};
 		sizePanel.add(new JLabel("Width:"));

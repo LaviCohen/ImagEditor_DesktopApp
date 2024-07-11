@@ -253,12 +253,6 @@ public class Picture extends StretchableShpae {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					Object[] positionData = positionPanel.getData();
-					double x = (Double) positionData[0];
-					double y = (Double) positionData[1];
-					Object[] sizeData = heightNwidthPanel.getData();
-					double width = (Double) sizeData[0];
-					double height = (Double) sizeData[1];
 					double rotation = rotationSlider.getValue();
 					BufferedImage image = null;
 					if (!sourceField.getText().equals("don\'t change")) {
@@ -271,18 +265,9 @@ public class Picture extends StretchableShpae {
 						}
 					}
 					LinkedList<Change> changes = new LinkedList<>();
-					if (Picture.this.x != x) {
-						changes.add(new NumericalChange(Change.X_CHANGE, x - Picture.this.x));
-					}
-					if (Picture.this.y != y) {
-						changes.add(new NumericalChange(Change.Y_CHANGE, y - Picture.this.y));
-					}
-					if (Picture.this.width != width) {
-						changes.add(new NumericalChange(Change.WIDTH_CHANGE, width - Picture.this.width));
-					}
-					if (Picture.this.height != height) {
-						changes.add(new NumericalChange(Change.HEIGHT_CHANGE, height - Picture.this.height));
-					}
+					changes.addAll(positionPanel.getChanges());
+					changes.addAll(heightNwidthPanel.getChanges());
+					
 					if (Picture.this.rotation != rotation) {
 						changes.add(new NumericalChange(Change.ROTATION_CHANGE, rotation - Picture.this.rotation));
 					}

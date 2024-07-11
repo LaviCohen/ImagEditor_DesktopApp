@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.LinkedList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -24,6 +25,8 @@ import gui.components.EditPanel;
 import le.gui.dialogs.LDialogs;
 import main.Actions;
 import main.Main;
+import operatins.changes.Change;
+import operatins.changes.NumericalChange;
 
 public abstract class Shape implements Drawable{
 	public static final int DEFAULT_X = 0;
@@ -188,6 +191,22 @@ public abstract class Shape implements Drawable{
 			public Object[] getData() {
 				return new Double[] {Double.parseDouble(xField.getText()), 
 						Double.parseDouble(yField.getText())};
+			}
+			
+			@Override
+			public LinkedList<Change> getChanges() {
+				Object[] positionData = getData();
+				double x = (Double) positionData[0];
+				double y = (Double) positionData[1];
+				
+				LinkedList<Change> changes = new LinkedList<>();
+				if (Shape.this.x != x) {
+					changes.add(new NumericalChange(Change.X_CHANGE, x - Shape.this.x));
+				}
+				if (Shape.this.y != y) {
+					changes.add(new NumericalChange(Change.Y_CHANGE, y - Shape.this.y));
+				}
+				return changes;
 			}
 		};
 		positionPanel.add(Main.theme.affect(new JLabel("X:")));

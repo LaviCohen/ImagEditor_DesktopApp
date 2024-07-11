@@ -20,7 +20,6 @@ import main.Main;
 import operatins.ChangesOperation;
 import operatins.OperationsManager;
 import operatins.changes.Change;
-import operatins.changes.NumericalChange;
 import operatins.changes.ObjectChange;
 
 public class Code extends Shape{
@@ -76,17 +75,10 @@ public class Code extends Shape{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					Object[] positionData = positionPanel.getData();
-					double x = (Double) positionData[0];
-					double y = (Double) positionData[1];
 					String code = textArea.getText();
 					LinkedList<Change> changes = new LinkedList<>();
-					if (Code.this.x != x) {
-						changes.add(new NumericalChange(Change.X_CHANGE, x - Code.this.x));
-					}
-					if (Code.this.y != y) {
-						changes.add(new NumericalChange(Change.Y_CHANGE, y - Code.this.y));
-					}
+					changes.addAll(positionPanel.getChanges());
+					
 					if (!Code.this.code.equals(code)) {
 						changes.add(new ObjectChange(Change.CODE_CHANGE, Code.this.code, code));
 					}

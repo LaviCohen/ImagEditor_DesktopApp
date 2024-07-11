@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedList;
 
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -12,6 +13,8 @@ import javax.swing.JLabel;
 import gui.components.EditPanel;
 import le.gui.ColorTheme;
 import main.Main;
+import operatins.changes.Change;
+import operatins.changes.ObjectChange;
 
 public interface ColoredShape {
 
@@ -40,6 +43,17 @@ public interface ColoredShape {
 			@Override
 			public Object[] getData() {
 				return new Color[] {colorLabel.getBackground()};
+			}
+
+			@Override
+			public LinkedList<Change> getChanges() {
+				LinkedList<Change> changes = new LinkedList<>();
+				Color color = (Color) getData()[0];
+				if (!ColoredShape.this.getColor().equals(color)) {
+					changes.add(new ObjectChange(Change.TEXT_COLOR_CHANGE, ColoredShape.this.getColor(),
+							color));
+				}
+				return changes;
 			}
 		};
 		colorPanel.add(new JLabel("Color:"), Main.translator.getBeforeTextBorder());

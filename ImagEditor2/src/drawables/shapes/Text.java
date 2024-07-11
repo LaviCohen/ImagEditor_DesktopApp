@@ -27,7 +27,6 @@ import main.Main;
 import operatins.ChangesOperation;
 import operatins.OperationsManager;
 import operatins.changes.Change;
-import operatins.changes.NumericalChange;
 import operatins.changes.ObjectChange;
 
 public class Text extends Shape implements ColoredShape{
@@ -78,28 +77,16 @@ public class Text extends Shape implements ColoredShape{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					Object[] positionData = positionPanel.getData();
-					double x = (Double) positionData[0];
-					double y = (Double) positionData[1];
 					String text = textField.getText();
-					Color color = (Color) colorPanel.getData()[0];
 					LinkedList<Change> changes = new LinkedList<>();
-					if (Text.this.x != x) {
-						changes.add(new NumericalChange(Change.X_CHANGE, x - Text.this.x));
-					}
-					if (Text.this.y != y) {
-						changes.add(new NumericalChange(Change.Y_CHANGE, y - Text.this.y));
-					}
+					changes.addAll(positionPanel.getChanges());
+					changes.addAll(colorPanel.getChanges());
 					if (!Text.this.text.equals(text)) {
 						changes.add(new ObjectChange(Change.TEXT_CHANGE, Text.this.text, text));
-					}
-					if (!Text.this.color.equals(color)) {
-						changes.add(new ObjectChange(Change.TEXT_COLOR_CHANGE, Text.this.color, color));
 					}
 					if (!Text.this.font.equals(fontHolder.getFont())) {
 						changes.add(new ObjectChange(Change.FONT_CHANGE, Text.this.font, fontHolder.getFont()));
 					}
-					
 					if (!changes.isEmpty()) {
 						OperationsManager.operate(new ChangesOperation(Text.this, changes));
 						Main.getLayersList().updateImage(Text.this);
