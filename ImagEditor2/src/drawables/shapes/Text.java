@@ -1,6 +1,5 @@
 package drawables.shapes;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -13,12 +12,10 @@ import java.util.LinkedList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import drawables.shapes.abstractShapes.ColoredShape;
 import drawables.shapes.abstractShapes.Shape;
+import drawables.shapes.abstractShapes.TextualShape;
 import gui.components.EditPanel;
 import le.gui.dialogs.LDialogs;
 import le.gui.dialogs.LFontChooser;
@@ -29,7 +26,7 @@ import operatins.OperationsManager;
 import operatins.changes.Change;
 import operatins.changes.ObjectChange;
 
-public class Text extends Shape implements ColoredShape{
+public class Text extends Shape implements ColoredShape, TextualShape{
 	Color color;
 	Font font;
 	String text;
@@ -44,7 +41,11 @@ public class Text extends Shape implements ColoredShape{
 	public void draw(Graphics2D g) {
 		g.setColor(color);
 		g.setFont(font);
-		g.drawString(text, (int)x, (int) (y + getHeightOnBoard() * 0.75));
+		double totalHeight = 0;
+		for (String line: text.split("\n")) {
+			totalHeight += getHeightOfLine(line);
+			g.drawString(line, (int)x, (int) (y + totalHeight));
+		}
 	}
 	@Override
 	public void edit() {
@@ -53,11 +54,7 @@ public class Text extends Shape implements ColoredShape{
 		editDialog.setTitle("Edit Text");
 		EditPanel positionPanel = createPositionPanel();
 		editDialog.add(positionPanel);
-		JPanel textPanel = new JPanel(new BorderLayout());
-		textPanel.add(Main.theme.affect(new JLabel("Text:")), 
-				Main.translator.getBeforeTextBorder());
-		JTextField textField = new JTextField(text);
-		textPanel.add(textField);
+		EditPanel textPanel = createTextPanel("Text:");
 		editDialog.add(textPanel);
 		EditPanel colorPanel = createColorPanel();
 		editDialog.add(colorPanel);
@@ -77,13 +74,10 @@ public class Text extends Shape implements ColoredShape{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					String text = textField.getText();
 					LinkedList<Change> changes = new LinkedList<>();
 					changes.addAll(positionPanel.getChanges());
 					changes.addAll(colorPanel.getChanges());
-					if (!Text.this.text.equals(text)) {
-						changes.add(new ObjectChange(Change.TEXT_CHANGE, Text.this.text, text));
-					}
+					changes.addAll(textPanel.getChanges());
 					if (!Text.this.font.equals(fontHolder.getFont())) {
 						changes.add(new ObjectChange(Change.FONT_CHANGE, Text.this.font, fontHolder.getFont()));
 					}
@@ -113,20 +107,41 @@ public class Text extends Shape implements ColoredShape{
 	public static Text createNewDefaultText() {
 		return new Text(0, 0, true, null, Color.BLACK, new Font("Arial", Font.PLAIN, 20), "Text");
 	}
-	@SuppressWarnings("deprecation")
 	@Override
 	public int getWidthOnBoard() {
-		return Toolkit.getDefaultToolkit().getFontMetrics(font).stringWidth(text);
+		double max = 0;
+		for(String line: text.split("\n")) {
+			double width = getWidthOfLine(line);
+			if (width > max) {
+				max = width;
+			}
+		}
+		return (int)max;
 	}
 	@Override
 	public int getHeightOnBoard() {
-		return (int) font.getLineMetrics(text, new FontRenderContext(null, false, true)).getHeight();
+		double total = 0;
+		for(String line: text.split("\n")) {
+			total += getHeightOfLine(line);
+		}
+		return (int)total;
 	}
 
+	@SuppressWarnings("deprecation")
+	public int getWidthOfLine(String text) {
+		return Toolkit.getDefaultToolkit().getFontMetrics(font).stringWidth(text);
+	}
+	
+	public int getHeightOfLine(String text) {
+		return (int) font.getLineMetrics(text, new FontRenderContext(null, false, true)).getHeight();
+	}
+	
+	@Override
 	public Color getColor() {
 		return color;
 	}
 
+	@Override
 	public void setColor(Color color) {
 		this.color = color;
 	}
@@ -139,10 +154,12 @@ public class Text extends Shape implements ColoredShape{
 		this.font = font;
 	}
 
+	@Override
 	public String getText() {
 		return text;
 	}
-
+	
+	@Override
 	public void setText(String text) {
 		this.text = text;
 	}

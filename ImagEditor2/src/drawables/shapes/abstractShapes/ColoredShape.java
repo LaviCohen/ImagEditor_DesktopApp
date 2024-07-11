@@ -50,7 +50,7 @@ public interface ColoredShape {
 				LinkedList<Change> changes = new LinkedList<>();
 				Color color = (Color) getData()[0];
 				if (!ColoredShape.this.getColor().equals(color)) {
-					changes.add(new ObjectChange(Change.TEXT_COLOR_CHANGE, ColoredShape.this.getColor(),
+					changes.add(new ObjectChange(Change.COLOR_CHANGE, ColoredShape.this.getColor(),
 							color));
 				}
 				return changes;
@@ -61,5 +61,4 @@ public interface ColoredShape {
 		colorPanel.add(setColorButton, Main.translator.getAfterTextBorder());
 		return colorPanel;
 	}
-	
 }

@@ -9,20 +9,17 @@ import java.util.LinkedList;
 
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
 
 import drawables.shapes.abstractShapes.Shape;
+import drawables.shapes.abstractShapes.TextualShape;
 import gui.components.EditPanel;
 import le.gui.dialogs.LDialogs;
 import main.Main;
 import operatins.ChangesOperation;
 import operatins.OperationsManager;
 import operatins.changes.Change;
-import operatins.changes.ObjectChange;
 
-public class Code extends Shape{
+public class Code extends Shape implements TextualShape{
 	
 	private String code;
 
@@ -33,7 +30,7 @@ public class Code extends Shape{
 		if (isHTML) {
 			this.pane.setContentType("text/html");
 		}
-		setCode(code);
+		setText(code);
 	}
 	
 	public Code(String line) {
@@ -64,24 +61,17 @@ public class Code extends Shape{
 		editDialog.setTitle("Edit Text");
 		EditPanel positionPanel = createPositionPanel();
 		editDialog.add(positionPanel, BorderLayout.NORTH);
-		JPanel textPanel = new JPanel(new BorderLayout());
-		textPanel.add(Main.theme.affect(new JLabel("Code:")), 
-				BorderLayout.NORTH);
-		JTextArea textArea = new JTextArea(code);
-		textPanel.add(textArea);
+		EditPanel textPanel = createTextPanel("Code:");
 		editDialog.add(textPanel);
 		ActionListener actionListener = new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					String code = textArea.getText();
 					LinkedList<Change> changes = new LinkedList<>();
 					changes.addAll(positionPanel.getChanges());
+					changes.addAll(textPanel.getChanges());
 					
-					if (!Code.this.code.equals(code)) {
-						changes.add(new ObjectChange(Change.CODE_CHANGE, Code.this.code, code));
-					}
 					if (!changes.isEmpty()) {
 						OperationsManager.operate(new ChangesOperation(Code.this, changes));
 						Main.getLayersList().updateImage(Code.this);
@@ -104,11 +94,13 @@ public class Code extends Shape{
 		editDialog.setVisible(true);
 	}
 	
-	public String getCode() {
+	@Override
+	public String getText() {
 		return code;
 	}
 
-	public void setCode(String code) {
+	@Override
+	public void setText(String code) {
 		this.code = code;
 		Code.this.pane.setText(code);
 

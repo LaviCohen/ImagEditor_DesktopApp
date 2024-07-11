@@ -5,11 +5,11 @@ import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-import drawables.shapes.Code;
 import drawables.shapes.Picture;
-import drawables.shapes.Rectangle;
 import drawables.shapes.Text;
+import drawables.shapes.abstractShapes.ColoredShape;
 import drawables.shapes.abstractShapes.Shape;
+import drawables.shapes.abstractShapes.TextualShape;
 import main.Main;
 
 public class ObjectChange extends Change{
@@ -29,10 +29,7 @@ public class ObjectChange extends Change{
 			s.setName((String) to);
 			break;
 		case TEXT_CHANGE:
-			((Text)s).setText((String) to);
-			break;
-		case CODE_CHANGE:
-			((Code)s).setCode((String) to);
+			((TextualShape)s).setText((String) to);
 			break;
 		case SRC_IMAGE_CHANGE:
 			((Picture)s).setImage((BufferedImage) to);
@@ -40,11 +37,8 @@ public class ObjectChange extends Change{
 		case FONT_CHANGE:
 			((Text)s).setFont((Font)to);
 			break;
-		case TEXT_COLOR_CHANGE:
-			((Text)s).setColor((Color)to);
-			break;
-		case RECTANGLE_COLOR_CHANGE:
-			((Rectangle)s).setColor((Color)to);
+		case COLOR_CHANGE:
+			((ColoredShape)s).setColor((Color)to);
 			break;
 		case LAYER_TOP_CHANGE:
 			Main.getLayersList().getLayerForShape(s).setTop((BufferedImage)to);
