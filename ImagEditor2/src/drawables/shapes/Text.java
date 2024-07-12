@@ -24,6 +24,7 @@ import main.Main;
 import operatins.ChangesOperation;
 import operatins.OperationsManager;
 import operatins.changes.Change;
+import operatins.changes.ChangeType;
 import operatins.changes.ObjectChange;
 
 public class Text extends Shape implements ColoredShape, TextualShape{
@@ -79,7 +80,7 @@ public class Text extends Shape implements ColoredShape, TextualShape{
 					changes.addAll(colorPanel.getChanges());
 					changes.addAll(textPanel.getChanges());
 					if (!Text.this.font.equals(fontHolder.getFont())) {
-						changes.add(new ObjectChange(Change.FONT_CHANGE, Text.this.font, fontHolder.getFont()));
+						changes.add(new ObjectChange(ChangeType.FONT_CHANGE, Text.this.font, fontHolder.getFont()));
 					}
 					if (!changes.isEmpty()) {
 						OperationsManager.operate(new ChangesOperation(Text.this, changes));

@@ -13,6 +13,7 @@ import main.Main;
 import operatins.ChangesOperation;
 import operatins.OperationsManager;
 import operatins.changes.Change;
+import operatins.changes.ChangeType;
 import operatins.changes.NumericalChange;
 
 public class PickingMouseAdapter extends BoardAdapter{
@@ -61,28 +62,32 @@ public class PickingMouseAdapter extends BoardAdapter{
 		if (shapeInFocus != null) {
 			LinkedList<Change> changes = new LinkedList<Change>();
 			if (totalMovementX != 0) {
-				changes.add(new NumericalChange(Change.X_CHANGE, totalMovementX));
+				changes.add(new NumericalChange(ChangeType.X_CHANGE, totalMovementX));
 			}
 			if (totalMovementY != 0) {
-				changes.add(new NumericalChange(Change.Y_CHANGE, totalMovementY));
+				changes.add(new NumericalChange(ChangeType.Y_CHANGE, totalMovementY));
 			}
 			if (totalStretchX != 0) {
-				changes.add(new NumericalChange(Change.WIDTH_CHANGE, totalStretchX));
+				changes.add(new NumericalChange(ChangeType.WIDTH_CHANGE, totalStretchX));
 			}
 			if (totalStretchY != 0) {
-				changes.add(new NumericalChange(Change.HEIGHT_CHANGE, totalStretchY));
+				changes.add(new NumericalChange(ChangeType.HEIGHT_CHANGE, totalStretchY));
 			}
 			if (totalCutFromBottom != 0) {
-				changes.add(new NumericalChange(Change.CUT_FROM_BOTTOM_CHANGE, totalCutFromBottom));
+				System.out.println("Bottom: " + totalCutFromBottom);
+				changes.add(new NumericalChange(ChangeType.CUT_FROM_BOTTOM_CHANGE, totalCutFromBottom));
 			}
 			if (totalCutFromTop != 0) {
-				changes.add(new NumericalChange(Change.CUT_FROM_TOP_CHANGE, totalCutFromTop));
+				System.out.println("Top: " + totalCutFromTop);
+				changes.add(new NumericalChange(ChangeType.CUT_FROM_TOP_CHANGE, totalCutFromTop));
 			}
 			if (totalCutFromRight != 0) {
-				changes.add(new NumericalChange(Change.CUT_FROM_RIGHT_CHANGE, totalCutFromRight));
+				System.out.println("Right: " + totalCutFromRight);
+				changes.add(new NumericalChange(ChangeType.CUT_FROM_RIGHT_CHANGE, totalCutFromRight));
 			}
 			if (totalCutFromLeft != 0) {
-				changes.add(new NumericalChange(Change.CUT_FROM_LEFT_CHANGE, totalCutFromLeft));
+				System.out.println("Left: " + totalCutFromLeft);
+				changes.add(new NumericalChange(ChangeType.CUT_FROM_LEFT_CHANGE, totalCutFromLeft));
 			}
 			
 			if (!changes.isEmpty()) {
@@ -146,13 +151,13 @@ public class PickingMouseAdapter extends BoardAdapter{
 					p.addToCutFromLeft(movementInX);
 					totalCutFromLeft += movementInX;
 					p.addToCutFromBottom(-movementInY);
-					totalCutFromBottom -= movementInX;
+					totalCutFromBottom -= movementInY;
 					break;
 				case BOTTOM_RIGHT_WRAPPER:
 					p.addToCutFromRight(-movementInX);
 					totalCutFromRight -= movementInX;
 					p.addToCutFromBottom(-movementInY);
-					totalCutFromBottom += movementInY;
+					totalCutFromBottom -= movementInY;
 					break;
 				}
 				p.invalidate();

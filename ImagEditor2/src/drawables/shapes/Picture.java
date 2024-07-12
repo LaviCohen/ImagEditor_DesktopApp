@@ -36,6 +36,7 @@ import operatins.ChangesOperation;
 import operatins.OperationsManager;
 import operatins.changes.BooleanChange;
 import operatins.changes.Change;
+import operatins.changes.ChangeType;
 import operatins.changes.NumericalChange;
 import operatins.changes.ObjectChange;
 
@@ -58,11 +59,12 @@ public class Picture extends StretchableShpae {
 	double cutFromTop = 0;
 	double cutFromRight = 0;
 	double cutFromBottom = 0;
-
-	double rotation;
-
+	
 	// Is the Picture currently cut
 	private boolean isCutting;
+	
+	double rotation;
+
 
 	// Effects
 	EffectsManager effectsManger = new EffectsManager(this);
@@ -269,7 +271,7 @@ public class Picture extends StretchableShpae {
 					changes.addAll(heightNwidthPanel.getChanges());
 					
 					if (Picture.this.rotation != rotation) {
-						changes.add(new NumericalChange(Change.ROTATION_CHANGE, rotation - Picture.this.rotation));
+						changes.add(new NumericalChange(ChangeType.ROTATION_CHANGE, rotation - Picture.this.rotation));
 					}
 					if (image != null) {
 						if (Preferences.usePreviewPictures) {
@@ -287,12 +289,12 @@ public class Picture extends StretchableShpae {
 								int imageWidth = 1000;
 								int imageHeight = (int) (((double)bf.getHeight())/bf.getWidth() * 1000);
 								image = PictureUtilities.getScaledImage(bf, imageWidth, imageHeight);
-								changes.add(new ObjectChange(Change.SRC_PREVIEW_CHANGE, Picture.this.source, src));
+								changes.add(new ObjectChange(ChangeType.SRC_PREVIEW_CHANGE, Picture.this.source, src));
 								if (!Picture.this.isPreview) {
-									changes.add(new BooleanChange(Change.PREVIEW_CHANGE, true));
+									changes.add(new BooleanChange(ChangeType.PREVIEW_CHANGE, true));
 								}
 							}	
-							changes.add(new ObjectChange(Change.SRC_IMAGE_CHANGE, Picture.this.image, image));
+							changes.add(new ObjectChange(ChangeType.SRC_IMAGE_CHANGE, Picture.this.image, image));
 						}
 					}
 					if (!changes.isEmpty()) {
@@ -377,8 +379,11 @@ public class Picture extends StretchableShpae {
 	}
 
 	public void setCutFromLeft(double cutFromLeft) {
-		if (cutFromLeft < 0 || cutFromLeft + this.cutFromRight > image.getWidth() - MINIMUM) {
-			return;
+		if(cutFromLeft < 0) {
+			cutFromLeft = 0;
+		}
+		if (this.cutFromRight + cutFromLeft > image.getWidth() - MINIMUM) {
+			cutFromLeft = image.getWidth() - MINIMUM - this.cutFromRight;
 		}
 		double diff = (cutFromLeft - this.cutFromLeft) * getWidthStretchRatio();
 		this.x += diff;
@@ -391,8 +396,11 @@ public class Picture extends StretchableShpae {
 	}
 
 	public void setCutFromTop(double cutFromTop) {
-		if (cutFromTop < 0 || cutFromTop + this.cutFromBottom > image.getHeight() - MINIMUM) {
-			return;
+		if(cutFromTop < 0) {
+			cutFromTop = 0;
+		}
+		if (this.cutFromBottom + cutFromTop > image.getWidth() - MINIMUM) {
+			cutFromTop = image.getWidth() - MINIMUM - this.cutFromBottom;
 		}
 		double diff = (cutFromTop - this.cutFromTop) * getHeightStretchRatio();
 		this.y += diff;
@@ -405,8 +413,11 @@ public class Picture extends StretchableShpae {
 	}
 
 	public void setCutFromRight(double cutFromRight) {
-		if (cutFromRight < 0 || this.cutFromLeft + cutFromRight > image.getWidth() - MINIMUM) {
-			return;
+		if(cutFromRight < 0) {
+			cutFromRight = 0;
+		}
+		if (this.cutFromLeft + cutFromRight > image.getWidth() - MINIMUM) {
+			cutFromRight = image.getWidth() - MINIMUM - this.cutFromLeft;
 		}
 		double diff = (cutFromRight - this.cutFromRight) * getWidthStretchRatio();
 		this.width -= diff;
@@ -418,8 +429,11 @@ public class Picture extends StretchableShpae {
 	}
 
 	public void setCutFromBottom(double cutFromBottom) {
-		if (cutFromBottom < 0 || this.cutFromTop + cutFromBottom > image.getHeight() - MINIMUM) {
-			return;
+		if(cutFromBottom < 0) {
+			cutFromBottom = 0;
+		}
+		if (this.cutFromTop + cutFromBottom > image.getWidth() - MINIMUM) {
+			cutFromBottom = image.getWidth() - MINIMUM - this.cutFromTop;
 		}
 		double diff = (cutFromBottom - this.cutFromBottom) * getHeightStretchRatio();
 		this.height -= diff;
@@ -501,7 +515,11 @@ public class Picture extends StretchableShpae {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Picture.this.setCutting(!Picture.this.isCutting);
+				if (Picture.this.isCutting) {
+					stopCutting();
+				} else {
+					startCutting();
+				}
 			}
 		});
 		popup.add(cut);
@@ -531,6 +549,14 @@ public class Picture extends StretchableShpae {
 		});
 		popup.add(copy);
 		return popup;
+	}
+	
+	public void startCutting() {
+		isCutting = true;
+	}
+	
+	public void stopCutting() {
+		isCutting = false;
 	}
 
 	public double getWidthStretchRatio() {

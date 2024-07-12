@@ -14,6 +14,7 @@ import main.Main;
 import operatins.ChangesOperation;
 import operatins.OperationsManager;
 import operatins.changes.Change;
+import operatins.changes.ChangeType;
 import operatins.changes.ObjectChange;
 
 public class EraserMouseAdapter extends BoardAdapter {
@@ -74,7 +75,7 @@ public class EraserMouseAdapter extends BoardAdapter {
 	public void mouseReleased(MouseEvent e) {
 		if (Preferences.keepTrackOfTopLayers && Main.getLayersList().getSelectedLayer() != null) {
 			LinkedList<Change> list = new LinkedList<Change>();
-			list.add(new ObjectChange(Change.LAYER_TOP_CHANGE, lastTop, 
+			list.add(new ObjectChange(ChangeType.LAYER_TOP_CHANGE, lastTop, 
 					PictureUtilities.copy(Main.getLayersList().getSelectedLayer().getTop())));
 			OperationsManager.addOperation(new ChangesOperation(
 					Main.getLayersList().getSelectedLayer().getShape(), list));

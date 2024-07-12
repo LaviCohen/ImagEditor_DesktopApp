@@ -20,6 +20,7 @@ import operatins.ChangesOperation;
 import operatins.OperationsManager;
 import operatins.changes.BooleanChange;
 import operatins.changes.Change;
+import operatins.changes.ChangeType;
 import operatins.changes.NumericalChange;
 
 public class Rectangle extends StretchableShpae implements ColoredShape{
@@ -79,13 +80,13 @@ public class Rectangle extends StretchableShpae implements ColoredShape{
 					
 					
 					if (Rectangle.this.roundWidth != roundWidthSlider.getValue()) {
-						changes.add(new NumericalChange(Change.ROUND_WIDTH_CHANGE, roundWidthSlider.getValue() - Rectangle.this.roundWidth));
+						changes.add(new NumericalChange(ChangeType.ROUND_WIDTH_CHANGE, roundWidthSlider.getValue() - Rectangle.this.roundWidth));
 					}
 					if (Rectangle.this.roundHeight != roundHeightSlider.getValue()) {
-						changes.add(new NumericalChange(Change.ROUND_HEIGHT_CHANGE, roundHeightSlider.getValue() - Rectangle.this.roundHeight));
+						changes.add(new NumericalChange(ChangeType.ROUND_HEIGHT_CHANGE, roundHeightSlider.getValue() - Rectangle.this.roundHeight));
 					}
 					if (Rectangle.this.isFilled != isFilledCheckBox.isSelected()) {
-						changes.add(new BooleanChange(Change.IS_FILLED_CHANGE, isFilledCheckBox.isSelected()));
+						changes.add(new BooleanChange(ChangeType.IS_FILLED_CHANGE, isFilledCheckBox.isSelected()));
 					}
 					
 					if (!changes.isEmpty()) {

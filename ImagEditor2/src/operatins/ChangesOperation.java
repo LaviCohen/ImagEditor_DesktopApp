@@ -8,28 +8,32 @@ import operatins.changes.Change;
 public class ChangesOperation implements Operation{
 
 	private LinkedList<Change> changes;
-	private Shape s;
+	private Shape shape;
 	
 	
 	
 	public ChangesOperation(Shape s, LinkedList<Change> changes) {
 		super();
 		this.changes = changes;
-		this.s = s;
+		this.shape = s;
 	}
 
 	@Override
 	public void undo() {
 		for (Change change : changes) {
-			change.undo(s);
+			change.undo(shape);
 		}
 	}
 
 	@Override
 	public void redo() {
 		for (Change change : changes) {
-			change.apply(s);
+			change.apply(shape);
 		}
+	}
+
+	public Shape getShape() {
+		return shape;
 	}
 
 }

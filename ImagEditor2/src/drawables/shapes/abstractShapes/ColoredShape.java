@@ -14,6 +14,7 @@ import gui.components.EditPanel;
 import le.gui.ColorTheme;
 import main.Main;
 import operatins.changes.Change;
+import operatins.changes.ChangeType;
 import operatins.changes.ObjectChange;
 
 public interface ColoredShape {
@@ -50,7 +51,7 @@ public interface ColoredShape {
 				LinkedList<Change> changes = new LinkedList<>();
 				Color color = (Color) getData()[0];
 				if (!ColoredShape.this.getColor().equals(color)) {
-					changes.add(new ObjectChange(Change.COLOR_CHANGE, ColoredShape.this.getColor(),
+					changes.add(new ObjectChange(ChangeType.COLOR_CHANGE, ColoredShape.this.getColor(),
 							color));
 				}
 				return changes;

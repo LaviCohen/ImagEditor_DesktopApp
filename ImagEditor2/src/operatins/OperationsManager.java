@@ -18,6 +18,7 @@ public class OperationsManager {
 	}
 	
 	public static void addOperation(Operation operation) {
+		System.out.println("Adding " + operation);
 		for (int i = 0; i < indexFromLastOperation; i++) {
 			operations.removeLast();
 		}
@@ -32,7 +33,11 @@ public class OperationsManager {
 	public static void undo() {
 		if (!operations.isEmpty()) {
 			System.out.println("Undoing " + operations.get(operations.size() - indexFromLastOperation - 1));
-			operations.get(operations.size() - indexFromLastOperation - 1).undo();
+			Operation operation = operations.get(operations.size() - indexFromLastOperation - 1);
+			operation.undo();
+			if (operation instanceof ChangesOperation) {
+				((ChangesOperation)operation).getShape().invalidate();
+			}
 			indexFromLastOperation++;
 		}
 	}

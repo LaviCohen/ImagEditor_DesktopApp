@@ -23,6 +23,7 @@ import main.Main;
 import operatins.ChangesOperation;
 import operatins.OperationsManager;
 import operatins.changes.Change;
+import operatins.changes.ChangeType;
 import operatins.changes.NumericalChange;
 
 public class GroupShape extends Shape{
@@ -138,10 +139,10 @@ public class GroupShape extends Shape{
 				double y = (Double) positionData[1];
 				LinkedList<Change> changes = new LinkedList<>();
 				if (GroupShape.this.x != x) {
-					changes.add(new NumericalChange(Change.X_CHANGE, x - GroupShape.this.x));
+					changes.add(new NumericalChange(ChangeType.X_CHANGE, x - GroupShape.this.x));
 				}
 				if (GroupShape.this.y != y) {
-					changes.add(new NumericalChange(Change.Y_CHANGE, y - GroupShape.this.y));
+					changes.add(new NumericalChange(ChangeType.Y_CHANGE, y - GroupShape.this.y));
 				}
 				
 				if (!changes.isEmpty()) {

@@ -9,6 +9,7 @@ import javax.swing.JTextArea;
 import gui.components.EditPanel;
 import main.Main;
 import operatins.changes.Change;
+import operatins.changes.ChangeType;
 import operatins.changes.ObjectChange;
 
 public interface TextualShape {
@@ -32,7 +33,7 @@ public interface TextualShape {
 				String text = (String) getData()[0];
 				LinkedList<Change> changes = new LinkedList<>();
 				if (!TextualShape.this.getText().equals(text)) {
-					changes.add(new ObjectChange(Change.TEXT_CHANGE, TextualShape.this.getText(), text));
+					changes.add(new ObjectChange(ChangeType.TEXT_CHANGE, TextualShape.this.getText(), text));
 				}
 				return changes;
 			}

@@ -8,14 +8,14 @@ public class BooleanChange extends Change{
 
 	private boolean newValue;
 	
-	public BooleanChange(int fieldID, boolean newValue) {
-		super(fieldID);
+	public BooleanChange(ChangeType changeType, boolean newValue) {
+		super(changeType);
 		this.newValue = newValue;
 	}
 
 	@Override
 	public void apply(Shape s) {
-		switch (fieldID) {
+		switch (changeType) {
 		case VISIBILITY_CHANGE:
 			s.setVisible(newValue);
 			break;
@@ -26,13 +26,13 @@ public class BooleanChange extends Change{
 			((Picture)s).setPreview(newValue);
 			break;
 		default:
-			throw new IllegalArgumentException("ID " + fieldID + " is not valid for boolean change");
+			throw new IllegalArgumentException("ID " + changeType + " is not valid for boolean change");
 		}
 	}
 
 	@Override
 	public void undo(Shape s) {
-		switch (fieldID) {
+		switch (changeType) {
 		case VISIBILITY_CHANGE:
 			s.setVisible(!newValue);
 			break;
@@ -42,7 +42,7 @@ public class BooleanChange extends Change{
 			((Picture)s).setPreview(!newValue);
 			break;
 		default:
-			throw new IllegalArgumentException("ID " + fieldID + " is not valid for boolean change");
+			throw new IllegalArgumentException("ID " + changeType + " is not valid for boolean change");
 		}
 	}
 

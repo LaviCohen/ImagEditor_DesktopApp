@@ -17,14 +17,14 @@ public class ObjectChange extends Change{
 	private Object oldObject;
 	private Object newObject;
 	
-	public ObjectChange(int fieldID, Object oldObject, Object newObject) {
-		super(fieldID);
+	public ObjectChange(ChangeType changeType, Object oldObject, Object newObject) {
+		super(changeType);
 		this.oldObject = oldObject;
 		this.newObject = newObject;
 	}
 
 	public void change(Shape s, Object to) {
-		switch (fieldID) {
+		switch (changeType) {
 		case NAME_CHANGE:
 			s.setName((String) to);
 			break;
@@ -47,7 +47,7 @@ public class ObjectChange extends Change{
 			((Picture)s).setSource((File)to);
 			break;
 		default:
-			throw new IllegalArgumentException("ID " + fieldID + " is not valid for String change");
+			throw new IllegalArgumentException("ID " + changeType + " is not valid for Object change");
 		}
 	}
 	

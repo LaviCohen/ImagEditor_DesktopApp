@@ -9,14 +9,14 @@ public class NumericalChange extends Change{
 	
 	protected double changeValue;
 	
-	public NumericalChange(int fieldID, double changeValue) {
-		super(fieldID);
+	public NumericalChange(ChangeType changeType, double changeValue) {
+		super(changeType);
 		this.changeValue = changeValue;
 	}
 
 	@Override
 	public void apply(Shape s) {
-		switch (fieldID) {
+		switch (changeType) {
 		case X_CHANGE:
 			s.setX(s.getX() + changeValue);
 			break;
@@ -51,13 +51,13 @@ public class NumericalChange extends Change{
 			((Rectangle)s).setRoundHeight((int) (((Rectangle)s).getRoundHeight() + changeValue));
 			break;
 		default:
-			throw new IllegalArgumentException("ID " + fieldID + " is not valid for numerical change");
+			throw new IllegalArgumentException("ID " + changeType + " is not valid for numerical change");
 		}
 	}
 
 	@Override
 	public void undo(Shape s) {
-		switch (fieldID) {
+		switch (changeType) {
 		case X_CHANGE:
 			s.setX(s.getX() - changeValue);
 			break;
@@ -92,7 +92,7 @@ public class NumericalChange extends Change{
 			((Rectangle)s).setRoundHeight((int) (((Rectangle)s).getRoundHeight() - changeValue));
 			break;
 		default:
-			throw new IllegalArgumentException("ID " + fieldID + " is not valid for numerical change");
+			throw new IllegalArgumentException("ID " + changeType + " is not valid for numerical change");
 		}
 	}
 }

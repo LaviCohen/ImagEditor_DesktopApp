@@ -26,6 +26,7 @@ import le.gui.dialogs.LDialogs;
 import main.Actions;
 import main.Main;
 import operatins.changes.Change;
+import operatins.changes.ChangeType;
 import operatins.changes.NumericalChange;
 
 public abstract class Shape implements Drawable{
@@ -201,10 +202,10 @@ public abstract class Shape implements Drawable{
 				
 				LinkedList<Change> changes = new LinkedList<>();
 				if (Shape.this.x != x) {
-					changes.add(new NumericalChange(Change.X_CHANGE, x - Shape.this.x));
+					changes.add(new NumericalChange(ChangeType.X_CHANGE, x - Shape.this.x));
 				}
 				if (Shape.this.y != y) {
-					changes.add(new NumericalChange(Change.Y_CHANGE, y - Shape.this.y));
+					changes.add(new NumericalChange(ChangeType.Y_CHANGE, y - Shape.this.y));
 				}
 				return changes;
 			}
@@ -255,4 +256,11 @@ public abstract class Shape implements Drawable{
 		}
 		dialog.setLocation(x, y);
 	}
+	
+	/** 
+	 * This method tells the shape that a change might happen, so it won't use pre-calculation
+	 * and or rendering to its next draw call.
+	 * Since not all the shapes needs it, it is not an abstract method, and it being overridden as needed.
+	 */
+	public void invalidate() {}
 }

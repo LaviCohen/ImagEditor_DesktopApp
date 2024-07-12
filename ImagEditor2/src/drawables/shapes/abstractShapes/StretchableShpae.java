@@ -9,6 +9,7 @@ import javax.swing.JTextField;
 import gui.components.EditPanel;
 import main.Main;
 import operatins.changes.Change;
+import operatins.changes.ChangeType;
 import operatins.changes.NumericalChange;
 
 public abstract class StretchableShpae extends Shape{
@@ -76,10 +77,10 @@ public abstract class StretchableShpae extends Shape{
 				double height = (Double) sizeData[1];
 				LinkedList<Change> changes = new LinkedList<>();
 				if (StretchableShpae.this.width != width) {
-					changes.add(new NumericalChange(Change.WIDTH_CHANGE, width - StretchableShpae.this.width));
+					changes.add(new NumericalChange(ChangeType.WIDTH_CHANGE, width - StretchableShpae.this.width));
 				}
 				if (StretchableShpae.this.height != height) {
-					changes.add(new NumericalChange(Change.HEIGHT_CHANGE, height - StretchableShpae.this.height));
+					changes.add(new NumericalChange(ChangeType.HEIGHT_CHANGE, height - StretchableShpae.this.height));
 				}
 				
 				return changes;
