@@ -62,15 +62,14 @@ public class Board extends JPanel{
 		this.paperHeight = height;
 		this.backgroundColor = color;
 		inited = true;
-		initKeyboadShortcutImplementation();
+		initSpecialIntefaces();
 		setMouseAdapterForTool(ToolsManager.getCurrentTool());
 		repaint();
 	}
 	
-	public void initKeyboadShortcutImplementation() {
+	public void initSpecialIntefaces() {
 		
-		@SuppressWarnings("unused")
-		DropTarget dt = new DropTarget(this, new DropTargetListener() {
+		new DropTarget(this, new DropTargetListener() {
 			
 			@Override
 			public void dropActionChanged(DropTargetDragEvent dtde) {

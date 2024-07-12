@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -648,6 +649,14 @@ public class Actions {
 				Picture p = Picture.createNewDefaultPicture();
 				p.setImage((BufferedImage)transferable.getTransferData(DataFlavor.imageFlavor));
 				Actions.addShape(p);
+			} else if (Utils.contains(dataFlavors, DataFlavor.javaFileListFlavor)) {
+				@SuppressWarnings("rawtypes")
+				List filesList = (List)transferable.getTransferData(DataFlavor.javaFileListFlavor);
+				for (Object object : filesList) {
+					Picture p = Picture.createNewDefaultPicture();
+					p.setImage(ImageIO.read(new File(object.toString())));
+					Actions.addShape(p);
+				}
 			} else if (Utils.contains(dataFlavors, DataFlavor.allHtmlFlavor)) {
 				Code c = Code.createNewDefaultCode();
 				c.setText((String) transferable.getTransferData(DataFlavor.stringFlavor));
