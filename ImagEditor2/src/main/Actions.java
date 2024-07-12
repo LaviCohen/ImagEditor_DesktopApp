@@ -4,8 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -38,6 +42,7 @@ import le.gui.components.LTextArea;
 import le.gui.components.LTextField;
 import le.gui.dialogs.LDialogs;
 import le.log.Logger;
+import le.utils.Utils;
 import multipicture.MultipictureCreator;
 import operatins.AddLayerOperation;
 import operatins.OperationsManager;
@@ -633,5 +638,34 @@ public class Actions {
 		Layer down = Main.getBoard().getLayers().get(downIndex);
 		Main.getBoard().getLayers().set(downIndex, layer);
 		Main.getBoard().getLayers().set(sIndex, down);
+	}
+	public static void copyFromClipboardTo(Point point) {
+		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		
+		try {
+			DataFlavor[] dataFlavors = clipboard.getAvailableDataFlavors();
+			if (Utils.contains(dataFlavors, DataFlavor.imageFlavor)) {
+				Picture p = Picture.createNewDefaultPicture();
+				p.setImage((BufferedImage)clipboard.getData(DataFlavor.imageFlavor));
+				Actions.addShape(p);
+			} else if (Utils.contains(dataFlavors, DataFlavor.allHtmlFlavor)) {
+				Code c = Code.createNewDefaultCode();
+				c.setText((String) clipboard.getData(DataFlavor.stringFlavor));
+				Actions.addShape(c);
+			} else if (Utils.contains(dataFlavors, DataFlavor.stringFlavor)) {
+				Text t = Text.createNewDefaultText();
+				t.setText((String) clipboard.getData(DataFlavor.stringFlavor));
+				Actions.addShape(t);
+			} else {
+				throw new IllegalArgumentException("Cannot paste the content on clipboard");
+			}
+			
+		} catch (UnsupportedFlavorException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 }

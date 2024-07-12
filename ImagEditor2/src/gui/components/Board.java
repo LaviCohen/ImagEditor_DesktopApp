@@ -6,15 +6,23 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 
 import drawables.Layer;
 import drawables.shapes.abstractShapes.Shape;
 import install.Preferences;
+import main.Actions;
 import main.Main;
 import tools.ToolsManager;
 import tools.adapters.BoardAdapter;
@@ -23,6 +31,10 @@ import tools.adapters.PickingMouseAdapter;
 public class Board extends JPanel{
 	
 	private static final long serialVersionUID = 1L;
+	
+	public static enum ActionCodes{
+		CTRL_C, CTRL_V, CTRL_X
+	}
 	
 	private Color backgroundColor;
 	private int paperWidth, paperHeight;
@@ -44,9 +56,28 @@ public class Board extends JPanel{
 		this.paperHeight = height;
 		this.backgroundColor = color;
 		inited = true;
+		initKeyboadShortcutImplementation();
 		setMouseAdapterForTool(ToolsManager.getCurrentTool());
 		repaint();
 	}
+	
+	public void initKeyboadShortcutImplementation() {
+		//Initializing inputs
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK), ActionCodes.CTRL_V);
+		
+		//Initializing actions
+		this.getActionMap().put(ActionCodes.CTRL_V, new AbstractAction() {
+			
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Actions.copyFromClipboardTo(new Point(0, 0));
+				
+			}
+		});
+	}
+	
 	public void setMouseAdapterForTool(int tool) {
 		if (currentBoardAdapter != null) {
 			this.removeMouseListener(currentBoardAdapter);
