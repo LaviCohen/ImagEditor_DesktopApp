@@ -8,6 +8,12 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -62,6 +68,41 @@ public class Board extends JPanel{
 	}
 	
 	public void initKeyboadShortcutImplementation() {
+		
+		@SuppressWarnings("unused")
+		DropTarget dt = new DropTarget(this, new DropTargetListener() {
+			
+			@Override
+			public void dropActionChanged(DropTargetDragEvent dtde) {
+				// TODO Auto-generated method stub
+			}
+			
+			@Override
+			public void drop(DropTargetDropEvent dtde) {
+				System.out.println("Transferred");
+				dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+				System.out.println(Actions.handleTransferable(dtde.getTransferable()));
+			}
+			
+			@Override
+			public void dragOver(DropTargetDragEvent dtde) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void dragExit(DropTargetEvent dte) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void dragEnter(DropTargetDragEvent dtde) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
 		//Initializing inputs
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK), ActionCodes.CTRL_V);
 		

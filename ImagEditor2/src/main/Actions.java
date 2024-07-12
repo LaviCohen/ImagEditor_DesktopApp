@@ -9,6 +9,7 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -639,25 +640,24 @@ public class Actions {
 		Main.getBoard().getLayers().set(downIndex, layer);
 		Main.getBoard().getLayers().set(sIndex, down);
 	}
-	public static void copyFromClipboardTo(Point point) {
-		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		
+	
+	public static boolean handleTransferable(Transferable transferable) {
 		try {
-			DataFlavor[] dataFlavors = clipboard.getAvailableDataFlavors();
+			DataFlavor[] dataFlavors = transferable.getTransferDataFlavors();
 			if (Utils.contains(dataFlavors, DataFlavor.imageFlavor)) {
 				Picture p = Picture.createNewDefaultPicture();
-				p.setImage((BufferedImage)clipboard.getData(DataFlavor.imageFlavor));
+				p.setImage((BufferedImage)transferable.getTransferData(DataFlavor.imageFlavor));
 				Actions.addShape(p);
 			} else if (Utils.contains(dataFlavors, DataFlavor.allHtmlFlavor)) {
 				Code c = Code.createNewDefaultCode();
-				c.setText((String) clipboard.getData(DataFlavor.stringFlavor));
+				c.setText((String) transferable.getTransferData(DataFlavor.stringFlavor));
 				Actions.addShape(c);
 			} else if (Utils.contains(dataFlavors, DataFlavor.stringFlavor)) {
 				Text t = Text.createNewDefaultText();
-				t.setText((String) clipboard.getData(DataFlavor.stringFlavor));
+				t.setText((String) transferable.getTransferData(DataFlavor.stringFlavor));
 				Actions.addShape(t);
 			} else {
-				throw new IllegalArgumentException("Cannot paste the content on clipboard");
+				return false;
 			}
 			
 		} catch (UnsupportedFlavorException e1) {
@@ -666,6 +666,15 @@ public class Actions {
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+		}
+		return true;
+	}
+	
+	public static void copyFromClipboardTo(Point point) {
+		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		
+		if (!handleTransferable(clipboard.getContents(null))) {
+			throw new IllegalArgumentException("Cannot paste the content on clipboard");
 		}
 	}
 }
