@@ -3,7 +3,9 @@ package drawables.shapes;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,14 +53,26 @@ public class Text extends Shape implements ColoredShape, TextualShape{
 	@Override
 	public void edit() {
 		JDialog editDialog = new JDialog(Main.f);
-		editDialog.setLayout(new GridLayout(5, 1));
+		editDialog.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(3, 3, 3, 3);
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.weightx = 1;
+		gbc.weighty = 0;
+	    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+	    gbc.gridx  = 0;
+	    gbc.gridy = 0;
 		editDialog.setTitle("Edit Text");
 		EditPanel positionPanel = createPositionPanel();
-		editDialog.add(positionPanel);
+		editDialog.add(positionPanel, gbc);
 		EditPanel textPanel = createTextPanel("Text:");
-		editDialog.add(textPanel);
+		gbc.weighty = 3;
+		gbc.gridy = 1;
+		editDialog.add(textPanel, gbc);
+		gbc.weighty = 0;
 		EditPanel colorPanel = createColorPanel();
-		editDialog.add(colorPanel);
+		gbc.gridy = 2;
+		editDialog.add(colorPanel, gbc);
 		FontHolder fontHolder = new FontHolder(this.font);
 		JButton setFontButton = new JButton("Set Font");
 		setFontButton.addActionListener(new ActionListener() {
@@ -69,7 +83,8 @@ public class Text extends Shape implements ColoredShape, TextualShape{
 						"Set Font", fontHolder.getFont(), null, Main.theme));
 			}
 		});
-		editDialog.add(setFontButton);
+		gbc.gridy = 3;
+		editDialog.add(setFontButton, gbc);
 		ActionListener actionListener =  new ActionListener() {
 			
 			@Override
@@ -97,7 +112,8 @@ public class Text extends Shape implements ColoredShape, TextualShape{
 				}
 			}
 		};
-		editDialog.add(createActionPanel(actionListener));
+		gbc.gridy = 4;
+		editDialog.add(createActionPanel(actionListener), gbc);
 		Main.theme.affect(editDialog);
 		editDialog.pack();
 		editDialog.setSize(editDialog.getWidth() + 50, editDialog.getHeight());
