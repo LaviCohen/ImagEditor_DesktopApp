@@ -11,6 +11,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 
 import drawables.shapes.abstractShapes.ColoredShape;
+import drawables.shapes.abstractShapes.Shape;
 import drawables.shapes.abstractShapes.StretchableShpae;
 import gui.components.EditPanel;
 import le.gui.components.LSlider;
@@ -23,9 +24,12 @@ import operatins.changes.Change;
 import operatins.changes.ChangeType;
 import operatins.changes.NumericalChange;
 
-public class Rectangle extends StretchableShpae implements ColoredShape{
+public class Rectangle extends Shape implements ColoredShape, StretchableShpae{
 
 	Color color;
+	
+	double width;
+	double height;
 	
 	int roundWidth;
 	int roundHeight;
@@ -34,7 +38,9 @@ public class Rectangle extends StretchableShpae implements ColoredShape{
 	boolean isFilled;
 	
 	public Rectangle(double x, double y, boolean visible, String name, double width, double height, Color color) {
-		super(x, y, visible, name, width, height);
+		super(x, y, visible, name);
+		this.width = width;
+		this.height = height;
 		this.color = color;
 		this.isFilled = true;
 		this.roundWidth = 0;
@@ -119,13 +125,19 @@ public class Rectangle extends StretchableShpae implements ColoredShape{
 		this.roundWidth = Integer.parseInt(data[8]);
 		this.roundHeight = Integer.parseInt(data[9]);
 	}
+	
+	@Override
+	public void invalidateSize() {
+		Main.getLayersList().getLayerForShape(this).adjustTopSize(getWidthOnBoard(), getHeightOnBoard());
+	}
+	
 	public Rectangle(String line) {
 		this(line.split(","));
 	}
 
 	@Override
 	public String encodeShape() {
-		return super.encodeShape() + "," + color.getRGB() + "," + isFilled + "," + roundWidth
+		return super.encodeShape() + ", " + width + ", " + height + "," + color.getRGB() + "," + isFilled + "," + roundWidth
 				 + "," + roundHeight;
 	}
 	
@@ -165,4 +177,33 @@ public class Rectangle extends StretchableShpae implements ColoredShape{
 		return new Rectangle(0, 0, true, null, 100, 100, Color.BLUE);
 	}
 
+	@Override
+	public double getWidth() {
+		return this.width;
+	}
+
+	@Override
+	public void setWidth(double width) {
+		this.width = width;
+	}
+
+	@Override
+	public double getHeight() {
+		return this.height;
+	}
+
+	@Override
+	public void setHeight(double height) {
+		this.height = height;
+	}
+
+	@Override
+	public int getWidthOnBoard() {
+		return (int) this.width;
+	}
+
+	@Override
+	public int getHeightOnBoard() {
+		return (int) this.height;
+	}
 }

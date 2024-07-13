@@ -23,6 +23,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
 import drawables.Layer;
+import drawables.shapes.abstractShapes.Shape;
 import drawables.shapes.abstractShapes.StretchableShpae;
 import effects.EffectsManager;
 import gui.components.EditPanel;
@@ -40,10 +41,14 @@ import operatins.changes.ChangeType;
 import operatins.changes.NumericalChange;
 import operatins.changes.ObjectChange;
 
-public class Picture extends StretchableShpae {
+public class Picture extends Shape implements StretchableShpae {
 
 	public static final int MINIMUM = 5;
 
+	//Size
+	private double width;
+	private double height;
+	
 	// Preview
 	private boolean isPreview = false;
 	private File source = null;
@@ -72,8 +77,29 @@ public class Picture extends StretchableShpae {
 	// Constructor
 	public Picture(double x, double y, boolean visible, String name, double width, double height, double rotation,
 			File src) {
-		super(x, y, visible, name, width, height);
+		this(x, y, visible, name, width, height, rotation, getImageFromFile(src));
+		if(usedPreview) {
+			this.source = src;
+			this.isPreview = true;
+			usedPreview = false;
+		}
+	}
+
+	// Constructor
+	public Picture(double x, double y, boolean visible, String name, double width, double height, double rotation,
+			BufferedImage img) {
+		super(x, y, visible, name);
+		this.width = width;
+		this.height = height;
 		this.rotation = rotation;
+		this.image = convertToARGB(img);
+	}
+	
+	//Turn to true if used preview while reading
+	private static boolean usedPreview = false;
+	
+	//Constructor Utility Method
+	public static BufferedImage getImageFromFile(File src) {
 		if (Preferences.usePreviewPictures) {
 			BufferedImage bf = null;
 			try {
@@ -83,30 +109,22 @@ public class Picture extends StretchableShpae {
 				e.printStackTrace();
 			}
 			if (bf.getWidth() * bf.getHeight() < 200_000) {
-				this.image = bf;
+				return bf;
 			} else {
 				int imageWidth = 1000;
 				int imageHeight = (int) (((double) bf.getHeight()) / bf.getWidth() * 1000);
-				this.image = PictureUtilities.getScaledImage(bf, imageWidth, imageHeight);
-				this.source = src;
-				this.isPreview = true;
+				usedPreview = true;
+				return PictureUtilities.getScaledImage(bf, imageWidth, imageHeight);
 			}
 		} else {
 			try {
-				this.image = convertToARGB(ImageIO.read(src));
+				return convertToARGB(ImageIO.read(src));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-	}
-
-	// Constructor
-	public Picture(double x, double y, boolean visible, String name, double width, double height, double rotation,
-			BufferedImage img) {
-		super(x, y, visible, name, width, height);
-		this.rotation = rotation;
-		this.image = convertToARGB(img);
+		return null;
 	}
 
 	// Methods
@@ -124,13 +142,13 @@ public class Picture extends StretchableShpae {
 						.drawImage(real.getSubimage((int) (cutFromLeft * previewProportion),
 								(int) (cutFromTop * previewProportion), (int) (getCutWidth() * previewProportion),
 								(int) (getCutHeight() * previewProportion)), 0, 0, null);
-				if (super.getWidthOnBoard() * super.getHeightOnBoard() > image.getHeight() * image.getWidth()) {
+				if (getWidth() * getHeight() > image.getHeight() * image.getWidth()) {
 					effectsManger.affectImage(displayImage);
-					displayImage = PictureUtilities.getScaledImage(displayImage, super.getWidthOnBoard(),
-							super.getHeightOnBoard());
+					displayImage = PictureUtilities.getScaledImage(displayImage, (int)getWidth(),
+							(int)getHeight());
 				} else {
-					displayImage = PictureUtilities.getScaledImage(displayImage, super.getWidthOnBoard(),
-							super.getHeightOnBoard());
+					displayImage = PictureUtilities.getScaledImage(displayImage, (int)getWidth(),
+							(int)getHeight());
 					effectsManger.affectImage(displayImage);
 				}
 				displayImage = PictureUtilities.rotateImageByDegrees(displayImage, rotation);
@@ -173,13 +191,13 @@ public class Picture extends StretchableShpae {
 		displayImage.createGraphics().drawImage(
 				image.getSubimage((int) cutFromLeft, (int) cutFromTop, (int) getCutWidth(), (int) getCutHeight()), 0, 0,
 				null);
-		if (super.getWidthOnBoard() * super.getHeightOnBoard() > image.getHeight() * image.getWidth()) {
+		if ((int) getWidth() * (int) getHeight() > image.getHeight() * image.getWidth()) {
 			effectsManger.affectImage(displayImage);
-			displayImage = PictureUtilities.getScaledImage(displayImage, super.getWidthOnBoard(),
-					super.getHeightOnBoard());
+			displayImage = PictureUtilities.getScaledImage(displayImage, (int) getWidth(),
+					(int) getHeight());
 		} else {
-			displayImage = PictureUtilities.getScaledImage(displayImage, super.getWidthOnBoard(),
-					super.getHeightOnBoard());
+			displayImage = PictureUtilities.getScaledImage(displayImage, (int) getWidth(),
+					(int) getHeight());
 			effectsManger.affectImage(displayImage);
 		}
 		displayImage = PictureUtilities.rotateImageByDegrees(displayImage, rotation);
@@ -330,14 +348,14 @@ public class Picture extends StretchableShpae {
 
 	@Override
 	public int getHeightOnBoard() {
-		return (int) Math.floor(super.getHeightOnBoard() * Math.cos(Math.toRadians(rotation))
-				+ super.getWidthOnBoard() * Math.sin(Math.toRadians(rotation)));
+		return (int) Math.floor((int) getHeight() * Math.cos(Math.toRadians(rotation))
+				+ (int) getWidth() * Math.sin(Math.toRadians(rotation)));
 	}
 
 	@Override
 	public int getWidthOnBoard() {
-		return (int) Math.floor(super.getHeightOnBoard() * Math.sin(Math.toRadians(rotation))
-				+ super.getWidthOnBoard() * Math.cos(Math.toRadians(rotation)));
+		return (int) Math.floor((int) getHeight() * Math.sin(Math.toRadians(rotation))
+				+ (int) getWidth() * Math.cos(Math.toRadians(rotation)));
 	}
 
 	public static BufferedImage readImage(File source) {
@@ -372,6 +390,26 @@ public class Picture extends StretchableShpae {
 
 	public void setEffectsManger(EffectsManager effectsManger) {
 		this.effectsManger = effectsManger;
+	}
+	
+	@Override
+	public double getWidth() {
+		return this.width;
+	}
+	
+	@Override
+	public void setWidth(double width) {
+		this.width = width;
+	}
+	
+	@Override
+	public double getHeight() {
+		return this.height;
+	}
+	
+	@Override
+	public void setHeight(double height) {
+		this.height = height;
 	}
 
 	public double getCutFromLeft() {
@@ -465,7 +503,7 @@ public class Picture extends StretchableShpae {
 
 	@Override
 	public String encodeShape() {
-		return super.encodeShape() + "," + rotation + "," + cutFromLeft + "," + cutFromTop + "," + cutFromRight + ","
+		return super.encodeShape() + ", " + width + ", " + height + "," + rotation + "," + cutFromLeft + "," + cutFromTop + "," + cutFromRight + ","
 				+ cutFromBottom + "," + encodeSourceImge(image) + "," + effectsManger.encodeEffect();
 	}
 
@@ -549,6 +587,11 @@ public class Picture extends StretchableShpae {
 		});
 		popup.add(copy);
 		return popup;
+	}
+	
+	@Override
+	public void invalidateSize() {
+		Main.getLayersList().getLayerForShape(this).adjustTopSize(getWidthOnBoard(), getHeightOnBoard());
 	}
 	
 	public void startCutting() {

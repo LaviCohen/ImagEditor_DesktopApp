@@ -36,7 +36,7 @@ import tools.adapters.UngroupMouseAdapter;
 
 public class ToolsManager {
 
-	private static Tool currentTool;
+	private static Tool currentTool = Tool.PICKER;
 	
 	
 	private static JLabel pickerToolLabel;

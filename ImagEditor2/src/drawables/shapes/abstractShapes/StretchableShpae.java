@@ -7,59 +7,29 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import gui.components.EditPanel;
-import main.Main;
 import operatins.changes.Change;
 import operatins.changes.ChangeType;
 import operatins.changes.NumericalChange;
 
-public abstract class StretchableShpae extends Shape{
+public interface StretchableShpae{
 	
-	protected double width;
-	protected double height;
 	
-	public StretchableShpae(double x, double y, boolean visible, String name, double width, double height) {
-		super(x, y, visible, name);
-		this.width = width;
-		this.height = height;
-	}
-
-	public void strecthBy(int widthDiff, int heightDiff) {
-		this.width += widthDiff;
-		this.height += heightDiff;
-		Main.getLayersList().getLayerForShape(this).adjustTopSize((int)this.width, (int)this.height);
+	public default void strecthBy(int widthDiff, int heightDiff) {
+		setWidth(getWidth() + widthDiff);
+		setHeight(getHeight() + heightDiff);
+		invalidateSize();
 	}
 	
-	@Override
-	public String encodeShape() {
-		return super.encodeShape() + "," + width + "," + height;
-	}
+	public double getWidth();
+	public void setWidth(double width);
+	public double getHeight();
+	public void setHeight(double height);
 	
-	@Override
-	public int getWidthOnBoard() {
-		return (int)getWidth();
-	}
-	@Override
-	public int getHeightOnBoard() {
-		return (int)getHeight();
-	}
-	public double getWidth() {
-		return width;
-	}
-	public void setWidth(double width) {
-		this.width = width;
-		Main.getLayersList().getLayerForShape(this).adjustTopSize((int)this.width, (int)this.height);
-	}
-	public double getHeight() {
-		return height;
-	}
-	public void setHeight(double height) {
-		this.height = height;
-		Main.getLayersList().getLayerForShape(this).adjustTopSize((int)this.width, (int)this.height);
-	}
+	public void invalidateSize();
 	
-	protected EditPanel createSizePanel() {
-		JTextField widthField = new JTextField(this.width + "");
-		JTextField heightField = new JTextField(this.height + "");
+	public default EditPanel createSizePanel() {
+		JTextField widthField = new JTextField(this.getWidth() + "");
+		JTextField heightField = new JTextField(this.getHeight() + "");
 		EditPanel sizePanel = new EditPanel(new GridLayout(1, 4)) {
 			
 			private static final long serialVersionUID = 1L;
@@ -76,11 +46,11 @@ public abstract class StretchableShpae extends Shape{
 				double width = (Double) sizeData[0];
 				double height = (Double) sizeData[1];
 				LinkedList<Change> changes = new LinkedList<>();
-				if (StretchableShpae.this.width != width) {
-					changes.add(new NumericalChange(ChangeType.WIDTH_CHANGE, width - StretchableShpae.this.width));
+				if (StretchableShpae.this.getWidth() != width) {
+					changes.add(new NumericalChange(ChangeType.WIDTH_CHANGE, width - StretchableShpae.this.getWidth()));
 				}
-				if (StretchableShpae.this.height != height) {
-					changes.add(new NumericalChange(ChangeType.HEIGHT_CHANGE, height - StretchableShpae.this.height));
+				if (StretchableShpae.this.getHeight() != height) {
+					changes.add(new NumericalChange(ChangeType.HEIGHT_CHANGE, height - StretchableShpae.this.getHeight()));
 				}
 				
 				return changes;
