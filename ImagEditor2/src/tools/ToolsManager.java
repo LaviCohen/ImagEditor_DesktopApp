@@ -36,15 +36,7 @@ import tools.adapters.UngroupMouseAdapter;
 
 public class ToolsManager {
 
-	public static final int PICKER_TOOL = 0;
-	public static final int BRUSH_TOOL = 1;
-	public static final int ERASER_TOOL = 2;
-	public static final int TEXT_TOOL = 4;
-	public static final int GROUP_TOOL = 5;
-	public static final int UNGROUP_TOOL = 6;
-	
-
-	private static int currentTool;
+	private static Tool currentTool;
 	
 	
 	private static JLabel pickerToolLabel;
@@ -65,7 +57,7 @@ public class ToolsManager {
 		pickerToolLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ToolsManager.setCurrentTool(ToolsManager.PICKER_TOOL);
+				ToolsManager.setCurrentTool(Tool.PICKER);
 			}
 		});
 		toolsSideBarPanel.add(pickerToolLabel);
@@ -76,7 +68,7 @@ public class ToolsManager {
 		brushToolLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ToolsManager.setCurrentTool(ToolsManager.BRUSH_TOOL);
+				ToolsManager.setCurrentTool(Tool.BRUSH);
 			}
 		});
 		toolsSideBarPanel.add(brushToolLabel);
@@ -87,7 +79,7 @@ public class ToolsManager {
 		eraserToolLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ToolsManager.setCurrentTool(ToolsManager.ERASER_TOOL);
+				ToolsManager.setCurrentTool(Tool.ERASER);
 			}
 		});
 		toolsSideBarPanel.add(eraserToolLabel);
@@ -98,7 +90,7 @@ public class ToolsManager {
 		textToolLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ToolsManager.setCurrentTool(ToolsManager.TEXT_TOOL);
+				ToolsManager.setCurrentTool(Tool.TEXT);
 			}
 		});
 		toolsSideBarPanel.add(textToolLabel);
@@ -109,7 +101,7 @@ public class ToolsManager {
 		groupToolLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ToolsManager.setCurrentTool(ToolsManager.GROUP_TOOL);
+				ToolsManager.setCurrentTool(Tool.GROUP);
 			}
 		});
 		toolsSideBarPanel.add(groupToolLabel);
@@ -120,17 +112,17 @@ public class ToolsManager {
 		ungroupToolLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ToolsManager.setCurrentTool(ToolsManager.UNGROUP_TOOL);
+				ToolsManager.setCurrentTool(Tool.UNGROUP);
 			}
 		});
 		toolsSideBarPanel.add(ungroupToolLabel);
 		
-		update(PICKER_TOOL);
+		update(Tool.PICKER);
 		
 		return toolsSideBarPanel;
 	}
 	
-	private static void update(int toolToChange) {
+	private static void update(Tool toolToChange) {
 		Color c = getLabelForTool(toolToChange).getBackground();
 		getLabelForTool(toolToChange).setBackground(getLabelForTool(currentTool).getBackground());
 		getLabelForTool(currentTool).setBackground(c);
@@ -142,24 +134,24 @@ public class ToolsManager {
 		Main.f.repaint();
 	}
 	
-	public static JPanel createTopPanelForTool(int tool) {
+	public static JPanel createTopPanelForTool(Tool tool) {
 		JPanel p = new JPanel(new BorderLayout());
 		
-		if (tool == PICKER_TOOL) {
+		if (tool == Tool.PICKER) {
 			p.add(new JLabel("<html><big>Picker Tool: </big></html>"), Main.translator.getBeforeTextBorder());
-		} else if (tool == BRUSH_TOOL) {
+		} else if (tool == Tool.BRUSH) {
 			p.add(new JLabel("<html><big>Brush Tool: </big></html>"), Main.translator.getBeforeTextBorder());
-		}else if (tool == ERASER_TOOL) {
+		}else if (tool == Tool.ERASER) {
 			p.add(new JLabel("<html><big>Eraser Tool: </big></html>"), Main.translator.getBeforeTextBorder());
-		}else if (tool == TEXT_TOOL) {
+		}else if (tool == Tool.TEXT) {
 			p.add(new JLabel("<html><big>Text Tool: </big></html>"), Main.translator.getBeforeTextBorder());
-		}else if (tool == GROUP_TOOL) {
+		}else if (tool == Tool.GROUP) {
 			p.add(new JLabel("<html><big>Group Tool: </big></html>"), Main.translator.getBeforeTextBorder());
-		}else if (tool == UNGROUP_TOOL) {
+		}else if (tool == Tool.UNGROUP) {
 			p.add(new JLabel("<html><big>Ungroup Tool: </big></html>"), Main.translator.getBeforeTextBorder());
 		}
 		
-		if (tool == BRUSH_TOOL) {
+		if (tool == Tool.BRUSH) {
 			JPanel optionsBar = new JPanel(new GridLayout(1, 2, 8, 3));
 			JPanel colorPanel = new JPanel(new BorderLayout());
 			colorPanel.add(Main.theme.affect(new JLabel("Color:")), Main.translator.getBeforeTextBorder());
@@ -190,7 +182,7 @@ public class ToolsManager {
 			});
 			optionsBar.add(brushSizeSlider);
 			p.add(optionsBar);
-		} else if (tool == ERASER_TOOL) {
+		} else if (tool == Tool.ERASER) {
 			JPanel optionsBar = new JPanel(new GridLayout(1, 1, 3, 3));
 			LSlider brushSizeSlider = new LSlider("Size", 1, 100, EraserMouseAdapter.getEraserSize());
 			brushSizeSlider.getSlider().addChangeListener(new ChangeListener() {
@@ -202,7 +194,7 @@ public class ToolsManager {
 			});
 			optionsBar.add(brushSizeSlider);
 			p.add(optionsBar);
-		} else if (tool == GROUP_TOOL) {
+		} else if (tool == Tool.GROUP) {
 			JPanel optionsBar = new JPanel(new GridLayout(1, 1, 3, 3));
 			JButton groupButton = new JButton("Group Selected Items");
 			groupButton.addActionListener(new ActionListener() {
@@ -226,7 +218,7 @@ public class ToolsManager {
 			});
 			optionsBar.add(groupButton);
 			p.add(optionsBar);
-		}else if (tool == UNGROUP_TOOL) {
+		}else if (tool == Tool.UNGROUP) {
 			JPanel optionsBar = new JPanel(new GridLayout(1, 1, 3, 3));
 			JButton ungroupButton = new JButton("Ungroup Selected Shape");
 			ungroupButton.addActionListener(new ActionListener() {
@@ -249,51 +241,51 @@ public class ToolsManager {
 		return p;
 	}
 	
-	private static JLabel getLabelForTool(int tool) {
-		if (tool == PICKER_TOOL) {
+	private static JLabel getLabelForTool(Tool tool) {
+		if (tool == Tool.PICKER) {
 			return pickerToolLabel;
 		}
-		if (tool == BRUSH_TOOL) {
+		if (tool == Tool.BRUSH) {
 			return brushToolLabel;
 		}
-		if (tool == ERASER_TOOL) {
+		if (tool == Tool.ERASER) {
 			return eraserToolLabel;
 		}
-		if (tool == TEXT_TOOL) {
+		if (tool == Tool.TEXT) {
 			return textToolLabel;
 		}
-		if (tool == GROUP_TOOL) {
+		if (tool == Tool.GROUP) {
 			return groupToolLabel;
 		}
-		if (tool == UNGROUP_TOOL) {
+		if (tool == Tool.UNGROUP) {
 			return ungroupToolLabel;
 		}
 		return null;
 	}
 
-	public static BoardAdapter getAdapterForTool(Board board, int tool) {
-		if (tool == ToolsManager.PICKER_TOOL) {
+	public static BoardAdapter getAdapterForTool(Board board, Tool tool) {
+		if (tool == Tool.PICKER) {
 			return new PickingMouseAdapter(board);
-		} else if (tool == ToolsManager.BRUSH_TOOL) {
+		} else if (tool == Tool.BRUSH) {
 			return new BrushMouseAdapter(board);
-		}else if (tool == ToolsManager.ERASER_TOOL) {
+		}else if (tool == Tool.ERASER) {
 			return new EraserMouseAdapter(board);
-		}else if (tool == ToolsManager.TEXT_TOOL) {
+		}else if (tool == Tool.TEXT) {
 			return new TextMouseAdapter(board);
-		}else if (tool == ToolsManager.GROUP_TOOL) {
+		}else if (tool == Tool.GROUP) {
 			return new GroupMouseAdapter(board);
-		}else if (tool == ToolsManager.UNGROUP_TOOL) {
+		}else if (tool == Tool.UNGROUP) {
 			return new UngroupMouseAdapter(board);
 		}
 		
 		return null;
 	}
 	
-	public static int getCurrentTool() {
+	public static Tool getCurrentTool() {
 		return currentTool;
 	}
 
-	public static void setCurrentTool(int currentTool) {
+	public static void setCurrentTool(Tool currentTool) {
 		update(currentTool);
 		ToolsManager.currentTool = currentTool;
 	}

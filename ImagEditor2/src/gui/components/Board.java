@@ -30,6 +30,7 @@ import drawables.shapes.abstractShapes.Shape;
 import install.Preferences;
 import main.Actions;
 import main.Main;
+import tools.Tool;
 import tools.ToolsManager;
 import tools.adapters.BoardAdapter;
 import tools.adapters.PickingMouseAdapter;
@@ -118,7 +119,7 @@ public class Board extends JPanel{
 		});
 	}
 	
-	public void setMouseAdapterForTool(int tool) {
+	public void setMouseAdapterForTool(Tool tool) {
 		if (currentBoardAdapter != null) {
 			this.removeMouseListener(currentBoardAdapter);
 			this.removeMouseMotionListener(currentBoardAdapter);
