@@ -31,6 +31,7 @@ import tools.adapters.BrushMouseAdapter;
 import tools.adapters.EraserMouseAdapter;
 import tools.adapters.GroupMouseAdapter;
 import tools.adapters.PickingMouseAdapter;
+import tools.adapters.RectMouseAdapter;
 import tools.adapters.TextMouseAdapter;
 import tools.adapters.UngroupMouseAdapter;
 
@@ -45,6 +46,7 @@ public class ToolsManager {
 	private static JLabel textToolLabel;
 	private static JLabel groupToolLabel;
 	private static JLabel ungroupToolLabel;
+	private static JLabel rectToolLabel;
 	
 	public static JPanel createToolsPanel() {
 		JPanel toolsSideBarPanel = new JPanel();
@@ -94,6 +96,17 @@ public class ToolsManager {
 			}
 		});
 		toolsSideBarPanel.add(textToolLabel);
+		//Rectangle
+		rectToolLabel = new JLabel(Resources.rectIcon);
+		rectToolLabel.setToolTipText("Use This Tool to Add Rectangles Easily");
+		rectToolLabel.setOpaque(true);
+		rectToolLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ToolsManager.setCurrentTool(Tool.RECT);
+			}
+		});
+		toolsSideBarPanel.add(rectToolLabel);
 		//Group
 		groupToolLabel = new JLabel(Resources.groupIcon);
 		groupToolLabel.setToolTipText("Use This Tool to Group Layers");
@@ -145,6 +158,8 @@ public class ToolsManager {
 			p.add(new JLabel("<html><big>Eraser Tool: </big></html>"), Main.translator.getBeforeTextBorder());
 		}else if (tool == Tool.TEXT) {
 			p.add(new JLabel("<html><big>Text Tool: </big></html>"), Main.translator.getBeforeTextBorder());
+		}else if (tool == Tool.RECT) {
+			p.add(new JLabel("<html><big>Rectangle Tool: </big></html>"), Main.translator.getBeforeTextBorder());
 		}else if (tool == Tool.GROUP) {
 			p.add(new JLabel("<html><big>Group Tool: </big></html>"), Main.translator.getBeforeTextBorder());
 		}else if (tool == Tool.UNGROUP) {
@@ -242,25 +257,24 @@ public class ToolsManager {
 	}
 	
 	private static JLabel getLabelForTool(Tool tool) {
-		if (tool == Tool.PICKER) {
+		switch (tool) {
+		case PICKER:
 			return pickerToolLabel;
-		}
-		if (tool == Tool.BRUSH) {
+		case BRUSH:
 			return brushToolLabel;
-		}
-		if (tool == Tool.ERASER) {
+		case ERASER:
 			return eraserToolLabel;
-		}
-		if (tool == Tool.TEXT) {
+		case TEXT:
 			return textToolLabel;
-		}
-		if (tool == Tool.GROUP) {
+		case RECT:
+			return rectToolLabel;
+		case GROUP:
 			return groupToolLabel;
-		}
-		if (tool == Tool.UNGROUP) {
+		case UNGROUP:
 			return ungroupToolLabel;
+		default:
+			throw new IllegalArgumentException("Unsupported tool:  " + tool);
 		}
-		return null;
 	}
 
 	public static BoardAdapter getAdapterForTool(Board board, Tool tool) {
@@ -272,6 +286,8 @@ public class ToolsManager {
 			return new EraserMouseAdapter(board);
 		}else if (tool == Tool.TEXT) {
 			return new TextMouseAdapter(board);
+		}else if (tool == Tool.RECT) {
+			return new RectMouseAdapter(board);
 		}else if (tool == Tool.GROUP) {
 			return new GroupMouseAdapter(board);
 		}else if (tool == Tool.UNGROUP) {

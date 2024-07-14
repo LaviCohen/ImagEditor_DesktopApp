@@ -226,6 +226,9 @@ public class Board extends JPanel{
 	    return resizedImg;
 	}
 	public double getZoomRate() {
+		if (isExportPaintMode) {
+			return 1;
+		}
 		return Main.getZoomSlider().getValue() / 100.0;
 	}
 	public Shape getShapeAt(int x, int y) {

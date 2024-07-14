@@ -25,6 +25,7 @@ public class Resources {
 	public static ImageIcon brushIcon;
 	public static ImageIcon eraserIcon;
 	public static ImageIcon textIcon;
+	public static ImageIcon rectIcon;
 	public static ImageIcon groupIcon;
 	public static ImageIcon ungroupIcon;
 	public static ImageIcon logo;
@@ -38,36 +39,24 @@ public class Resources {
 	public static void init(){
 		System.out.println("loading images");
 		try {
-			editIcon = getIcon(ImageIO.read(
-					Resources.class.getResourceAsStream("/images/edit.jpg")), 50, 50);
-			removeIcon = getIcon(ImageIO.read(
-					Resources.class.getResourceAsStream("/images/remove.jpg")), 50, 50);
-			up_layerIcon = getIcon(ImageIO.read(
-					Resources.class.getResourceAsStream("/images/up-layer.png")), 50, 50);
-			down_layerIcon = getIcon(ImageIO.read(
-					Resources.class.getResourceAsStream("/images/down-layer.png")), 50, 50);
-			showIcon = getIcon(ImageIO.read(
-					Resources.class.getResourceAsStream("/images/show.png")), 70, 40);
-			hideIcon = getIcon(ImageIO.read(
-					Resources.class.getResourceAsStream("/images/hide.png")), 70, 40);
-			pickerIcon = getIcon(ImageIO.read(
-					Resources.class.getResourceAsStream("/images/picker.png")), 32, 32);
-			brushIcon = getIcon(ImageIO.read(
-					Resources.class.getResourceAsStream("/images/brush.png")), 32, 32);
-			eraserIcon = getIcon(ImageIO.read(
-					Resources.class.getResourceAsStream("/images/eraser.png")), 32, 32);
-			textIcon = getIcon(ImageIO.read(
-					Resources.class.getResourceAsStream("/images/text.png")), 32, 32);
-			groupIcon = getIcon(ImageIO.read(
-					Resources.class.getResourceAsStream("/images/group.png")), 32, 32);
-			ungroupIcon = getIcon(ImageIO.read(
-					Resources.class.getResourceAsStream("/images/ungroup.png")), 32, 32);
-			maleShadow = getIcon(ImageIO.read(
-					Resources.class.getResourceAsStream("/images/maleShadow.png")), 150, 150);
-			femaleShadow = getIcon(ImageIO.read(
-					Resources.class.getResourceAsStream("/images/femaleShadow.png")), 150, 150);
-			noneShadow = getIcon(ImageIO.read(
-					Resources.class.getResourceAsStream("/images/noneShadow.png")), 150, 150);
+			editIcon = getIcon("/images/edit.jpg", 50, 50);
+			removeIcon = getIcon("/images/remove.jpg", 50, 50);
+			up_layerIcon = getIcon("/images/up-layer.png", 50, 50);
+			down_layerIcon = getIcon("/images/down-layer.png", 50, 50);
+			showIcon = getIcon("/images/show.png", 70, 40);
+			hideIcon = getIcon("/images/hide.png", 70, 40);
+			pickerIcon = getIcon("/images/picker.png", 32, 32);
+			brushIcon = getIcon("/images/brush.png", 32, 32);
+			eraserIcon = getIcon("/images/eraser.png", 32, 32);
+			textIcon = getIcon("/images/text.png", 32, 32);
+			rectIcon = getIcon("/images/rect_tool.png", 32, 32);
+			groupIcon = getIcon("/images/group.png", 32, 32);
+			ungroupIcon = getIcon("/images/ungroup.png", 32, 32);
+			maleShadow = getIcon("/images/maleShadow.png", 150, 150);
+			femaleShadow = getIcon("/images/femaleShadow.png", 150, 150);
+			noneShadow = getIcon("/images/noneShadow.png", 150, 150);
+			
+			
 			logo = new ImageIcon(ImageIO.read(
 					Resources.class.getResourceAsStream("/images/logo.png")));
 			
@@ -80,6 +69,10 @@ public class Resources {
 			e.printStackTrace();
 		}
 		System.out.println("All images loaded successfully");
+	}
+	public static ImageIcon getIcon(String path, int w, int h) throws IOException {
+		return getIcon(ImageIO.read(
+				Resources.class.getResourceAsStream(path)), w, h);
 	}
 	public static ImageIcon getIcon(Image image, int w, int h) {
 		if (!Preferences.darkMode) {
