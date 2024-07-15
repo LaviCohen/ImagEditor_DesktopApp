@@ -2,8 +2,6 @@ package drawables.shapes;
 
 import java.awt.BorderLayout;
 import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
@@ -13,10 +11,7 @@ import javax.swing.JEditorPane;
 import drawables.shapes.abstractShapes.Shape;
 import drawables.shapes.abstractShapes.TextualShape;
 import gui.components.EditPanel;
-import le.gui.dialogs.LDialogs;
 import main.Main;
-import operatins.ChangesOperation;
-import operatins.OperationsManager;
 import operatins.changes.Change;
 
 public class Code extends Shape implements TextualShape{
@@ -55,43 +50,31 @@ public class Code extends Shape implements TextualShape{
 	}
 
 	@Override
-	public void edit() {
-		JDialog editDialog = new JDialog(Main.f);
-		editDialog.setLayout(new BorderLayout());
-		editDialog.setTitle("Edit Text");
+	public EditPanel getEditPanel(boolean full, boolean vertical) {
+		
 		EditPanel positionPanel = createPositionPanel();
-		editDialog.add(positionPanel, BorderLayout.NORTH);
 		EditPanel textPanel = createTextPanel("Code:");
-		editDialog.add(textPanel);
-		ActionListener actionListener = new ActionListener() {
+		EditPanel editPanel = new EditPanel(new BorderLayout()) {
+			
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Object[] getData() {
+				return null;
+			}
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					LinkedList<Change> changes = new LinkedList<>();
-					changes.addAll(positionPanel.getChanges());
-					changes.addAll(textPanel.getChanges());
-					
-					if (!changes.isEmpty()) {
-						OperationsManager.operate(new ChangesOperation(Code.this, changes));
-						Main.getLayersList().updateImage(Code.this);
-						Main.getBoard().repaint();
-					}
-				} catch (Exception e2) {
-					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
-				}
-				if (e.getActionCommand().equals("Apply & Close")) {
-					editDialog.dispose();
-				}
+			public LinkedList<Change> getChanges() {
+				LinkedList<Change> changes = new LinkedList<>();
+				changes.addAll(positionPanel.getChanges());
+				changes.addAll(textPanel.getChanges());
+				
+				return changes;
 			}
 		};
-		editDialog.add(createActionPanel(actionListener), BorderLayout.SOUTH);
-		Main.theme.affect(editDialog);
-		editDialog.pack();
-		editDialog.setSize(editDialog.getWidth() + 50, editDialog.getHeight());
-		moveDialogToCorrectPos(editDialog);
-		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		editDialog.setVisible(true);
+		editPanel.add(positionPanel, BorderLayout.NORTH);
+		editPanel.add(textPanel);
+		return editPanel;
 	}
 	
 	@Override

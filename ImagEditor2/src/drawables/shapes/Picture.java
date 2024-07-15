@@ -13,7 +13,6 @@ import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -33,8 +32,6 @@ import le.gui.components.LSlider;
 import le.gui.dialogs.LDialogs;
 import le.utils.PictureUtilities;
 import main.Main;
-import operatins.ChangesOperation;
-import operatins.OperationsManager;
 import operatins.changes.BooleanChange;
 import operatins.changes.Change;
 import operatins.changes.ChangeType;
@@ -220,12 +217,10 @@ public class Picture extends Shape implements StretchableShpae {
 	}
 
 	@Override
-	public void edit() {
-		JDialog editDialog = new JDialog(Main.f);
-		editDialog.setLayout(new GridLayout(5, 1));
-		editDialog.setTitle("Edit Picture");
+	public EditPanel getEditPanel(boolean full, boolean vertical){
+		//Position Panel creation
 		EditPanel positionPanel = createPositionPanel();
-		editDialog.add(positionPanel);
+		//Size Panel creation
 		JPanel sizePanel = new JPanel(new BorderLayout());
 		EditPanel heightNwidthPanel = createSizePanel();
 		sizePanel.add(heightNwidthPanel);
@@ -241,9 +236,9 @@ public class Picture extends Shape implements StretchableShpae {
 			}
 		});
 		sizePanel.add(toNaturalImageSizeButton, Main.translator.getAfterTextBorder());
-		editDialog.add(sizePanel);
+		//Rotation Slider creation
 		LSlider rotationSlider = new LSlider("Rotation", 0, 360, rotation, 0.1);
-		editDialog.add(rotationSlider);
+		//Source Panel creation
 		JPanel sourcePanel = new JPanel(new BorderLayout());
 		sourcePanel.add(new JLabel("Source:"),
 				Main.translator.getBeforeTextBorder());
@@ -259,7 +254,7 @@ public class Picture extends Shape implements StretchableShpae {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fc = sourceField.getText().equals("don\'t change")?
 						new JFileChooser(Main.install.getPath("Gallery")):new JFileChooser(new File(sourceField.getText()));
-				fc.showOpenDialog(editDialog);
+				fc.showOpenDialog(sourcePanel.getParent());
 				File f = fc.getSelectedFile();
 				if (f != null) {
 					sourceField.setText(f.getAbsolutePath());
@@ -267,11 +262,17 @@ public class Picture extends Shape implements StretchableShpae {
 			}
 		});
 		sourcePanel.add(browse, Main.translator.getAfterTextBorder());
-		editDialog.add(sourcePanel);
-		ActionListener actionListener = new ActionListener() {
+		
+		EditPanel editPanel = new EditPanel(new GridLayout(5, 1)) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Object[] getData() {
+				return null;
+			}
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public LinkedList<Change> getChanges() {
 				try {
 					double rotation = rotationSlider.getValue();
 					BufferedImage image = null;
@@ -280,8 +281,8 @@ public class Picture extends Shape implements StretchableShpae {
 						try {
 							image = readImage(f);
 						} catch (Exception e2) {
-							LDialogs.showMessageDialog(editDialog, "Invalid File Destination",
-									"ERROR", LDialogs.ERROR_MESSAGE);
+							LDialogs.showMessageDialog(sourcePanel.getParent(),
+									"Invalid File Destination", "ERROR", LDialogs.ERROR_MESSAGE);
 						}
 					}
 					LinkedList<Change> changes = new LinkedList<>();
@@ -315,27 +316,19 @@ public class Picture extends Shape implements StretchableShpae {
 							changes.add(new ObjectChange(ChangeType.SRC_IMAGE_CHANGE, Picture.this.image, image));
 						}
 					}
-					if (!changes.isEmpty()) {
-						OperationsManager.operate(new ChangesOperation(Picture.this, changes));
-						invalidate();
-						Main.getLayersList().updateImage(Picture.this);
-						Main.getBoard().repaint();
-					}
+					return changes;
+					
 				} catch (Exception e2) {
 					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
 				}
-				
-				if (e.getActionCommand().equals("Apply & Close")) {
-					editDialog.dispose();
-				}
+				return null;
 			}
 		};
-		editDialog.add(createActionPanel(actionListener));
-		Main.theme.affect(editDialog);
-		editDialog.pack();
-		moveDialogToCorrectPos(editDialog);
-		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		editDialog.setVisible(true);
+		editPanel.add(positionPanel);
+		editPanel.add(sizePanel);
+		editPanel.add(rotationSlider);
+		editPanel.add(sourcePanel);
+		return editPanel;
 	}
 
 	public void editEffects() {

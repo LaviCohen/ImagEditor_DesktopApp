@@ -3,12 +3,9 @@ package drawables.shapes;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.LinkedList;
 
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 
 import drawables.shapes.abstractShapes.ColoredShape;
 import drawables.shapes.abstractShapes.Shape;
@@ -17,8 +14,6 @@ import gui.components.EditPanel;
 import le.gui.components.LSlider;
 import le.gui.dialogs.LDialogs;
 import main.Main;
-import operatins.ChangesOperation;
-import operatins.OperationsManager;
 import operatins.changes.BooleanChange;
 import operatins.changes.Change;
 import operatins.changes.ChangeType;
@@ -56,28 +51,26 @@ public class Rectangle extends Shape implements ColoredShape, StretchableShpae{
 			g.drawRoundRect((int)x, (int)y, (int)width, (int)height, roundWidth, roundHeight);
 		}
 	}
-
 	@Override
-	public void edit() {
-		JDialog editDialog = new JDialog(Main.f);
-		editDialog.setLayout(new GridLayout(7, 1));
-		editDialog.setTitle("Edit Rectangle");
+	public EditPanel getEditPanel(boolean full, boolean vertical) {
+		
 		EditPanel positionPanel = createPositionPanel();
-		editDialog.add(positionPanel);
 		EditPanel sizePanel = createSizePanel();
-		editDialog.add(sizePanel);
 		EditPanel colorPanel = createColorPanel();
-		editDialog.add(colorPanel);
-		LSlider roundWidthSlider = new LSlider("Round Width:", 0, (int) this.width, roundWidth);
-		editDialog.add(roundWidthSlider);
-		LSlider roundHeightSlider = new LSlider("Round Height:", 0, (int) this.height, roundHeight);
-		editDialog.add(roundHeightSlider);
+		LSlider roundWidthSlider = new LSlider("Round Width:", 0, (int) this.width, (int)(roundWidth > width ? width : roundWidth));
+		LSlider roundHeightSlider = new LSlider("Round Height:", 0, (int) this.height, (int)(roundHeight > height ? height : roundHeight));
 		JCheckBox isFilledCheckBox = new JCheckBox("Fill Rectangle", isFilled);
-		editDialog.add(isFilledCheckBox);
-		ActionListener actionListener =  new ActionListener() {
+		EditPanel editPanel = new EditPanel(new GridLayout(7, 1)) {
+			
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Object[] getData() {
+				return null;
+			}
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public LinkedList<Change> getChanges() {
 				try {
 					LinkedList<Change> changes = new LinkedList<>();
 					changes.addAll(positionPanel.getChanges());
@@ -95,27 +88,21 @@ public class Rectangle extends Shape implements ColoredShape, StretchableShpae{
 						changes.add(new BooleanChange(ChangeType.IS_FILLED_CHANGE, isFilledCheckBox.isSelected()));
 					}
 					
-					if (!changes.isEmpty()) {
-						OperationsManager.operate(new ChangesOperation(Rectangle.this, changes));
-						Main.getLayersList().updateImage(Rectangle.this);
-						Main.getBoard().repaint();
-					}
+					return changes;
 				} catch (Exception e2) {
 					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
 					e2.printStackTrace();
 				}
-				
-				if (e.getActionCommand().equals("Apply & Close")) {
-					editDialog.dispose();
-				}
+				return null;
 			}
 		};
-		editDialog.add(createActionPanel(actionListener));
-		Main.theme.affect(editDialog);
-		editDialog.pack();
-		moveDialogToCorrectPos(editDialog);
-		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		editDialog.setVisible(true);
+		editPanel.add(positionPanel);
+		editPanel.add(sizePanel);
+		editPanel.add(colorPanel);
+		editPanel.add(roundWidthSlider);
+		editPanel.add(roundHeightSlider);
+		editPanel.add(isFilledCheckBox);
+		return editPanel;
 	}
 	public Rectangle(String[] data) {
 		this(Double.parseDouble(data[0]), Double.parseDouble(data[1]),

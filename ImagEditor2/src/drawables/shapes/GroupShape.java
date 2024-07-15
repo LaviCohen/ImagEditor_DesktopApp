@@ -10,7 +10,6 @@ import java.util.LinkedList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -23,8 +22,6 @@ import main.Main;
 import operatins.ChangesOperation;
 import operatins.OperationsManager;
 import operatins.changes.Change;
-import operatins.changes.ChangeType;
-import operatins.changes.NumericalChange;
 
 public class GroupShape extends Shape{
 
@@ -93,14 +90,9 @@ public class GroupShape extends Shape{
 	}
 
 	@Override
-	public void edit() {
-		JDialog editDialog = new JDialog(Main.f, "Edit");
-		
-		editDialog.setLayout(new GridLayout(3, 1));
+	public EditPanel getEditPanel(boolean full, boolean vertical) {
 		
 		EditPanel positionPanel = createPositionPanel();
-		
-		editDialog.add(positionPanel);
 		
 		JPanel editLayersPanel = new JPanel(new GridLayout(1, 3));
 		
@@ -125,45 +117,32 @@ public class GroupShape extends Shape{
 				layers[comboBox.getSelectedIndex()].getShape().edit();
 			}
 		});
-		
 		editLayersPanel.add(editLayersButton, Main.translator.getAfterTextBorder());
 		
-		editDialog.add(editLayersPanel);
-		
-		ActionListener actionListener = new ActionListener() {
+		EditPanel editPanel = new EditPanel(new GridLayout(3, 1)) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Object[] getData() {
+				return null;
+			}
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				Object[] positionData = positionPanel.getData();
-				double x = (Double) positionData[0];
-				double y = (Double) positionData[1];
+			public LinkedList<Change> getChanges() {
 				LinkedList<Change> changes = new LinkedList<>();
-				if (GroupShape.this.x != x) {
-					changes.add(new NumericalChange(ChangeType.X_CHANGE, x - GroupShape.this.x));
-				}
-				if (GroupShape.this.y != y) {
-					changes.add(new NumericalChange(ChangeType.Y_CHANGE, y - GroupShape.this.y));
-				}
+				changes.addAll(positionPanel.getChanges());
 				
 				if (!changes.isEmpty()) {
 					OperationsManager.operate(new ChangesOperation(GroupShape.this, changes));
 					Main.getLayersList().updateImage(GroupShape.this);
 					Main.getBoard().repaint();
 				}
-				
-				if (e.getActionCommand().equals("Apply & Close")) {
-					editDialog.dispose();
-				}
+				return changes;
 			}
 		};
-		
-		JPanel actionPanel = createActionPanel(actionListener);
-		editDialog.add(actionPanel);
-		moveDialogToCorrectPos(editDialog);
-		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		editDialog.pack();
-		editDialog.setVisible(true);
-		
+		editPanel.add(positionPanel);
+		editPanel.add(editLayersPanel);
+		return editPanel;
 	}
 
 	@Override

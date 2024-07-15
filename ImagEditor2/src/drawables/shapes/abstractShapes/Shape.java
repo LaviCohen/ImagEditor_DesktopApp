@@ -25,6 +25,8 @@ import gui.components.EditPanel;
 import le.gui.dialogs.LDialogs;
 import main.Actions;
 import main.Main;
+import operatins.ChangesOperation;
+import operatins.OperationsManager;
 import operatins.changes.Change;
 import operatins.changes.ChangeType;
 import operatins.changes.NumericalChange;
@@ -83,7 +85,34 @@ public abstract class Shape implements Drawable{
 		setX(p.getX());
 		setY(p.getY());
 	}
-	public abstract void edit();
+	public abstract EditPanel getEditPanel(boolean full, boolean vertical);
+	public void edit() {
+		JDialog editDialog = new JDialog(Main.f, "Editing " + this.name);
+		EditPanel editPanel = getEditPanel(false, true);
+		editDialog.add(editPanel);
+		editDialog.add(createActionPanel(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				LinkedList<Change> changes = editPanel.getChanges();
+				if (!changes.isEmpty()) {
+					OperationsManager.operate(new ChangesOperation(Shape.this, changes));
+					invalidate();
+					Main.getLayersList().updateImage(Shape.this);
+					Main.getBoard().repaint();
+				}
+				
+				if (e.getActionCommand().equals("Apply & Close")) {
+					editDialog.dispose();
+				}
+			}
+		}), BorderLayout.SOUTH);
+		Main.theme.affect(editDialog);
+		editDialog.pack();
+		moveDialogToCorrectPos(editDialog);
+		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		editDialog.setVisible(true);
+	}
 	public abstract int getWidthOnBoard();
 	public abstract int getHeightOnBoard();
 	@Override

@@ -51,6 +51,10 @@ public class Text extends Shape implements ColoredShape, TextualShape{
 		}
 	}
 	@Override
+	public EditPanel getEditPanel(boolean full, boolean vertical) {
+		return null;
+	}
+	@Override
 	public void edit() {
 		JDialog editDialog = new JDialog(Main.f);
 		editDialog.setLayout(new GridBagLayout());
