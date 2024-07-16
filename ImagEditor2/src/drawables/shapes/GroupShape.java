@@ -18,6 +18,7 @@ import javax.swing.JPopupMenu;
 import drawables.Layer;
 import drawables.shapes.abstractShapes.Shape;
 import gui.components.EditPanel;
+import install.Preferences;
 import main.Main;
 import operatins.ChangesOperation;
 import operatins.OperationsManager;
@@ -119,14 +120,17 @@ public class GroupShape extends Shape{
 		});
 		editLayersPanel.add(editLayersButton, Main.translator.getAfterTextBorder());
 		GridLayout gl = new GridLayout(vertical ? 2 : 1, vertical ? 1 : 2);
+		gl.setHgap(10);
+		gl.setVgap(5);
 		EditPanel editPanel = new EditPanel(gl) {
 			private static final long serialVersionUID = 1L;
 			
 			@Override
 			public LinkedList<Change> getChanges() {
 				LinkedList<Change> changes = new LinkedList<>();
-				changes.addAll(positionPanel.getChanges());
-				
+				if (full || Preferences.showPositionOnTop) {
+					changes.addAll(positionPanel.getChanges());
+				}
 				if (!changes.isEmpty()) {
 					OperationsManager.operate(new ChangesOperation(GroupShape.this, changes));
 					Main.getLayersList().updateImage(GroupShape.this);
@@ -135,7 +139,9 @@ public class GroupShape extends Shape{
 				return changes;
 			}
 		};
-		editPanel.add(positionPanel);
+		if (full || Preferences.showPositionOnTop) {
+			editPanel.add(positionPanel);
+		}
 		editPanel.add(editLayersPanel);
 		return editPanel;
 	}

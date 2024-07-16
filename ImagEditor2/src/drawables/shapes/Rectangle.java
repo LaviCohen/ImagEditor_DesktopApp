@@ -11,6 +11,7 @@ import drawables.shapes.abstractShapes.ColoredShape;
 import drawables.shapes.abstractShapes.Shape;
 import drawables.shapes.abstractShapes.StretchableShpae;
 import gui.components.EditPanel;
+import install.Preferences;
 import le.gui.components.LSlider;
 import le.gui.dialogs.LDialogs;
 import main.Main;
@@ -60,6 +61,8 @@ public class Rectangle extends Shape implements ColoredShape, StretchableShpae{
 		LSlider roundHeightSlider = new LSlider("Round Height:", 0, (int) this.height, (int)(roundHeight > height ? height : roundHeight));
 		JCheckBox isFilledCheckBox = new JCheckBox("Fill Rectangle", isFilled);
 		GridLayout gl = new GridLayout(vertical ? 6 : 1, vertical ? 1 : 6);
+		gl.setHgap(10);
+		gl.setVgap(5);
 		EditPanel editPanel = new EditPanel(gl) {
 			
 			private static final long serialVersionUID = 1L;
@@ -68,8 +71,12 @@ public class Rectangle extends Shape implements ColoredShape, StretchableShpae{
 			public LinkedList<Change> getChanges() {
 				try {
 					LinkedList<Change> changes = new LinkedList<>();
-					changes.addAll(positionPanel.getChanges());
-					changes.addAll(sizePanel.getChanges());
+					if (full || Preferences.showPositionOnTop) {
+						changes.addAll(positionPanel.getChanges());
+					}
+					if (full || Preferences.showSizeOnTop) {
+						changes.addAll(sizePanel.getChanges());
+					}
 					changes.addAll(colorPanel.getChanges());
 					
 					
@@ -91,8 +98,12 @@ public class Rectangle extends Shape implements ColoredShape, StretchableShpae{
 				return null;
 			}
 		};
-		editPanel.add(positionPanel);
-		editPanel.add(sizePanel);
+		if (full || Preferences.showPositionOnTop) {
+			editPanel.add(positionPanel);
+		}
+		if (full || Preferences.showSizeOnTop) {
+			editPanel.add(sizePanel);
+		}
 		editPanel.add(colorPanel);
 		editPanel.add(roundWidthSlider);
 		editPanel.add(roundHeightSlider);

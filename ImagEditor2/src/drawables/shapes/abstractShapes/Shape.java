@@ -90,7 +90,7 @@ public abstract class Shape implements Drawable{
 		
 		Main.getEditShapesTopPanel().removeAll();
 		
-		Main.getEditShapesTopPanel().setLayout(new BorderLayout());
+		Main.getEditShapesTopPanel().setLayout(new BorderLayout(15, 0));
 		
 		Main.getEditShapesTopPanel().add(new JLabel(Shape.this.name + ":"), Main.translator.getBeforeTextBorder());
 		

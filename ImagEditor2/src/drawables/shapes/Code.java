@@ -11,6 +11,7 @@ import javax.swing.JEditorPane;
 import drawables.shapes.abstractShapes.Shape;
 import drawables.shapes.abstractShapes.TextualShape;
 import gui.components.EditPanel;
+import install.Preferences;
 import main.Main;
 import operatins.changes.Change;
 
@@ -54,20 +55,24 @@ public class Code extends Shape implements TextualShape{
 		
 		EditPanel positionPanel = createPositionPanel();
 		EditPanel textPanel = createTextPanel("Code:");
-		EditPanel editPanel = new EditPanel(new BorderLayout()) {
+		EditPanel editPanel = new EditPanel(new BorderLayout(10, 5)) {
 			
 			private static final long serialVersionUID = 1L;
 			
 			@Override
 			public LinkedList<Change> getChanges() {
 				LinkedList<Change> changes = new LinkedList<>();
-				changes.addAll(positionPanel.getChanges());
+				if (full || Preferences.showPositionOnTop) {
+					changes.addAll(positionPanel.getChanges());
+				}
 				changes.addAll(textPanel.getChanges());
 				
 				return changes;
 			}
 		};
-		editPanel.add(positionPanel, vertical ? BorderLayout.NORTH : Main.translator.getAfterTextBorder());
+		if (full || Preferences.showPositionOnTop) {
+			editPanel.add(positionPanel, vertical ? BorderLayout.NORTH : Main.translator.getBeforeTextBorder());
+		}
 		editPanel.add(textPanel);
 		return editPanel;
 	}

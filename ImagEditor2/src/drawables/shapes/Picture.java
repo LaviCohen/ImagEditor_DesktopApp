@@ -263,6 +263,8 @@ public class Picture extends Shape implements StretchableShpae {
 		});
 		sourcePanel.add(browse, Main.translator.getAfterTextBorder());
 		GridLayout gl = new GridLayout(vertical ? 4 : 1, vertical ? 1 : 4);
+		gl.setHgap(10);
+		gl.setVgap(5);
 		EditPanel editPanel = new EditPanel(gl) {
 			private static final long serialVersionUID = 1L;
 			
@@ -281,9 +283,12 @@ public class Picture extends Shape implements StretchableShpae {
 						}
 					}
 					LinkedList<Change> changes = new LinkedList<>();
-					changes.addAll(positionPanel.getChanges());
-					changes.addAll(heightNwidthPanel.getChanges());
-					
+					if (full || Preferences.showPositionOnTop) {
+						changes.addAll(positionPanel.getChanges());
+					}
+					if (full || Preferences.showSizeOnTop) {
+						changes.addAll(heightNwidthPanel.getChanges());
+					}
 					if (Picture.this.rotation != rotation) {
 						changes.add(new NumericalChange(ChangeType.ROTATION_CHANGE, rotation - Picture.this.rotation));
 					}
@@ -319,8 +324,12 @@ public class Picture extends Shape implements StretchableShpae {
 				return null;
 			}
 		};
-		editPanel.add(positionPanel);
-		editPanel.add(sizePanel);
+		if (full || Preferences.showPositionOnTop) {
+			editPanel.add(positionPanel);
+		}
+		if (full || Preferences.showSizeOnTop) {
+			editPanel.add(sizePanel);
+		}
 		editPanel.add(rotationSlider);
 		editPanel.add(sourcePanel);
 		return editPanel;
