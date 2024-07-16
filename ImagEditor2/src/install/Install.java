@@ -49,6 +49,8 @@ public class Install extends AbstractInstall{
 			Preferences.manualRefreshOnly = false;
 			Preferences.darkMode = false;
 			Preferences.keepTrackOfTopLayers = true;
+			Preferences.showPositionOnTop = false;
+			Preferences.showSizeOnTop = false;
 			Preferences.numOfBackOperations = -1;
 			Preferences.mpPixelSize = 50;
 			Preferences.mpSourceWidth = 300;

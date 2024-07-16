@@ -118,14 +118,9 @@ public class GroupShape extends Shape{
 			}
 		});
 		editLayersPanel.add(editLayersButton, Main.translator.getAfterTextBorder());
-		
-		EditPanel editPanel = new EditPanel(new GridLayout(3, 1)) {
+		GridLayout gl = new GridLayout(vertical ? 2 : 1, vertical ? 1 : 2);
+		EditPanel editPanel = new EditPanel(gl) {
 			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Object[] getData() {
-				return null;
-			}
 			
 			@Override
 			public LinkedList<Change> getChanges() {

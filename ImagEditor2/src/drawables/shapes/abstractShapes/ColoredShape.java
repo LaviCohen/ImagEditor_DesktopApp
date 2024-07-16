@@ -41,15 +41,11 @@ public interface ColoredShape {
 		EditPanel colorPanel = new EditPanel(new BorderLayout()) {
 			private static final long serialVersionUID = 1L;
 
-			@Override
-			public Object[] getData() {
-				return new Color[] {colorLabel.getBackground()};
-			}
 
 			@Override
 			public LinkedList<Change> getChanges() {
 				LinkedList<Change> changes = new LinkedList<>();
-				Color color = (Color) getData()[0];
+				Color color = colorLabel.getBackground();
 				if (!ColoredShape.this.getColor().equals(color)) {
 					changes.add(new ObjectChange(ChangeType.COLOR_CHANGE, ColoredShape.this.getColor(),
 							color));

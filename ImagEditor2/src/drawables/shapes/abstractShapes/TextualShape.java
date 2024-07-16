@@ -23,14 +23,10 @@ public interface TextualShape {
 		EditPanel textPanel = new EditPanel(new BorderLayout()) {
 			private static final long serialVersionUID = 1L;
 
-			@Override
-			public Object[] getData() {
-				return new String[] {textArea.getText()};
-			}
 
 			@Override
 			public LinkedList<Change> getChanges() {
-				String text = (String) getData()[0];
+				String text = textArea.getText();
 				LinkedList<Change> changes = new LinkedList<>();
 				if (!TextualShape.this.getText().equals(text)) {
 					changes.add(new ObjectChange(ChangeType.TEXT_CHANGE, TextualShape.this.getText(), text));

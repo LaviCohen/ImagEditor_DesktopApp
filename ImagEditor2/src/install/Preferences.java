@@ -45,6 +45,9 @@ public class Preferences {
 	public static boolean showCutPartsOfPicture;
 	public static boolean keepTrackOfTopLayers;
 	public static int numOfBackOperations;
+	//Edit
+	public static boolean showPositionOnTop;
+	public static boolean showSizeOnTop;
 	//Appearance
 	public static boolean darkMode;
 	//Multi-Picture
@@ -71,6 +74,8 @@ public class Preferences {
 		darkMode = Boolean.parseBoolean(default_setting.get("dark_mode"));
 		showCutPartsOfPicture = Boolean.parseBoolean(default_setting.get("show_cut_parts_of_picture"));
 		keepTrackOfTopLayers = Boolean.parseBoolean(default_setting.get("keep_track_of_layer"));
+		showPositionOnTop = Boolean.parseBoolean(default_setting.get("show_position_on_top"));
+		showSizeOnTop = Boolean.parseBoolean(default_setting.get("show_size_on_top"));
 		numOfBackOperations = Integer.parseInt(default_setting.get("num_of_back_op"));
 		mpPixelSize = Integer.parseInt(default_setting.get("multi_picture_pixel_size"));
 		mpSourceWidth = Integer.parseInt(default_setting.get("multi_picture_src_width"));
@@ -90,6 +95,8 @@ public class Preferences {
 		default_setting.putWithoutSave("dark_mode", darkMode);
 		default_setting.putWithoutSave("show_cut_parts_of_picture", showCutPartsOfPicture);
 		default_setting.putWithoutSave("keep_track_of_layer", keepTrackOfTopLayers);
+		default_setting.putWithoutSave("show_position_on_top", showPositionOnTop);
+		default_setting.putWithoutSave("show_size_on_top", showSizeOnTop);
 		default_setting.putWithoutSave("num_of_back_op", numOfBackOperations);
 		default_setting.putWithoutSave("multi_picture_pixel_size", mpPixelSize);
 		default_setting.putWithoutSave("multi_picture_src_width", mpSourceWidth);
@@ -249,6 +256,18 @@ public class Preferences {
 		
 		tabbedPane.addTab("Advanced", advancedPrefsPanel);
 		
+		//Edit Tab
+		JPanel editTabPanel = new JPanel(new ListLayout());
+		
+		//Manual Refresh
+		JCheckBox showPositionOnTopCheckBox = new JCheckBox("Show Position On Top Edit Bar", Preferences.manualRefreshOnly);
+		editTabPanel.add(showPositionOnTopCheckBox);
+				
+		//Manual Refresh
+		JCheckBox showSizeOnTopCheckBox = new JCheckBox("Show Size On Top Edit Bar", Preferences.manualRefreshOnly);
+		editTabPanel.add(showSizeOnTopCheckBox);
+		
+		tabbedPane.addTab("Edit", editTabPanel);
 		
 		//Apply button
 		JButton apply = new JButton("Apply Preferences");
@@ -287,7 +306,7 @@ public class Preferences {
 				//Updating use more preview
 				Preferences.usePreviewPictures = usePreviewCheckBox.isSelected();
 				//Updating manual refresh
-				Preferences.manualRefreshOnly = manualRefreshOnlyCheckBox.isSelected();
+				Preferences.manualRefreshOnly = showSizeOnTopCheckBox.isSelected();
 				//Show cut parts of picture
 				Preferences.showCutPartsOfPicture = showCutPartsOfPictureCheckBox.isSelected();
 				//Updating keep track of layers
@@ -298,6 +317,10 @@ public class Preferences {
 				} else {
 					Preferences.numOfBackOperations = -1;
 				}
+				//Updating showing position in top
+				Preferences.showPositionOnTop = showPositionOnTopCheckBox.isSelected();
+				//Updating showing size in top
+				Preferences.showSizeOnTop = showSizeOnTopCheckBox.isSelected();
 				//Updating Pixel Size
 				Preferences.mpPixelSize = Integer.parseInt(mpPixelSizeField.getText());
 				//Updating Source Width

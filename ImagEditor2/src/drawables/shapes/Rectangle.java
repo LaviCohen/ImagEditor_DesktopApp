@@ -53,21 +53,16 @@ public class Rectangle extends Shape implements ColoredShape, StretchableShpae{
 	}
 	@Override
 	public EditPanel getEditPanel(boolean full, boolean vertical) {
-		
 		EditPanel positionPanel = createPositionPanel();
 		EditPanel sizePanel = createSizePanel();
 		EditPanel colorPanel = createColorPanel();
 		LSlider roundWidthSlider = new LSlider("Round Width:", 0, (int) this.width, (int)(roundWidth > width ? width : roundWidth));
 		LSlider roundHeightSlider = new LSlider("Round Height:", 0, (int) this.height, (int)(roundHeight > height ? height : roundHeight));
 		JCheckBox isFilledCheckBox = new JCheckBox("Fill Rectangle", isFilled);
-		EditPanel editPanel = new EditPanel(new GridLayout(7, 1)) {
+		GridLayout gl = new GridLayout(vertical ? 6 : 1, vertical ? 1 : 6);
+		EditPanel editPanel = new EditPanel(gl) {
 			
 			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Object[] getData() {
-				return null;
-			}
 			
 			@Override
 			public LinkedList<Change> getChanges() {

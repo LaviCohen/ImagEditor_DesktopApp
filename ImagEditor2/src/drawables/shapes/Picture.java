@@ -262,14 +262,9 @@ public class Picture extends Shape implements StretchableShpae {
 			}
 		});
 		sourcePanel.add(browse, Main.translator.getAfterTextBorder());
-		
-		EditPanel editPanel = new EditPanel(new GridLayout(5, 1)) {
+		GridLayout gl = new GridLayout(vertical ? 4 : 1, vertical ? 1 : 4);
+		EditPanel editPanel = new EditPanel(gl) {
 			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Object[] getData() {
-				return null;
-			}
 			
 			@Override
 			public LinkedList<Change> getChanges() {

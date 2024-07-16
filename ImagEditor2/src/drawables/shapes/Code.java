@@ -57,11 +57,6 @@ public class Code extends Shape implements TextualShape{
 		EditPanel editPanel = new EditPanel(new BorderLayout()) {
 			
 			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Object[] getData() {
-				return null;
-			}
 			
 			@Override
 			public LinkedList<Change> getChanges() {
@@ -72,7 +67,7 @@ public class Code extends Shape implements TextualShape{
 				return changes;
 			}
 		};
-		editPanel.add(positionPanel, BorderLayout.NORTH);
+		editPanel.add(positionPanel, vertical ? BorderLayout.NORTH : Main.translator.getAfterTextBorder());
 		editPanel.add(textPanel);
 		return editPanel;
 	}

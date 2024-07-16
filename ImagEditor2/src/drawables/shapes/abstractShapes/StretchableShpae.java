@@ -31,20 +31,12 @@ public interface StretchableShpae{
 		JTextField widthField = new JTextField(this.getWidth() + "");
 		JTextField heightField = new JTextField(this.getHeight() + "");
 		EditPanel sizePanel = new EditPanel(new GridLayout(1, 4)) {
-			
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public Object[] getData() {
-				return new Double[] {Double.parseDouble(widthField.getText()), 
-						Double.parseDouble(heightField.getText())};
-			}
-
-			@Override
 			public LinkedList<Change> getChanges() {
-				Object[] sizeData = getData();
-				double width = (Double) sizeData[0];
-				double height = (Double) sizeData[1];
+				double width = Double.parseDouble(widthField.getText());
+				double height = Double.parseDouble(heightField.getText());
 				LinkedList<Change> changes = new LinkedList<>();
 				if (StretchableShpae.this.getWidth() != width) {
 					changes.add(new NumericalChange(ChangeType.WIDTH_CHANGE, width - StretchableShpae.this.getWidth()));

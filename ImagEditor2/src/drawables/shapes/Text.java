@@ -117,7 +117,7 @@ public class Text extends Shape implements ColoredShape, TextualShape{
 			}
 		};
 		gbc.gridy = 4;
-		editDialog.add(createActionPanel(actionListener), gbc);
+		editDialog.add(createActionPanel(false, actionListener), gbc);
 		Main.theme.affect(editDialog);
 		editDialog.pack();
 		editDialog.setSize(editDialog.getWidth() + 50, editDialog.getHeight());

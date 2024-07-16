@@ -52,7 +52,7 @@ public class Main {
 	/**
 	 * Holds the number of the version with minor version (after the decimal point)
 	 */
-	public static final double version = 5.0;
+	public static final double version = 5.2;
 	/**
 	 * The frame of the program.
 	 */
@@ -115,6 +115,14 @@ public class Main {
 	 */
 	private static JPanel toolsSideBarPanel;
 	/**
+	 * The top bar which holds the tools settings & shapes edit.
+	 */
+	private static JPanel topBarPanel;
+	/**
+	 * The top bar which holds the shapes edit.
+	 */
+	private static JPanel editShapesTopPanel;
+	/**
 	 * The top bar which holds the tools settings.
 	 */
 	private static JPanel toolsSettingsPanel;
@@ -176,7 +184,7 @@ public class Main {
 		initProject();
 		initBoardScrollPane();
 		initLayersSideBarPanel();
-		initToolsSettingsPanel();
+		initTopBarPanel();
 		initToolsSideBarPanel();
 		updateSizeLabel();
 		updateLayersList();
@@ -194,10 +202,20 @@ public class Main {
 		controlBar.add(logLabel, BorderLayout.SOUTH);
 		f.add(controlBar, BorderLayout.SOUTH);
 	}
+	private static void initTopBarPanel() {
+		topBarPanel = new JPanel(new GridLayout(2, 1));
+		initToolsSettingsPanel();
+		initEditShapesTopPanel();
+		f.add(topBarPanel, BorderLayout.NORTH);
+	}
 	private static void initToolsSettingsPanel() {
 		setToolsSettingsPanel(new JPanel(new BorderLayout()));
 		getToolsSettingsPanel().add(new JPanel());
-		f.add(getToolsSettingsPanel(), BorderLayout.NORTH);
+		topBarPanel.add(toolsSettingsPanel);
+	}
+	private static void initEditShapesTopPanel() {
+		editShapesTopPanel = new JPanel();
+		topBarPanel.add(editShapesTopPanel);
 	}
 	private static void initToolsSideBarPanel() {
 		toolsSideBarPanel = ToolsManager.createToolsPanel();
@@ -558,5 +576,17 @@ public class Main {
 	}
 	public static void setLogLabel(JLabel logLabel) {
 		Main.logLabel = logLabel;
+	}
+	public static JPanel getTopBarPanel() {
+		return topBarPanel;
+	}
+	public static void setTopBarPanel(JPanel topBarPanel) {
+		Main.topBarPanel = topBarPanel;
+	}
+	public static JPanel getEditShapesTopPanel() {
+		return editShapesTopPanel;
+	}
+	public static void setEditShapesTopPanel(JPanel editShapesTopPanel) {
+		Main.editShapesTopPanel = editShapesTopPanel;
 	}
 }

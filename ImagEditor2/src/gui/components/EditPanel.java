@@ -15,7 +15,5 @@ public abstract class EditPanel extends JPanel{
 		super(lm);
 	}
 	
-	public abstract Object[] getData();
-	
 	public abstract LinkedList<Change> getChanges();
 }

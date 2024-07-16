@@ -87,31 +87,63 @@ public abstract class Shape implements Drawable{
 	}
 	public abstract EditPanel getEditPanel(boolean full, boolean vertical);
 	public void edit() {
-		JDialog editDialog = new JDialog(Main.f, "Editing " + this.name);
-		EditPanel editPanel = getEditPanel(false, true);
-		editDialog.add(editPanel);
-		editDialog.add(createActionPanel(new ActionListener() {
+		
+		Main.getEditShapesTopPanel().removeAll();
+		
+		Main.getEditShapesTopPanel().setLayout(new BorderLayout());
+		
+		Main.getEditShapesTopPanel().add(new JLabel(Shape.this.name + ":"), Main.translator.getBeforeTextBorder());
+		
+		EditPanel editPanel = getEditPanel(false, false);
+		
+		Main.getEditShapesTopPanel().add(editPanel);
+		
+		ActionListener al = new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				LinkedList<Change> changes = editPanel.getChanges();
-				if (!changes.isEmpty()) {
-					OperationsManager.operate(new ChangesOperation(Shape.this, changes));
-					invalidate();
-					Main.getLayersList().updateImage(Shape.this);
-					Main.getBoard().repaint();
-				}
-				
-				if (e.getActionCommand().equals("Apply & Close")) {
-					editDialog.dispose();
+				if (e.getActionCommand().equals("Pop Out")) {
+					JDialog editDialog = new JDialog(Main.f, "Editing " + Shape.this.name);
+					EditPanel editPanel = getEditPanel(true, true);
+					editDialog.add(editPanel);
+					editDialog.add(createActionPanel(false,  new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							LinkedList<Change> changes = editPanel.getChanges();
+							if (!changes.isEmpty()) {
+								OperationsManager.operate(new ChangesOperation(Shape.this, changes));
+								invalidate();
+								Main.getLayersList().updateImage(Shape.this);
+								Main.getBoard().repaint();
+							}
+							
+							if (e.getActionCommand().equals("Apply & Close")) {
+								editDialog.dispose();
+							}
+						}
+					}), BorderLayout.SOUTH);
+					Main.theme.affect(editDialog);
+					editDialog.pack();
+					moveDialogToCorrectPos(editDialog);
+					editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					editDialog.setVisible(true);
+				} else if(e.getActionCommand().equals("Apply")) {
+					LinkedList<Change> changes = editPanel.getChanges();
+					if (!changes.isEmpty()) {
+						OperationsManager.operate(new ChangesOperation(Shape.this, changes));
+						invalidate();
+						Main.getLayersList().updateImage(Shape.this);
+						Main.getBoard().repaint();
+					}
 				}
 			}
-		}), BorderLayout.SOUTH);
-		Main.theme.affect(editDialog);
-		editDialog.pack();
-		moveDialogToCorrectPos(editDialog);
-		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		editDialog.setVisible(true);
+		};
+		
+		Main.getEditShapesTopPanel().add(createActionPanel(true, al), Main.translator.getAfterTextBorder());
+		
+		Main.f.revalidate();
+		Main.f.repaint();
 	}
 	public abstract int getWidthOnBoard();
 	public abstract int getHeightOnBoard();
@@ -216,18 +248,11 @@ public abstract class Shape implements Drawable{
 		Main.theme.affect(yField);
 		EditPanel positionPanel = new EditPanel(new GridLayout(1, 4)) {
 			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Object[] getData() {
-				return new Double[] {Double.parseDouble(xField.getText()), 
-						Double.parseDouble(yField.getText())};
-			}
 			
 			@Override
 			public LinkedList<Change> getChanges() {
-				Object[] positionData = getData();
-				double x = (Double) positionData[0];
-				double y = (Double) positionData[1];
+				double x = Double.parseDouble(xField.getText());
+				double y = Double.parseDouble(yField.getText());
 				
 				LinkedList<Change> changes = new LinkedList<>();
 				if (Shape.this.x != x) {
@@ -247,14 +272,14 @@ public abstract class Shape implements Drawable{
 		return positionPanel;
 	}
 	
-	protected JPanel createActionPanel(ActionListener actionListener) {
+	protected JPanel createActionPanel(boolean top, ActionListener actionListener) {
 		JPanel actionPanel = new JPanel(new BorderLayout());
-		JButton applyNclose = new JButton("Apply & Close");
-		JButton apply = new JButton("Apply");
-		applyNclose.addActionListener(actionListener);
-		apply.addActionListener(actionListener);
-		actionPanel.add(applyNclose);
-		actionPanel.add(apply, BorderLayout.EAST);
+		JButton firstButton = new JButton(top ? "Apply" : "Apply & Close");
+		JButton secondBottoun = new JButton(top ? "Pop Out" : "Apply");
+		firstButton.addActionListener(actionListener);
+		secondBottoun.addActionListener(actionListener);
+		actionPanel.add(firstButton);
+		actionPanel.add(secondBottoun, BorderLayout.EAST);
 		return actionPanel;
 	}
 	protected void moveDialogToCorrectPos(JDialog dialog){
