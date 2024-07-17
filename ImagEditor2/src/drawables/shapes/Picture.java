@@ -245,9 +245,9 @@ public class Picture extends Shape implements StretchableShpae {
 		});
 		sizePanel.add(toNaturalImageSizeButton, Main.translator.getAfterTextBorder());
 		//Rotation Slider creation
-		LSlider rotationSlider = new LSlider("Rotation", 0, 360, rotation, 0.1);
+		LSlider rotationSlider = new LSlider("Rotation: ", 0, 360, rotation, 0.1);
 		//Transparency Slider creation
-		LSlider transparencySlider = new LSlider("Trancparency", 0, 1, transparency, 0.05);
+		LSlider transparencySlider = new LSlider("Trancparency: ", 0, 1, transparency, 0.05);
 		//Source Panel creation
 		JPanel sourcePanel = new JPanel(new BorderLayout());
 		sourcePanel.add(new JLabel("Source:"),
@@ -304,7 +304,6 @@ public class Picture extends Shape implements StretchableShpae {
 						changes.add(new NumericalChange(ChangeType.ROTATION_CHANGE, rotation - Picture.this.rotation));
 					}
 					if (Picture.this.transparency != transparency) {
-						System.out.println("Transparency Changed from " + Picture.this.transparency + " to " + transparency);
 						changes.add(new NumericalChange(ChangeType.TRANSPARENCY_CHANGE, transparency - Picture.this.transparency));
 					}
 					if (image != null) {

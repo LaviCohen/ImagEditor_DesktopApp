@@ -9,10 +9,8 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -68,37 +66,12 @@ public class Board extends JPanel{
 	}
 	
 	public void initSpecialIntefaces() {
-		
-		new DropTarget(this, new DropTargetListener() {
-			
-			@Override
-			public void dropActionChanged(DropTargetDragEvent dtde) {
-				// TODO Auto-generated method stub
-			}
-			
+		new DropTarget(this, new DropTargetAdapter() {
 			@Override
 			public void drop(DropTargetDropEvent dtde) {
 				System.out.println("Transferred");
 				dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
 				System.out.println(Actions.handleTransferable(dtde.getTransferable()));
-			}
-			
-			@Override
-			public void dragOver(DropTargetDragEvent dtde) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void dragExit(DropTargetEvent dte) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void dragEnter(DropTargetDragEvent dtde) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
 		
@@ -180,8 +153,17 @@ public class Board extends JPanel{
 		g.setColor(backgroundColor);
 		g.fillRect((int)getLeftGap(), (int)getTopGap(), (int)(paperWidth * getZoomRate()),
 				(int)(paperHeight * getZoomRate()));
-		g.setClip((int)getLeftGap(), (int)getTopGap(), (int)(paperWidth * getZoomRate()),
-				(int)(paperHeight * getZoomRate()));
+		int originalClipWidth = g.getClip().getBounds().width;
+		int originalClipHeight = g.getClip().getBounds().height;
+		int clipWidth = (int)(paperWidth * getZoomRate());
+		if (clipWidth > originalClipWidth) {
+			clipWidth = originalClipWidth;
+		}
+		int clipHeight = (int)(paperHeight * getZoomRate());
+		if (clipHeight > originalClipHeight) {
+			clipHeight = originalClipHeight;
+		}
+		g.setClip((int)getLeftGap(), (int)getTopGap(), clipWidth, clipHeight);
 		for (Layer layer:layers) {
 			Shape s = layer.getShape();
 			if (getZoomRate() != 1) {
