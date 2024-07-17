@@ -154,7 +154,7 @@ public class Text extends Shape implements ColoredShape, TextualShape{
 	}
 	
 	public int getHeightOfLine(String text) {
-		return (int) (font.getLineMetrics(text, new FontRenderContext(null, false, true)).getHeight() * 0.8);
+		return (int) (font.getLineMetrics(text, new FontRenderContext(null, false, true)).getHeight());
 	}
 	
 	@Override

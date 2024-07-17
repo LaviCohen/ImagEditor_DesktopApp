@@ -1,20 +1,29 @@
 package tools.adapters;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
+
+import javax.swing.JTextArea;
 
 import drawables.shapes.Picture;
 import drawables.shapes.Text;
 import drawables.shapes.abstractShapes.Shape;
 import drawables.shapes.abstractShapes.StretchableShpae;
 import gui.components.Board;
-import le.gui.dialogs.LDialogs;
 import main.Main;
 import operatins.ChangesOperation;
 import operatins.OperationsManager;
 import operatins.changes.Change;
 import operatins.changes.ChangeType;
 import operatins.changes.NumericalChange;
+import operatins.changes.ObjectChange;
 
 public class PickingMouseAdapter extends BoardAdapter{
 	
@@ -49,6 +58,9 @@ public class PickingMouseAdapter extends BoardAdapter{
 		previousX = e.getXOnScreen();
 		previousY = e.getYOnScreen();
 		shapeInFocus = parent.getShapeAt(boardToPaperCoordinatesX(e.getX()), boardToPaperCoordinatesY(e.getY()));
+		if (shapeInFocus != text) {
+			focusLost.run();
+		}
 		if (shapeInFocus != null && !shapeInFocus.isVisible()) {
 			shapeInFocus = null;
 		}
@@ -56,6 +68,75 @@ public class PickingMouseAdapter extends BoardAdapter{
 			touchedWrapper = touchWrapper(e);
 		}
 		Main.getLayersList().setSelection(shapeInFocus);
+	}
+	private JTextArea ta;
+	private String originalText;
+	private Text text;
+	public Runnable focusLost = new Runnable() {
+		
+		@Override
+		public void run() {
+			if (text == null) {
+				return;
+			}
+			Main.getBoard().remove(ta);
+			text.setVisible(true);
+			if (!ta.getText().equals(originalText)) {
+				LinkedList<Change> changes = new LinkedList<Change>();
+				changes.add(new ObjectChange(ChangeType.TEXT_CHANGE, originalText, ta.getText()));
+				OperationsManager.addOperation(new ChangesOperation(text, changes));
+				Main.getLayersList().updateImage(text);
+			}
+			Main.getBoard().repaint();
+			ta = null;
+			originalText = null;
+			text = null;
+		}
+	};
+	public void editTextOnBoard(Text text) {
+		this.text = text;
+		editTextOnBoard();
+	}
+	private void editTextOnBoard() {
+		System.out.println("Editing text on board");
+		ta = new JTextArea(text.getText());
+		ta.setFont(resizeFont(text.getFont(), parent.getZoomRate()));
+		ta.setForeground(text.getColor());
+		if (text.getColor().getRed() + text.getColor().getGreen() + text.getColor().getBlue() > 400) {
+			ta.setBackground(Color.BLACK);
+		}
+		ta.setMargin(new Insets(0, 0, 0, 0));
+		Main.getBoard().add(ta);
+		originalText = text.getText();
+		ta.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				super.keyTyped(e);
+				System.out.println(e.getKeyChar());
+				text.setText(ta.getText());
+				ta.setBounds(parent.paperToBoardCoordinatesX((int) text.getX()),
+						parent.paperToBoardCoordinatesY((int) text.getY()), 
+						ta.getPreferredSize().width + 15, ta.getPreferredSize().height);
+				Main.getBoard().repaint();
+			}
+		});
+		ta.requestFocus();
+		ta.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				super.focusLost(e);
+				focusLost.run();
+			}
+		});
+		text.setVisible(false);
+		ta.setBounds(parent.paperToBoardCoordinatesX((int) text.getX()),
+				parent.paperToBoardCoordinatesY((int) text.getY()), 
+				ta.getPreferredSize().width + 15, ta.getPreferredSize().height);
+		Main.getBoard().revalidate();
+		Main.getBoard().repaint();
+	}
+	public Font resizeFont(Font f, double sizeFactor) {
+		return new Font(f.getName(), f.getStyle(), (int) (f.getSize() * sizeFactor));
 	}
 	@Override
 	public void mouseReleased(MouseEvent e) {
@@ -118,12 +199,7 @@ public class PickingMouseAdapter extends BoardAdapter{
 		}
 		if(e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1 
 				&& shapeInFocus instanceof Text){
-			String text = LDialogs.
-					showInputDialog(parent, "Enter Text:", "Set Text", ((Text)shapeInFocus).getText());
-			if (text != null && !text.equals(((Text)shapeInFocus).getText())) {
-				((Text)shapeInFocus).setText(text);
-				Main.getLayersList().updateImage(shapeInFocus);
-			}
+			editTextOnBoard((Text) shapeInFocus);
 		}
 		parent.repaint();
 	}

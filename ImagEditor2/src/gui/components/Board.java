@@ -1,6 +1,5 @@
 package gui.components;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -56,7 +55,7 @@ public class Board extends JPanel{
 	private boolean isExportPaintMode = false;
 	
 	public Board(Color color, int width, int height) {
-		this.setLayout(new BorderLayout());
+		this.setLayout(null);
 		this.setFocusable(true);
 		this.setOpaque(true);
 		this.paperWidth = width;
@@ -259,6 +258,12 @@ public class Board extends JPanel{
 	}
 	public int boardToPaperCoordinatesY(int boardY) {
 		return (int)((boardY - getTopGap()) / getZoomRate());
+	}
+	public int paperToBoardCoordinatesX(int paperX) {
+		return (int)(paperX * getZoomRate() + getLeftGap());
+	}
+	public int paperToBoardCoordinatesY(int paperY) {
+		return (int)(paperY * getZoomRate() + getTopGap());
 	}
 
 	public int getPaperWidth() {
