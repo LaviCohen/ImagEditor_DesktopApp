@@ -88,6 +88,7 @@ public class LayersList extends JPanel{
 		}
 		selected = layerPanel;
 		if (selected != null) {
+			selected.layer.getShape().edit();
 			selected.setBackground(Color.CYAN);
 			selected.revalidate();
 			selected.repaint();

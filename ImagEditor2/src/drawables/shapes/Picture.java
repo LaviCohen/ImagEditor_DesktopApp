@@ -1,5 +1,6 @@
 package drawables.shapes;
 
+import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -65,8 +66,11 @@ public class Picture extends Shape implements StretchableShpae {
 	// Is the Picture currently cut
 	private boolean isCutting;
 	
+	//Rotation
 	double rotation;
 
+	//Transparency
+	private double transparency = 0;
 
 	// Effects
 	EffectsManager effectsManger = new EffectsManager(this);
@@ -128,7 +132,7 @@ public class Picture extends Shape implements StretchableShpae {
 	@Override
 	public void draw(Graphics2D g) {
 		if (Main.getBoard().isExportPaintMode() && isPreview) {
-			//In case the program uses only preview while editing, here the code give the full
+			//In case the program uses only preview while editing, the code here gives the full
 			//picture in maximum resolution.
 			BufferedImage displayImage = new BufferedImage((int) getCutWidth(), (int) getCutHeight(),
 					BufferedImage.TYPE_INT_ARGB_PRE);
@@ -173,13 +177,17 @@ public class Picture extends Shape implements StretchableShpae {
 			// In case the setting has been changed while the program is running, so
 			// previous lastDrawn won't stuck in the memory
 			invalidate();
+            g.setComposite(AlphaComposite.SrcOver.derive((float)(1 - transparency)));
 			g.drawImage(getImageToDisplay(), (int) x, (int) y, null);
+            g.setComposite(AlphaComposite.SrcOver.derive((float)(1)));
 			return;
 		}
 		if (lastDrawn == null) {
 			lastDrawn = getImageToDisplay();
 		}
+        g.setComposite(AlphaComposite.SrcOver.derive((float)(1 - transparency)));
 		g.drawImage(lastDrawn, (int) x, (int) y, null);
+        g.setComposite(AlphaComposite.SrcOver.derive((float)(1)));
 	}
 
 	public BufferedImage getImageToDisplay() {
@@ -238,6 +246,8 @@ public class Picture extends Shape implements StretchableShpae {
 		sizePanel.add(toNaturalImageSizeButton, Main.translator.getAfterTextBorder());
 		//Rotation Slider creation
 		LSlider rotationSlider = new LSlider("Rotation", 0, 360, rotation, 0.1);
+		//Transparency Slider creation
+		LSlider transparencySlider = new LSlider("Trancparency", 0, 1, transparency, 0.05);
 		//Source Panel creation
 		JPanel sourcePanel = new JPanel(new BorderLayout());
 		sourcePanel.add(new JLabel("Source:"),
@@ -262,7 +272,7 @@ public class Picture extends Shape implements StretchableShpae {
 			}
 		});
 		sourcePanel.add(browse, Main.translator.getAfterTextBorder());
-		GridLayout gl = new GridLayout(dialog ? 4 : 1, dialog ? 1 : 4);
+		GridLayout gl = new GridLayout(dialog ? 5 : 1, dialog ? 1 : 5);
 		gl.setHgap(10);
 		gl.setVgap(5);
 		EditPanel editPanel = new EditPanel(gl) {
@@ -272,6 +282,7 @@ public class Picture extends Shape implements StretchableShpae {
 			public LinkedList<Change> getChanges() {
 				try {
 					double rotation = rotationSlider.getValue();
+					double transparency = transparencySlider.getValue();
 					BufferedImage image = null;
 					if (!sourceField.getText().equals("don\'t change")) {
 						File f = new File(sourceField.getText());
@@ -291,6 +302,10 @@ public class Picture extends Shape implements StretchableShpae {
 					}
 					if (Picture.this.rotation != rotation) {
 						changes.add(new NumericalChange(ChangeType.ROTATION_CHANGE, rotation - Picture.this.rotation));
+					}
+					if (Picture.this.transparency != transparency) {
+						System.out.println("Transparency Changed from " + Picture.this.transparency + " to " + transparency);
+						changes.add(new NumericalChange(ChangeType.TRANSPARENCY_CHANGE, transparency - Picture.this.transparency));
 					}
 					if (image != null) {
 						if (Preferences.usePreviewPictures) {
@@ -331,6 +346,7 @@ public class Picture extends Shape implements StretchableShpae {
 			editPanel.add(sizePanel);
 		}
 		editPanel.add(rotationSlider);
+		editPanel.add(transparencySlider);
 		editPanel.add(sourcePanel);
 		return editPanel;
 	}
@@ -486,12 +502,13 @@ public class Picture extends Shape implements StretchableShpae {
 	public Picture(String[] data) throws NumberFormatException, IOException {
 		this(Double.parseDouble(data[0]), Double.parseDouble(data[1]), Boolean.parseBoolean(data[2]), data[3],
 				Double.parseDouble(data[4]), Double.parseDouble(data[5]), Double.parseDouble(data[6]),
-				decodeSourceImage(data[11]));
-		this.cutFromLeft = Double.parseDouble(data[7]);
-		this.cutFromTop = Double.parseDouble(data[8]);
-		this.cutFromRight = Double.parseDouble(data[9]);
-		this.cutFromBottom = Double.parseDouble(data[10]);
-		this.effectsManger = new EffectsManager(data[12], this);
+				decodeSourceImage(data[12]));
+		this.transparency = Double.parseDouble(data[7]);
+		this.cutFromLeft = Double.parseDouble(data[8]);
+		this.cutFromTop = Double.parseDouble(data[9]);
+		this.cutFromRight = Double.parseDouble(data[10]);
+		this.cutFromBottom = Double.parseDouble(data[11]);
+		this.effectsManger = new EffectsManager(data[13], this);
 	}
 
 	public Picture(String line) throws NumberFormatException, IOException {
@@ -500,7 +517,7 @@ public class Picture extends Shape implements StretchableShpae {
 
 	@Override
 	public String encodeShape() {
-		return super.encodeShape() + ", " + width + ", " + height + "," + rotation + "," + cutFromLeft + "," + cutFromTop + "," + cutFromRight + ","
+		return super.encodeShape() + ", " + width + ", " + height + "," + rotation + "," + transparency + "," + cutFromLeft + "," + cutFromTop + "," + cutFromRight + ","
 				+ cutFromBottom + "," + encodeSourceImge(image) + "," + effectsManger.encodeEffect();
 	}
 
@@ -613,6 +630,14 @@ public class Picture extends Shape implements StretchableShpae {
 
 	public void setRotation(double rotation) {
 		this.rotation = rotation;
+	}
+
+	public double getTransparency() {
+		return transparency;
+	}
+
+	public void setTransparency(double transparency) {
+		this.transparency = transparency;
 	}
 
 	public boolean isCutting() {

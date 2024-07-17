@@ -14,7 +14,6 @@ import java.awt.font.FontRenderContext;
 import java.util.LinkedList;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 
 import drawables.shapes.abstractShapes.ColoredShape;
 import drawables.shapes.abstractShapes.Shape;
@@ -25,8 +24,6 @@ import le.gui.dialogs.LDialogs;
 import le.gui.dialogs.LFontChooser;
 import le.gui.dialogs.LFontChooser.FontHolder;
 import main.Main;
-import operatins.ChangesOperation;
-import operatins.OperationsManager;
 import operatins.changes.Change;
 import operatins.changes.ChangeType;
 import operatins.changes.ObjectChange;
