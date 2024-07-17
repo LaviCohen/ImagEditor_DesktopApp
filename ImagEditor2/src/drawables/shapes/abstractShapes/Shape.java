@@ -285,17 +285,14 @@ public abstract class Shape implements Drawable{
 	protected void moveDialogToCorrectPos(JDialog dialog){
 		double xOnScreen, yOnScreen;
 		xOnScreen = Shape.this.getScreenXCoordinates();
-		System.out.println(Shape.this.getScreenYCoordinates() - 20  + ", " + dialog.getHeight());
 		if (Shape.this.getScreenYCoordinates() - 20 > dialog.getHeight()) {
 			yOnScreen = Shape.this.getScreenYCoordinates() - 10 - dialog.getHeight();
 		} else {
 			yOnScreen = Shape.this.getScreenYCoordinates() + Shape.this.getHeightOnBoard() + 10;
 		}
-		System.out.println("Frame Location: " + Main.f.getLocationOnScreen());
 		int x = (int) (xOnScreen - Main.f.getLocationOnScreen().x - 16);
 
 		int y = (int) (yOnScreen - Main.f.getLocationOnScreen().y - 16);
-		System.out.println("Locate at " + x + ", " + y + " (" + xOnScreen + ", " + yOnScreen + ")");
 		if (x > Main.f.getWidth() + Main.f.getLocationOnScreen().x - dialog.getWidth()) {
 			x = Main.f.getWidth() + Main.f.getLocationOnScreen().x - dialog.getWidth();
 		}

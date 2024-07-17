@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
@@ -69,9 +70,15 @@ public class Board extends JPanel{
 		new DropTarget(this, new DropTargetAdapter() {
 			@Override
 			public void drop(DropTargetDropEvent dtde) {
-				System.out.println("Transferred");
+				System.out.println("Data Transferred by Dropping");
 				dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
-				System.out.println(Actions.handleTransferable(dtde.getTransferable()));
+				if (!Actions.handleTransferable(dtde.getTransferable())) {
+					try {
+						throw new UnsupportedFlavorException(dtde.getCurrentDataFlavors()[0]);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		});
 		

@@ -92,8 +92,8 @@ public class Actions {
 			System.out.println("Manual Refreshing");
 			Main.getBoard().setActiveManualRefreshing(true);
 			Main.updateLayersList();
-			System.out.println(Main.getBoard().isActiveManualRefreshing());
 			Main.getBoard().repaint();
+			Main.getBoard().setActiveManualRefreshing(false);
 		}else if (command.equals("Undo")) {
 			OperationsManager.undo();
 			Main.getBoard().repaint();

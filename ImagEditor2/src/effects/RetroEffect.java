@@ -31,14 +31,12 @@ public class RetroEffect extends Effect{
 
 	@Override
 	public void affectImage(BufferedImage bf) {
-		System.out.println(bf.getWidth() + ", " + bf.getHeight());
 		for (int i = 0; i < bf.getWidth(); i++) {
 			for (int j = 0; j < bf.getHeight(); j++) {
 				Color cur = new Color(bf.getRGB(i, j));
 				Color affected = new Color(cur.getRed() / variety * variety,
 						cur.getGreen() / variety * variety, cur.getBlue() / variety * variety,
 						cur.getAlpha());
-//				System.out.println(affected + ", " + affected.getAlpha());
 				bf.setRGB(i, j, affected.getRGB());
 			}
 		}

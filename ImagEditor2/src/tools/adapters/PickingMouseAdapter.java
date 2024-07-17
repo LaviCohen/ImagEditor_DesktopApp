@@ -98,7 +98,6 @@ public class PickingMouseAdapter extends BoardAdapter{
 		editTextOnBoard();
 	}
 	private void editTextOnBoard() {
-		System.out.println("Editing text on board");
 		ta = new JTextArea(text.getText());
 		ta.setFont(resizeFont(text.getFont(), parent.getZoomRate()));
 		ta.setForeground(text.getColor());
@@ -112,7 +111,6 @@ public class PickingMouseAdapter extends BoardAdapter{
 			@Override
 			public void keyTyped(KeyEvent e) {
 				super.keyTyped(e);
-				System.out.println(e.getKeyChar());
 				text.setText(ta.getText());
 				ta.setBounds(parent.paperToBoardCoordinatesX((int) text.getX()),
 						parent.paperToBoardCoordinatesY((int) text.getY()), 
@@ -155,19 +153,15 @@ public class PickingMouseAdapter extends BoardAdapter{
 				changes.add(new NumericalChange(ChangeType.HEIGHT_CHANGE, totalStretchY));
 			}
 			if (totalCutFromBottom != 0) {
-				System.out.println("Bottom: " + totalCutFromBottom);
 				changes.add(new NumericalChange(ChangeType.CUT_FROM_BOTTOM_CHANGE, totalCutFromBottom));
 			}
 			if (totalCutFromTop != 0) {
-				System.out.println("Top: " + totalCutFromTop);
 				changes.add(new NumericalChange(ChangeType.CUT_FROM_TOP_CHANGE, totalCutFromTop));
 			}
 			if (totalCutFromRight != 0) {
-				System.out.println("Right: " + totalCutFromRight);
 				changes.add(new NumericalChange(ChangeType.CUT_FROM_RIGHT_CHANGE, totalCutFromRight));
 			}
 			if (totalCutFromLeft != 0) {
-				System.out.println("Left: " + totalCutFromLeft);
 				changes.add(new NumericalChange(ChangeType.CUT_FROM_LEFT_CHANGE, totalCutFromLeft));
 			}
 			

@@ -21,7 +21,6 @@ public class EffectsManager extends Effect{
 	public Picture parent;
 	public HashMap<Effect, Boolean> effects = new HashMap<Effect, Boolean>();
 	public EffectsManager(Picture picture) {
-		System.out.println(picture);
 		this.parent = picture;
 	}
 	public void affectImage(BufferedImage bufferedImage) {
@@ -139,7 +138,6 @@ public class EffectsManager extends Effect{
 		this(parent);
 		System.out.println("Decoding Effects Manager from Data: " + s);
 		String[] data = s.split("#");
-		System.out.println(data.length);
 		int effectsNum = data.length/2;
 		for (int i = 0; i < effectsNum; i++) {
 			effects.put(Effect.parseEffect(data[i * 2 + 1]),

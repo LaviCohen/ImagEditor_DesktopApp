@@ -28,7 +28,6 @@ public class WebProjectsUtils {
 		}
 		String params = "username=" + Main.myAccount.userName + "&password=" + Main.myAccount.password;
 		String response = Main.website.getResponse("/getProjectsList.php", params, "POST");
-		System.out.println(response);
 		if (response.equals("")) {
 			return null;
 		}
@@ -46,7 +45,6 @@ public class WebProjectsUtils {
 		String params = "projectName=" + p.name + "&" + "data=" + p.getData() + "&username=" + 
 				Main.myAccount.userName + "&password=" + Main.myAccount.password + "&app=yes&"
 				 + "&quiet=yes";
-		System.out.println(params);
 		String response = Main.website.getResponse("/uploadProject.php", params, "POST");
 		if(response.equals("Your username or password are incorrect.")) {
 			LDialogs.showMessageDialog(Main.f, "We had issues with your request, please try to "

@@ -54,7 +54,6 @@ public class EraserMouseAdapter extends BoardAdapter {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1) {
-			System.out.println("Painting");
 			paintWithEraser(e);
 		} else if (e.getButton() == MouseEvent.BUTTON3) {
 			rightClick(e);
