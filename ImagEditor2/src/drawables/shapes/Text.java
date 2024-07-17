@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -19,6 +20,7 @@ import drawables.shapes.abstractShapes.ColoredShape;
 import drawables.shapes.abstractShapes.Shape;
 import drawables.shapes.abstractShapes.TextualShape;
 import gui.components.EditPanel;
+import install.Preferences;
 import le.gui.dialogs.LDialogs;
 import le.gui.dialogs.LFontChooser;
 import le.gui.dialogs.LFontChooser.FontHolder;
@@ -51,79 +53,71 @@ public class Text extends Shape implements ColoredShape, TextualShape{
 		}
 	}
 	@Override
-	public EditPanel getEditPanel(boolean full, boolean vertical) {
-		return null;
-	}
-	@Override
-	public void edit() {
-		JDialog editDialog = new JDialog(Main.f);
-		editDialog.setLayout(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.insets = new Insets(3, 3, 3, 3);
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.weightx = 1;
-		gbc.weighty = 0;
-	    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-	    gbc.gridx  = 0;
-	    gbc.gridy = 0;
-		editDialog.setTitle("Edit Text");
+	public EditPanel getEditPanel(boolean dialog) {
 		EditPanel positionPanel = createPositionPanel();
-		editDialog.add(positionPanel, gbc);
 		EditPanel textPanel = createTextPanel("Text:");
-		gbc.weighty = 3;
-		gbc.gridy = 1;
-		editDialog.add(textPanel, gbc);
-		gbc.weighty = 0;
 		EditPanel colorPanel = createColorPanel();
-		gbc.gridy = 2;
-		editDialog.add(colorPanel, gbc);
 		FontHolder fontHolder = new FontHolder(this.font);
 		JButton setFontButton = new JButton("Set Font");
 		setFontButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				fontHolder.setFont(LFontChooser.openChooseFontDialog(editDialog,
+				fontHolder.setFont(LFontChooser.openChooseFontDialog(setFontButton.getParent(),
 						"Set Font", fontHolder.getFont(), null, Main.theme));
 			}
 		});
-		gbc.gridy = 3;
-		editDialog.add(setFontButton, gbc);
-		ActionListener actionListener =  new ActionListener() {
-			
+		EditPanel editDialog = new EditPanel(dialog ? new GridBagLayout() : new GridLayout(1, 5, 15, 0)) {
+			private static final long serialVersionUID = 1L;
+
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public LinkedList<Change> getChanges() {
 				try {
 					LinkedList<Change> changes = new LinkedList<>();
-					changes.addAll(positionPanel.getChanges());
+					if (dialog || Preferences.showPositionOnTop) {
+						changes.addAll(positionPanel.getChanges());
+					}
 					changes.addAll(colorPanel.getChanges());
-					changes.addAll(textPanel.getChanges());
+					if (dialog) {
+						changes.addAll(textPanel.getChanges());
+					}
 					if (!Text.this.font.equals(fontHolder.getFont())) {
 						changes.add(new ObjectChange(ChangeType.FONT_CHANGE, Text.this.font, fontHolder.getFont()));
 					}
-					if (!changes.isEmpty()) {
-						OperationsManager.operate(new ChangesOperation(Text.this, changes));
-						Main.getLayersList().updateImage(Text.this);
-						Main.getBoard().repaint();
-					}
+					return changes;
 				} catch (Exception e2) {
 					LDialogs.showMessageDialog(Main.f, "Invalid input", "Error", LDialogs.ERROR_MESSAGE);
 					e2.printStackTrace();
 				}
-				
-				if (e.getActionCommand().equals("Apply & Close")) {
-					editDialog.dispose();
-				}
+				return null;
 			}
 		};
-		gbc.gridy = 4;
-		editDialog.add(createActionPanel(false, actionListener), gbc);
-		Main.theme.affect(editDialog);
-		editDialog.pack();
-		editDialog.setSize(editDialog.getWidth() + 50, editDialog.getHeight());
-		moveDialogToCorrectPos(editDialog);
-		editDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		editDialog.setVisible(true);
+		if (dialog) {
+			GridBagConstraints gbc = new GridBagConstraints();
+			gbc.insets = new Insets(3, 3, 3, 3);
+			gbc.fill = GridBagConstraints.BOTH;
+			gbc.weightx = 1;
+			gbc.weighty = 0;
+		    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+		    gbc.gridx  = 0;
+		    gbc.gridy = 0;
+			editDialog.add(positionPanel, gbc);
+			gbc.weighty = 3;
+			gbc.gridy = 1;
+			editDialog.add(textPanel, gbc);
+			gbc.weighty = 0;
+			gbc.gridy = 2;
+			editDialog.add(colorPanel, gbc);
+			gbc.gridy = 3;
+			editDialog.add(setFontButton, gbc);
+		} else {
+			if (Preferences.showPositionOnTop) {
+				editDialog.add(positionPanel);
+			}
+			editDialog.add(colorPanel);
+			editDialog.add(setFontButton);
+		}
+		return editDialog;
 	}
 	public static Text createNewDefaultText() {
 		return new Text(0, 0, true, null, Color.BLACK, new Font("Arial", Font.PLAIN, 20), "Text");

@@ -53,14 +53,14 @@ public class Rectangle extends Shape implements ColoredShape, StretchableShpae{
 		}
 	}
 	@Override
-	public EditPanel getEditPanel(boolean full, boolean vertical) {
+	public EditPanel getEditPanel(boolean dialog) {
 		EditPanel positionPanel = createPositionPanel();
 		EditPanel sizePanel = createSizePanel();
 		EditPanel colorPanel = createColorPanel();
 		LSlider roundWidthSlider = new LSlider("Round Width:", 0, (int) this.width, (int)(roundWidth > width ? width : roundWidth));
 		LSlider roundHeightSlider = new LSlider("Round Height:", 0, (int) this.height, (int)(roundHeight > height ? height : roundHeight));
 		JCheckBox isFilledCheckBox = new JCheckBox("Fill Rectangle", isFilled);
-		GridLayout gl = new GridLayout(vertical ? 6 : 1, vertical ? 1 : 6);
+		GridLayout gl = new GridLayout(dialog ? 6 : 1, dialog ? 1 : 6);
 		gl.setHgap(10);
 		gl.setVgap(5);
 		EditPanel editPanel = new EditPanel(gl) {
@@ -71,10 +71,10 @@ public class Rectangle extends Shape implements ColoredShape, StretchableShpae{
 			public LinkedList<Change> getChanges() {
 				try {
 					LinkedList<Change> changes = new LinkedList<>();
-					if (full || Preferences.showPositionOnTop) {
+					if (dialog || Preferences.showPositionOnTop) {
 						changes.addAll(positionPanel.getChanges());
 					}
-					if (full || Preferences.showSizeOnTop) {
+					if (dialog || Preferences.showSizeOnTop) {
 						changes.addAll(sizePanel.getChanges());
 					}
 					changes.addAll(colorPanel.getChanges());
@@ -98,10 +98,10 @@ public class Rectangle extends Shape implements ColoredShape, StretchableShpae{
 				return null;
 			}
 		};
-		if (full || Preferences.showPositionOnTop) {
+		if (dialog || Preferences.showPositionOnTop) {
 			editPanel.add(positionPanel);
 		}
-		if (full || Preferences.showSizeOnTop) {
+		if (dialog || Preferences.showSizeOnTop) {
 			editPanel.add(sizePanel);
 		}
 		editPanel.add(colorPanel);

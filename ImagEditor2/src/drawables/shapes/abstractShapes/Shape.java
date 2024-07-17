@@ -85,7 +85,7 @@ public abstract class Shape implements Drawable{
 		setX(p.getX());
 		setY(p.getY());
 	}
-	public abstract EditPanel getEditPanel(boolean full, boolean vertical);
+	public abstract EditPanel getEditPanel(boolean dialog);
 	public void edit() {
 		
 		Main.getEditShapesTopPanel().removeAll();
@@ -94,7 +94,7 @@ public abstract class Shape implements Drawable{
 		
 		Main.getEditShapesTopPanel().add(new JLabel(Shape.this.name + ":"), Main.translator.getBeforeTextBorder());
 		
-		EditPanel editPanel = getEditPanel(false, false);
+		EditPanel editPanel = getEditPanel(false);
 		
 		Main.getEditShapesTopPanel().add(editPanel);
 		
@@ -104,7 +104,7 @@ public abstract class Shape implements Drawable{
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("Pop Out")) {
 					JDialog editDialog = new JDialog(Main.f, "Editing " + Shape.this.name);
-					EditPanel editPanel = getEditPanel(true, true);
+					EditPanel editPanel = getEditPanel(true);
 					editDialog.add(editPanel);
 					editDialog.add(createActionPanel(false,  new ActionListener() {
 						

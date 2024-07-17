@@ -7,6 +7,7 @@ import java.util.LinkedList;
 
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
+import javax.swing.JLabel;
 
 import drawables.shapes.abstractShapes.Shape;
 import drawables.shapes.abstractShapes.TextualShape;
@@ -51,7 +52,7 @@ public class Code extends Shape implements TextualShape{
 	}
 
 	@Override
-	public EditPanel getEditPanel(boolean full, boolean vertical) {
+	public EditPanel getEditPanel(boolean dialog) {
 		
 		EditPanel positionPanel = createPositionPanel();
 		EditPanel textPanel = createTextPanel("Code:");
@@ -62,18 +63,24 @@ public class Code extends Shape implements TextualShape{
 			@Override
 			public LinkedList<Change> getChanges() {
 				LinkedList<Change> changes = new LinkedList<>();
-				if (full || Preferences.showPositionOnTop) {
+				if (dialog || Preferences.showPositionOnTop) {
 					changes.addAll(positionPanel.getChanges());
 				}
-				changes.addAll(textPanel.getChanges());
+				if (dialog) {
+					changes.addAll(textPanel.getChanges());
+				}
 				
 				return changes;
 			}
 		};
-		if (full || Preferences.showPositionOnTop) {
-			editPanel.add(positionPanel, vertical ? BorderLayout.NORTH : Main.translator.getBeforeTextBorder());
+		if (dialog || Preferences.showPositionOnTop) {
+			editPanel.add(positionPanel, dialog ? BorderLayout.NORTH : Main.translator.getBeforeTextBorder());
+		} 
+		if (dialog) {
+			editPanel.add(textPanel);
+		} else {
+			editPanel.add(new JLabel("Editing Code is Avaliable Only in Dialog Mode, Click \"Pop Out\" to Try."));
 		}
-		editPanel.add(textPanel);
 		return editPanel;
 	}
 	

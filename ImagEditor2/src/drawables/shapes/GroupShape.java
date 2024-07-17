@@ -91,7 +91,7 @@ public class GroupShape extends Shape{
 	}
 
 	@Override
-	public EditPanel getEditPanel(boolean full, boolean vertical) {
+	public EditPanel getEditPanel(boolean dialog) {
 		
 		EditPanel positionPanel = createPositionPanel();
 		
@@ -119,7 +119,7 @@ public class GroupShape extends Shape{
 			}
 		});
 		editLayersPanel.add(editLayersButton, Main.translator.getAfterTextBorder());
-		GridLayout gl = new GridLayout(vertical ? 2 : 1, vertical ? 1 : 2);
+		GridLayout gl = new GridLayout(dialog ? 2 : 1, dialog ? 1 : 2);
 		gl.setHgap(10);
 		gl.setVgap(5);
 		EditPanel editPanel = new EditPanel(gl) {
@@ -128,7 +128,7 @@ public class GroupShape extends Shape{
 			@Override
 			public LinkedList<Change> getChanges() {
 				LinkedList<Change> changes = new LinkedList<>();
-				if (full || Preferences.showPositionOnTop) {
+				if (dialog || Preferences.showPositionOnTop) {
 					changes.addAll(positionPanel.getChanges());
 				}
 				if (!changes.isEmpty()) {
@@ -139,7 +139,7 @@ public class GroupShape extends Shape{
 				return changes;
 			}
 		};
-		if (full || Preferences.showPositionOnTop) {
+		if (dialog || Preferences.showPositionOnTop) {
 			editPanel.add(positionPanel);
 		}
 		editPanel.add(editLayersPanel);

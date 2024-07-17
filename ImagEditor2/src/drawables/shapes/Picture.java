@@ -217,7 +217,7 @@ public class Picture extends Shape implements StretchableShpae {
 	}
 
 	@Override
-	public EditPanel getEditPanel(boolean full, boolean vertical){
+	public EditPanel getEditPanel(boolean dialog){
 		//Position Panel creation
 		EditPanel positionPanel = createPositionPanel();
 		//Size Panel creation
@@ -262,7 +262,7 @@ public class Picture extends Shape implements StretchableShpae {
 			}
 		});
 		sourcePanel.add(browse, Main.translator.getAfterTextBorder());
-		GridLayout gl = new GridLayout(vertical ? 4 : 1, vertical ? 1 : 4);
+		GridLayout gl = new GridLayout(dialog ? 4 : 1, dialog ? 1 : 4);
 		gl.setHgap(10);
 		gl.setVgap(5);
 		EditPanel editPanel = new EditPanel(gl) {
@@ -283,10 +283,10 @@ public class Picture extends Shape implements StretchableShpae {
 						}
 					}
 					LinkedList<Change> changes = new LinkedList<>();
-					if (full || Preferences.showPositionOnTop) {
+					if (dialog || Preferences.showPositionOnTop) {
 						changes.addAll(positionPanel.getChanges());
 					}
-					if (full || Preferences.showSizeOnTop) {
+					if (dialog || Preferences.showSizeOnTop) {
 						changes.addAll(heightNwidthPanel.getChanges());
 					}
 					if (Picture.this.rotation != rotation) {
@@ -324,10 +324,10 @@ public class Picture extends Shape implements StretchableShpae {
 				return null;
 			}
 		};
-		if (full || Preferences.showPositionOnTop) {
+		if (dialog || Preferences.showPositionOnTop) {
 			editPanel.add(positionPanel);
 		}
-		if (full || Preferences.showSizeOnTop) {
+		if (dialog || Preferences.showSizeOnTop) {
 			editPanel.add(sizePanel);
 		}
 		editPanel.add(rotationSlider);
