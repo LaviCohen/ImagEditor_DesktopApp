@@ -84,7 +84,7 @@ public class LayersList extends JPanel{
 	}
 	public void setSelection(LayerPanel layerPanel) {
 		if (selected != null) {
-			selected.setBackground(Main.theme.getBackgroundColor());
+			selected.setBackground(Main.theme.getBackgroundColor().brighter());
 		}
 		selected = layerPanel;
 		if (selected != null) {
@@ -169,6 +169,9 @@ public class LayersList extends JPanel{
 			showNhide.setToolTipText("hide this layer");
 			showNhide.setFocusPainted(false);
 			showNhide.setBackground(Color.WHITE);
+			if (!Main.theme.isLightMode()) {
+				showNhide.setBackground(Color.BLACK);
+			}
 			showNhide.addActionListener(new ActionListener() {
 				
 				@Override
