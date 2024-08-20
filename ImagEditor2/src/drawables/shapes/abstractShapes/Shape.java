@@ -142,6 +142,8 @@ public abstract class Shape implements Drawable{
 		
 		Main.getEditShapesTopPanel().add(createActionPanel(true, al), Main.translator.getAfterTextBorder());
 		
+		Main.theme.affect(Main.getEditShapesTopPanel());
+		
 		Main.f.revalidate();
 		Main.f.repaint();
 	}
